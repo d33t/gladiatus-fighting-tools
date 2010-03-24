@@ -1,0 +1,9 @@
+content gft content/
+overlay chrome://browser/content/browser.xul chrome://gft/content/gft.xul
+
+locale gft en-US locale/en-US/
+locale gft bg-BG locale/bg-BG/
+locale gft de-DE locale/de-DE/
+
+skin gft classic/1.0 skin/
+style chrome://global/content/customizeToolbar.xul chrome://gft/skin/gft.css
