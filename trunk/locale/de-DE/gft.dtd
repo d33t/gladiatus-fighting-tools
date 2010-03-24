@@ -1,0 +1,27 @@
+﻿<!-- GFT XUL -->
+<!ENTITY gft.statusbar.tooltip.menu.desc "Betätige die rechte Maustaste um das Menu zu öffnen">
+<!ENTITY gft.statusbar.tooltip.atackssincesessionstart "Alle Kämpfe innerhalb dieser Sitzung: ">
+<!ENTITY gft.statusbar.tooltip.atackssincestartoftheday "Alle Kämpfe seit Anfang des Tages: ">
+<!ENTITY gft.statusbar.tooltip.atackssincedefiniedperiod "Alle Käpfe seit letzter Woche: ">
+<!ENTITY gft.statusbar.menu.optionswindow "Optionen">
+<!ENTITY gft.statusbar.menu.battleswindow "Kämpfe">
+<!ENTITY gft.statusbar.menu.aboutwindow "Info">
+<!ENTITY gft.fighter.tooltip.lastopponent "Letzter Gegner: 			">
+<!ENTITY gft.fighter.tooltip.lastdaybattles "Käpfe innerhalb letzter Tag:			">
+<!ENTITY gft.fighter.tooltip.nextpossiblebattletime "Nächsten möglichen Angriff:	">
+
+<!-- BATTLES XUL -->
+<!ENTITY gft.battles.title "Optionen der Kämpfe">
+
+<!-- battles.xul: Group Insert player -->
+<!ENTITY gft.battles.battlestablecaption "Kämpfetabelle">
+<!ENTITY gft.battles.pnamecolumn "Gegnername">
+<!ENTITY gft.battles.pguildcolumn "Gegnergildie">
+<!ENTITY gft.battles.battlescountcolumn "Kämpfe innerhalb der letzten ">
+<!ENTITY gft.battles.searchplayername "Gegnername: ">
+<!ENTITY gft.battles.searchplayerlevel "Über Stuffe: ">
+<!ENTITY gft.battles.searchtimeperiod "Zeitperiode">
+<!ENTITY gft.battles.searchbutton "Anzeigen">
+
+<!-- Common -->
+<!ENTITY gft.common.close "schiessen">

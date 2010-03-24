@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://gft/locale/gft.dtd">
+
+<window class="dialog"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        orient="vertical"
+        autostretch="always"
+        onload="init();"
+        title="&prefs.title;">
+
+    <keyset>
+        <key keycode="VK_ESCAPE" oncommand="window.close();"/>
+    </keyset>
+    <script type="application/x-javascript" src="chrome://gft/content/options.js"/>
+
+    <groupbox>
+        <caption label="&prefs.appearancecaption;"/>
+        <hbox>
+            <label value="&prefs.poslabel;" control="iconPositionRadiogroup"/>
+            <radiogroup id="gftIconPositionRadiogroup" orient="horizontal" oncommand="apply();">
+                <radio id="L" label="&prefs.posLlabel;"/>
+                <radio id="R" label="&prefs.posRlabel;"/>
+                <radio id="RM" label="&prefs.posRMlabel;"/>
+            </radiogroup>
+        </hbox>
+    </groupbox>
+
+    <separator class="thin"/>
+
+    <groupbox>
+        <caption label="&prefs.worksettings;"/>
+		
+		 <hbox>
+			<radiogroup id="servers" orient="horizontal" oncommand="apply();">
+                <radio id="s1" label="&prefs.server1;"/>
+                <radio id="s2" label="&prefs.server2;"/>
+                <radio id="s3" label="&prefs.server3;"/>
+				<radio id="custom" label="&prefs.custom;"/>
+			</radiogroup>
+		</hbox>
+		
+		<hbox>
+			<label control="customservername" value="&prefs.custom.name;"/>
+			<textbox flex="" size="2" id="customservername" value="" oninput="apply();"/>
+			<label id="errorservername" value=""/>
+		</hbox>
+		
+		<hbox>
+			<label control="customserverinitials" value="&prefs.custom.initials;"/>
+			<textbox flex="" size="2" id="customserverinitials" value="" oninput="apply();"/>
+			<label id="errorserverinitials" value=""/>
+		</hbox>
+		
+        <separator class="thin"/>
+		
+		<hbox flex="1" align="center">
+            <label control="gtCheckInterval" value="&check.interval;"/>
+            <textbox flex="" size="2" id="gtCheckInterval" value="3" oninput="apply();"/>
+            <label control="gtCheckInterval" value="&check.sec;"/>
+        </hbox>
+		
+		<separator class="thin"/>
+		
+		<hbox flex="1" align="center">
+			<checkbox id="usesimplecounter" label="&prefs.simpleCounter;" oncommand="apply();"/>
+            <spacer minwidth="5" flex="1"/>
+			<checkbox id="checkInfinity" label="&check.infinity;" oncommand="apply();"/>
+			<spacer minwidth="5" flex="1"/>
+        </hbox>
+    </groupbox>
+
+    <hbox>
+        <button label="&close;" oncommand="window.close();" default="true"/>
+    </hbox>
+
+</window>

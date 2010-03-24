@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://gft/skin/gft.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://gft/locale/gft.dtd">
+<overlay id="gft-overlay"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="gft-strings" src="chrome://gft/locale/gft.properties"/>
+	</stringbundleset>
+	<script type="application/x-javascript" src="chrome://gft/content/xmlhttprequester.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/prefman.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/script-compiler.js"/> 
+	
+	<statusbar id="status-bar">
+		<statusbarpanel id="gft-status" label="" hidden="false">
+			<box width="20" height="16" align="center" pack="center">
+				<tooltip id="gft-statusmenu-tooltip" orient="vertical" style="background-color: #33DD00;">
+					<hbox>
+						<description value="&gft.statusbar.tooltip.atackssincesessionstart;"/>
+						<description id="statusmenu-tooltip-atacks-since-session-start" style="font-weight: bold;" value=""/>
+					</hbox>
+					<hbox>
+						<description value="&gft.statusbar.tooltip.atackssincestartoftheday;"/>
+						<description id="statusmenu-tooltip-atacks-since-start-of-the-day" style="font-weight: bold;" value=""/>
+					</hbox>
+					<hbox>
+						<description value="&gft.statusbar.tooltip.atackssincedefiniedperiod;"/>
+						<description id="statusmenu-tooltip-atacks-since-definied-period" style="font-weight: bold;" value=""/>
+					</hbox>
+					<description value="&gft.statusbar.tooltip.menu.desc;"/>
+				</tooltip>
+
+				<image id="gft-status-icon" src="chrome://gft/skin/gft-statusbar.png" width="14" height="16"
+										 context="gft-popup"
+										 onclick="gft_statusbar.handleClick(event);"
+										 onload="gft_statusbar.handleCursor(this);"
+										 tooltip="gft-statusmenu-tooltip"/>
+			</box>   
+			<menupopup id="gft-popup" position="before_end"
+												onpopupshowing="gft_statusbar.handleMenu(this);"
+												oncommand="gft_statusbar.handleAction(event.target.value);">
+				<menuitem value="options" label="&gft.statusbar.menu.optionswindow;"/>
+				<menuitem value="battles" label="&gft.statusbar.menu.battleswindow;"/>
+				<menuitem value="about" label="&gft.statusbar.menu.aboutwindow;"/>
+			</menupopup>
+		</statusbarpanel>
+		<tooltip id="gft-timer-tooltip" orient="vertical" style="background-color: #33DD00;">
+			<hbox>
+				<description value="&gft.fighter.tooltip.lastopponent;"/>
+				<description id="timer-fighter-tooltip-lastopponent" style="font-weight: bold;" value=""/>
+			</hbox>
+			<hbox>
+				<description value="&gft.fighter.tooltip.lastdaybattles;"/>
+				<description id="timer-fighter-tooltip-lastdaybattles" style="font-weight: bold;" value=""/>
+			</hbox>
+			<hbox>
+				<description value="&gft.fighter.tooltip.nextpossiblebattletime;"/>
+				<description id="timer-fighter-tooltip-nextpossiblebattletime" style="font-weight: bold;" value=""/>
+			</hbox>
+		</tooltip>
+		<statusbarpanel id="gft-timer" label=""  hidden="true"  tooltip="gft-timer-tooltip"/>
+	</statusbar>
+</overlay> 

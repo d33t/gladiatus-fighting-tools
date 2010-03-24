@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+  <Description about="urn:mozilla:install-manifest">
+   
+    <em:id>gft@demonsteam.net</em:id>
+    <em:name>Gladiatus Fighting Tools</em:name>
+    <em:version>1.0</em:version>
+    <em:description>Fighting Tools for the web based game - Gladiatus</em:description>
+    <em:creator>Demons Team</em:creator>
+    
+    <em:homepageURL>http://addons.demonsteam.net</em:homepageURL>
+	<em:optionsURL>chrome://gft/content/options.xul</em:optionsURL>
+	<em:iconURL>chrome://gft/skin/gft-ico.png</em:iconURL>
+    <em:aboutURL>chrome://gft/content/about.xul</em:aboutURL>
+    
+    <!-- Firefox -->
+    <em:targetApplication>
+      <Description>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+        <em:minVersion>3.5</em:minVersion>
+        <em:maxVersion>3.5.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+    
+  </Description>
+
+</RDF>

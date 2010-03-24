@@ -1,0 +1,27 @@
+﻿<!-- GFT XUL -->
+<!ENTITY gft.statusbar.tooltip.menu.desc "Използвай дясно копче за да отвориш менюто">
+<!ENTITY gft.statusbar.tooltip.atackssincesessionstart "Брой атаки от стартта на сесията: ">
+<!ENTITY gft.statusbar.tooltip.atackssincestartoftheday "Брой атаки от началото на деня: 	">
+<!ENTITY gft.statusbar.tooltip.atackssincedefiniedperiod "Брой атаки за последната една седмица: ">
+<!ENTITY gft.statusbar.menu.optionswindow "Опции">
+<!ENTITY gft.statusbar.menu.battleswindow "Двубои">
+<!ENTITY gft.statusbar.menu.aboutwindow "Относно">
+<!ENTITY gft.fighter.tooltip.lastopponent "Последен опонент: 			">
+<!ENTITY gft.fighter.tooltip.lastdaybattles "Двубои през последния ден:			">
+<!ENTITY gft.fighter.tooltip.nextpossiblebattletime "Следваща възможна атака:	">
+
+<!-- BATTLES XUL -->
+<!ENTITY gft.battles.title "Опции на битките">
+
+<!-- battles.xul: Group Insert player -->
+<!ENTITY gft.battles.battlestablecaption "Таблица на двубоите">
+<!ENTITY gft.battles.pnamecolumn "Опонент">
+<!ENTITY gft.battles.pguildcolumn "Гилдия">
+<!ENTITY gft.battles.battlescountcolumn "Брой атаки">
+<!ENTITY gft.battles.searchplayername "Опонент: ">
+<!ENTITY gft.battles.searchplayerlevel "Над ниво: ">
+<!ENTITY gft.battles.searchtimeperiod "Времеви период">
+<!ENTITY gft.battles.searchbutton "Покажи двубоите">
+
+<!-- Common -->
+<!ENTITY gft.common.close "Затвори">

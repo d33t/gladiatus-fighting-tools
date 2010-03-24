@@ -1,0 +1,27 @@
+<!-- GFT XUL -->
+<!ENTITY gft.statusbar.tooltip.menu.desc "Use right mouse button to open the menu">
+<!ENTITY gft.statusbar.tooltip.atackssincesessionstart "Atacks count since session start: ">
+<!ENTITY gft.statusbar.tooltip.atackssincestartoftheday "Today's atacks count: ">
+<!ENTITY gft.statusbar.tooltip.atackssincedefiniedperiod "Atacks since last week: ">
+<!ENTITY gft.statusbar.menu.optionswindow "Options">
+<!ENTITY gft.statusbar.menu.battleswindow "Battles">
+<!ENTITY gft.statusbar.menu.aboutwindow "About">
+<!ENTITY gft.fighter.tooltip.lastopponent "Last opponent: 			">
+<!ENTITY gft.fighter.tooltip.lastdaybattles "Battles last day:			">
+<!ENTITY gft.fighter.tooltip.nextpossiblebattletime "Next possible atack:	">
+
+<!-- BATTLES XUL -->
+<!ENTITY gft.battles.title "Battles options">
+
+<!-- battles.xul: Group Insert player -->
+<!ENTITY gft.battles.battlestablecaption "Battles table">
+<!ENTITY gft.battles.pnamecolumn "Player name">
+<!ENTITY gft.battles.pguildcolumn "Player guild">
+<!ENTITY gft.battles.battlescountcolumn "Battles for the last ">
+<!ENTITY gft.battles.searchplayername "Player name: ">
+<!ENTITY gft.battles.searchplayerlevel "Above level: ">
+<!ENTITY gft.battles.searchtimeperiod "Time period">
+<!ENTITY gft.battles.searchbutton "Show battles">
+
+<!-- Common -->
+<!ENTITY gft.common.close "close">
