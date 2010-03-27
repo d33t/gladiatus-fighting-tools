@@ -148,8 +148,8 @@ var gft = {
 		else if(validator.validateCombatReportPage(loc))
 		{
 			gft_utils.getPrefBranch().setCharPref("nextbattletime", (gft_utils.getTime() +  waitTime) + "");
-			gft_statusbar.showReverseCounter(waitTime);
-			this.updateStatusBarToolTip();
+			// gft_statusbar.showReverseCounter(waitTime);
+			// this.updateStatusBarToolTip();
 		}	
 		else if(validator.validatePlayerReportPage(loc))
 		{

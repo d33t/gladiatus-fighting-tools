@@ -52,7 +52,8 @@ contentLoad: function(e) {
 
 	if (
 		injectplayerpage_gmCompiler.isGreasemonkeyable(href)
-		&& ( /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=player&p=\d+&sh=.*/.test(href) )
+		&& (( /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=player&p=\d+&sh=.*/.test(href) )
+		|| ( /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=player&p=\d+&doll=1&sh=.*/.test(href) ))
 		&& true
 	) {
 		var script=injectplayerpage_gmCompiler.getUrlContents(
