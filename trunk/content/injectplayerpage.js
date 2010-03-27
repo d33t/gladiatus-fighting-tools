@@ -80,5 +80,19 @@ function handleButtonClick(event)
 	}
 }
 
+function getToolTipElem(text, toolTipText)
+{
+	return '<div onmouseover="' + getToolTipTable(toolTipText) + '">' + text + '</div>';
+}
+
+function getToolTipTable(toolTipText)
+{
+	return escape('<table cellspacing=2 cellpadding=2 valign=middle style=\'background:black;filter:alpha(opacity=85); -moz-opacity:0.85;opacity: 0.85;border: 1px solid #999; font-family:Tahoma;\'><tr><td style=\'color:white; font-weight: bold; font-size:9pt\' colspan=\'2\' nowrap=\'nowrap\'>' + toolTipText + '</td></tr></table>');
+}
+
+function getBoldElem(text)
+{
+	return '<span style="color: blue; font-weight: bold;">' + text + '</span>';
+}
 createAndInjectBattleInfo();
 window.addEventListener('click', handleButtonClick, true);
