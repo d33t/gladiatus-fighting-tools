@@ -328,10 +328,10 @@ function PlayerPageContent() //TODO
 	this.getContent = function(doc, period) 
 	{
 		if(!period)
-			period = "24h";
+			period = "oneday";
 		var server = doc.domain+"";
 		var pid = gft_utils.getPidFromUrl(doc.location+"");
-		var atacks = gft_db.getNumberOfBattlesWithin(pid, server, "pid", 1, "oneday"); //identifier, server, by, atype, period
+		var atacks = gft_db.getNumberOfBattlesWithin(pid, server, "pid", 1, period); //identifier, server, by, atype, period
 		var nextAtack = gft.getNextPossibleAtack(pid, server, "pid", atacks);
 		return gft.createTableEntry(gft_utils.getString("battlesforlast24h"), atacks) +
 				gft.createTableEntry(gft_utils.getString("nextpossiblefight"), nextAtack) +
@@ -346,7 +346,7 @@ function PlayerPageContent() //TODO
 	this.getMyStats = function(doc, period)
 	{
 		if(!period)
-			period = "24h";
+			period = "oneday";
 		var todayAtacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(0, doc.domain);
 		var oneWeekAtacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(6, doc.domain);
 		return gft.createTableEntry(gft_utils.getString("atackssincestartoftheday"), todayAtacks) +
@@ -391,7 +391,8 @@ function PlayerPageContent() //TODO
 	{
 		var server = doc.domain+"";
 		var pid = gft_utils.getPidFromUrl(doc.location+"");	
-		return gft.createTableEntry(gft_utils.getString("realWinChance"), gft_db.getWinChance(pid, server) + " %");
+		var winChance = gft_db.getWinChance(pid, server);
+		return gft.createTableEntry(gft_utils.getString("realWinChance"),  winChance + (winChance != "none" ? " %" : ""));
 	};
 	
 	this.getString = function(string) { return gft_utils.getStrings().getString(string) };
