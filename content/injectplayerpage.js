@@ -33,12 +33,13 @@ function createAndInjectBattleInfo()
 	msgDiv.style.marginLeft = "17px";
 	msgDiv.style.marginRight = "26px";
 	descriptionDiv.parentNode.insertBefore(msgDiv, descriptionDiv);
-	msgDiv.innerHTML = isPlayerPage() ? getBattleStatsTable("Battle stats", GM_getContent(document), "visible") : getBattleStatsTable("My stats", GM_getMyStats(document), "visible");
+	msgDiv.innerHTML = isPlayerPage() ? getBattleStatsTable("Battle stats", GM_getContent(document), "hidden") : getBattleStatsTable("My stats", GM_getMyStats(document), "hidden");
+
 }
 
 function getBattleStatsTable(title, content, visibility)
 {
-	return 	'<div class="title_box"><div id="gfBattleStatsTitle" class="title_inner">' + title +  '</div></div>\n' + 
+	return 	'<div class="title_box"><div id="gfBattleStatsTitle" style="text-align:center;" class="title_inner">' + title +  '</div></div>\n' + 
 			'<div id="gfBattleStatsBody" style="visibility:' + visibility + ';" class="title2_box">\n' +
 			getBattleStatsTableContent(content, visibility) + '</div>';			
 }
@@ -79,20 +80,21 @@ function handleButtonClick(event)
 	    }
 	}
 }
-
+/*
 function getToolTipElem(text, toolTipText)
 {
-	return '<div onmouseover="' + getToolTipTable(toolTipText) + '">' + text + '</div>';
+	return '<a href="#" onmouseover="return escape(\'' + getToolTipTable(toolTipText) + '\')">' + text + '</a>';
 }
 
 function getToolTipTable(toolTipText)
 {
-	return escape('<table cellspacing=2 cellpadding=2 valign=middle style=\'background:black;filter:alpha(opacity=85); -moz-opacity:0.85;opacity: 0.85;border: 1px solid #999; font-family:Tahoma;\'><tr><td style=\'color:white; font-weight: bold; font-size:9pt\' colspan=\'2\' nowrap=\'nowrap\'>' + toolTipText + '</td></tr></table>');
+	return '<table cellspacing=2 cellpadding=2 valign=middle style=\'background:black;filter:alpha(opacity=85); -moz-opacity:0.85;opacity: 0.85;border: 1px solid #999; font-family:Tahoma;\'><tr><td style=\'color:white; font-weight: bold; font-size:9pt\' colspan=\'2\' nowrap=\'nowrap\'>' + toolTipText + '</td></tr></table>';
 }
 
 function getBoldElem(text)
 {
 	return '<span style="color: blue; font-weight: bold;">' + text + '</span>';
 }
-createAndInjectBattleInfo();
+*/
+window.addEventListener('load', createAndInjectBattleInfo, false);
 window.addEventListener('click', handleButtonClick, true);

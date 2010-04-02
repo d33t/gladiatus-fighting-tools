@@ -25,9 +25,12 @@
 
 var gftScriptLoader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"].getService(Components.interfaces.mozIJSSubScriptLoader);
 gftScriptLoader.loadSubScript("chrome://gft/content/objects.js");
-gftScriptLoader.loadSubScript("chrome://gft/content/gft_db.js");
-gftScriptLoader.loadSubScript("chrome://gft/content/gft_utils.js");
-gftScriptLoader.loadSubScript("chrome://gft/content/statusbar.js");
+if(!gft_db)
+	gftScriptLoader.loadSubScript("chrome://gft/content/gft_db.js");
+if(!gft_utils)
+	gftScriptLoader.loadSubScript("chrome://gft/content/gft_utils.js");
+if(!statusbar)
+	gftScriptLoader.loadSubScript("chrome://gft/content/statusbar.js");
 
 var gft = {
 	initialized: false,
@@ -177,11 +180,15 @@ var gft = {
 
 				var repid = gft_utils.getRepIdFromUrl(loc);
 				
-				// parse opponent level
+				// parse levels
+				nodesSnapshot = this.evaluateXPath("//div[@id='battlerep']/table[2]/tbody/tr[2]/td[1]/div/div[2]/span[2]");
+				var atackerLevel = trimmer.trim(nodesSnapshot.snapshotItem(0).textContent);
 				nodesSnapshot = this.evaluateXPath("//div[@id='battlerep']/table[2]/tbody/tr[2]/td[2]/div/div[2]/span[2]");
 				var defenderLevel = trimmer.trim(nodesSnapshot.snapshotItem(0).textContent);
 				
 				// parse opponent guild
+				nodesSnapshot = this.evaluateXPath("//div[@id='battlerep']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a");
+				var atackerGuild = (nodesSnapshot.snapshotItem(0)) ? trimmer.trim(nodesSnapshot.snapshotItem(0).textContent) : "none";				
 				nodesSnapshot = this.evaluateXPath("//div[@id='battlerep']/div[2]/div[2]/div/table/tbody/tr[3]/td[2]/a");
 				var defenderGuild = (nodesSnapshot.snapshotItem(0)) ? trimmer.trim(nodesSnapshot.snapshotItem(0).textContent) : "none";
 				
@@ -224,6 +231,7 @@ var gft = {
 				else
 				{
 					console.log(atacker + " has atacked me.");
+					gft_db.updatePlayerData(atackerID, atacker, server, atackerLevel, atackerGuild);
 					this.insertBattle(atackerID, atacker, server, 0, repid, winner, raisedGold, raisedExp)
 				}
 			}
@@ -291,33 +299,108 @@ var gft = {
 	
 	createTableEntry: function(name, value)
 	{
-		return '<tr><th>' + name + ':</th><td style="white-space: nowrap;" class="stats_value">' + value + '</td></tr>\n';
+		return '<tr><th>' + name + ':</th> <td style="white-space: nowrap;" class="stats_value">' + value + '</td></tr>\n';
 	}
 };
 
 function PlayerPageContent() //TODO
 {
-	this.getContent = function(doc) 
+	this.getGold = function(doc, atype, period, infoMsg)
 	{
-		// var pid = gft_utils.getPidFromUrl(gft_utils.getBrowser().location+"");
+		var server = doc.domain+"";
+		var pid = gft_utils.getPidFromUrl(doc.location+"");
+		var gold = gft_utils.getString("goldImg");
+		return gft.createTableEntry(gft_utils.getString(infoMsg), 
+				gft_db.getGoldRaised(pid, server, atype, period) +
+				' <img border="0" align="absmiddle" title="' + gold + '" alt="' + gold + '" src="img/res2.gif">');
+	};
+	
+	this.getMaxGold = function(doc, atype, period, infoMsg)
+	{
+		var server = doc.domain+"";
+		var pid = gft_utils.getPidFromUrl(doc.location+"");	
+		var gold = gft_utils.getString("goldImg");
+		return gft.createTableEntry(gft_utils.getString(infoMsg), 
+				gft_db.getMaxGold(pid, server, atype, period) +
+				' <img border="0" align="absmiddle" title="' + gold + '" alt="' + gold + '" src="img/res2.gif">');
+	};
+	
+	this.getContent = function(doc, period) 
+	{
+		if(!period)
+			period = "24h";
 		var server = doc.domain+"";
 		var pid = gft_utils.getPidFromUrl(doc.location+"");
 		var atacks = gft_db.getNumberOfBattlesWithin(pid, server, "pid", 1, "oneday"); //identifier, server, by, atype, period
 		var nextAtack = gft.getNextPossibleAtack(pid, server, "pid", atacks);
 		return gft.createTableEntry(gft_utils.getString("battlesforlast24h"), atacks) +
-				gft.createTableEntry(gft_utils.getString("nextpossiblefight"), nextAtack);
+				gft.createTableEntry(gft_utils.getString("nextpossiblefight"), nextAtack) +
+				this.getGoldRaised(doc, period) +
+				this.getGoldLost(doc, period) +
+				this.getMaxGoldRaised(doc, period) +
+				this.getMaxGoldLost(doc, period) +
+				this.getExpRaised(doc, period) +
+				this.getWinChance(doc);
 	};
-	this.getMyStats = function(doc)
+	
+	this.getMyStats = function(doc, period)
 	{
+		if(!period)
+			period = "24h";
 		var todayAtacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(0, doc.domain);
 		var oneWeekAtacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(6, doc.domain);
 		return gft.createTableEntry(gft_utils.getString("atackssincestartoftheday"), todayAtacks) +
-				gft.createTableEntry(gft_utils.getString("atackssinceoneweek"), oneWeekAtacks);		
+				gft.createTableEntry(gft_utils.getString("atackssinceoneweek"), oneWeekAtacks) +
+				this.getAllExpRaised(doc, period);	
 	};
+
+	this.getGoldRaised = function(doc, period)
+	{
+		return this.getGold(doc, 1, period, "goldRaised");
+	};
+	
+	this.getGoldLost = function(doc, period)
+	{
+		return this.getGold(doc, 0, period, "goldLost");
+	};
+	
+	this.getMaxGoldRaised = function(doc, period)
+	{
+		return this.getMaxGold(doc, 1, period, "maxGoldRaised");
+	};
+	
+	this.getMaxGoldLost = function(doc, period)
+	{
+		return this.getMaxGold(doc, 0, period, "maxGoldLost");
+	};
+
+	this.getExpRaised = function(doc, period)
+	{
+		var server = doc.domain+"";
+		var pid = gft_utils.getPidFromUrl(doc.location+"");
+		return gft.createTableEntry(gft_utils.getString("expRaised"), gft_db.getExpRaised(pid, server, period));
+	};
+	
+	this.getAllExpRaised = function(doc, period)
+	{
+		var server = doc.domain+"";
+		return gft.createTableEntry(gft_utils.getString("allExpRaised"), gft_db.getAllExpRaised(server, period));
+	};
+	
+	this.getWinChance = function(doc)
+	{
+		var server = doc.domain+"";
+		var pid = gft_utils.getPidFromUrl(doc.location+"");	
+		return gft.createTableEntry(gft_utils.getString("realWinChance"), gft_db.getWinChance(pid, server) + " %");
+	};
+	
 	this.getString = function(string) { return gft_utils.getStrings().getString(string) };
+	
 	this.insertPlayer = function(pid, pname, plevel, inwar, pguild) { gft_db.updatePlayerData(pid, pname, plevel, inwar, pguild) };
+	
 	this.getPidFromUrl = function(url) { return gft_utils.getPidFromUrl(url); };
-	this.trim = function(string) { return trimmer.trim(string); }
+	
+	this.trim = function(string) { return trimmer.trim(string); };
 }
 
 window.addEventListener(
