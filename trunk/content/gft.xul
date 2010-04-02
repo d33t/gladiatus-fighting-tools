@@ -8,9 +8,15 @@
 	</stringbundleset>
 	<script type="application/x-javascript" src="chrome://gft/content/xmlhttprequester.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/prefman.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/gft.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/script-compiler.js"/> 
-	
+	<!--
+	<script type="application/x-javascript" src="chrome://gft/content/objects.js"/>
+	-->
+	<script type="application/x-javascript" src="chrome://gft/content/gft_db.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft_utils.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/statusbar.js"/>
+
+	<script type="application/x-javascript" src="chrome://gft/content/script-compiler.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft.js"/>	
 	<statusbar id="status-bar">
 		<statusbarpanel id="gft-status" label="" hidden="false">
 			<box width="20" height="16" align="center" pack="center">

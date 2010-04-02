@@ -874,6 +874,136 @@ var gft_db = {
 		return -1;
 	},
 	
+	getGoldRaised: function(pid, server, atype, period)
+	{
+		console.log("Debug[getGoldRaised()]: pid: " + pid + ", server: " + server + ", atype: " + atype + ", period: " + period);
+		if (this.gft_dbConn)
+		{
+			var oid = this.getPlayerId(pid, server, "pid");
+			
+			var gold = 0;
+			try 
+			{
+				var oStatement = this.gft_dbConn.createStatement("SELECT sum(r.gold) as RaisedGold from reports r inner join battles b on r.battleid=b.battleid " + 
+																	"WHERE b.atype=:a_type AND b.oid=:o_id AND atime >= :period");
+				oStatement.params.o_id = oid;
+				oStatement.params.a_type = atype;
+				oStatement.params.period = this.getTimePeriod(period);
+				while (oStatement.executeStep())
+				{
+					gold = oStatement.row.RaisedGold;
+				}
+				oStatement.reset();
+				
+				if(!gold || gold == null)
+					return 0;
+				return gold;
+			}
+			catch (e) {alert("DB query failed. Could not compute gold raised\n" + e);}
+		}
+		return 0;
+	},
+	
+	getMaxGold: function(pid, server, atype, period)
+	{
+		console.log("Debug[getMaxGold()]: pid: " + pid + ", server: " + server + ", atype: " + atype + ", period: " + period);
+		if (this.gft_dbConn)
+		{
+			var oid = this.getPlayerId(pid, server, "pid");
+			
+			var gold = 0;
+			try 
+			{
+				var oStatement = this.gft_dbConn.createStatement("SELECT max(r.gold) as RaisedGold from reports r inner join battles b on r.battleid=b.battleid " + 
+																	"WHERE b.atype=:a_type AND b.oid=:o_id AND atime >= :period");
+				oStatement.params.o_id = oid;
+				oStatement.params.a_type = atype;
+				oStatement.params.period = this.getTimePeriod(period);
+				while (oStatement.executeStep())
+				{
+					gold = oStatement.row.RaisedGold;
+				}
+				oStatement.reset();
+				
+				if(!gold || gold == null)
+					return 0;
+				return gold;
+			}
+			catch (e) {alert("DB query failed. Could not compute max gold\n" + e);}
+		}
+		return 0;		
+	},
+
+	getWinChance: function(pid, server)
+	{
+		console.log("Debug[getWinChance()]: pid: " + pid + ", server: " + server);
+		if (this.gft_dbConn)
+		{
+			var myid = this.getMyId(server);
+			var oid = this.getPlayerId(pid, server, "pid");
+			
+			var battlesWon = 0;
+			var allBattles = 0;
+			try 
+			{
+				var oStatement = this.gft_dbConn.createStatement("SELECT count(b.battleid) as battlesWon, " + 
+																	"(select count(battleid) from battles where oid=:o_id) as allBattles " + 
+																	"from reports r inner join battles b on r.battleid=b.battleid " + 
+																	"WHERE r.winnerid=:my_id AND b.oid=:o_id");
+				oStatement.params.my_id = myid;
+				oStatement.params.o_id = oid;
+				while (oStatement.executeStep())
+				{
+					battlesWon = oStatement.row.battlesWon;
+					allBattles = oStatement.row.allBattles;
+				}
+				oStatement.reset();
+				
+				if(allBattles <= 0)
+					return "none";
+				return Math.round((battlesWon/allBattles)*100);
+			}
+			catch (e) {alert("DB query failed. Could not compute max gold\n" + e);}
+		}
+		return 0;		
+	},
+	
+	getExpRaised: function(pid, server, period)
+	{
+		console.log("Debug[getExpRaised()]: pid: " + pid + ", server: " + server + ", period: " + period);
+		if (this.gft_dbConn)
+		{			
+			var exp = 0;
+			try 
+			{
+				var oStatement = this.gft_dbConn.createStatement("SELECT sum(r.exp) as RaisedExp from reports r inner join battles b on r.battleid=b.battleid " + 
+																	"WHERE b.atype=1 AND atime >= :period" + ((pid > 0) ? " AND b.oid=:o_id" : ""));
+				if(pid > 0)
+				{
+					var oid = this.getPlayerId(pid, server, "pid");
+					oStatement.params.o_id = oid;
+				}
+				oStatement.params.period = this.getTimePeriod(period);
+				while (oStatement.executeStep())
+				{
+					exp = oStatement.row.RaisedExp;
+				}
+				oStatement.reset();
+				
+				if(!exp)
+					return 0;
+				return exp;
+			}
+			catch (e) {alert("DB query failed. Could not compute gold raised\n" + e);}
+		}
+		return 0;
+	},
+	
+	getAllExpRaised: function(server, period)
+	{
+		return this.getExpRaised(-1, server, period);
+	},
+	
 	getTimePeriod: function(period)
 	{
 		console.log("Debug[getTimePeriod()]: period: " + period);
@@ -887,6 +1017,7 @@ var gft_db = {
 			case "fivedays": return now - this.getDayPeriodInSec(5);
 			case "oneweek":   return now - this.getDayPeriodInSec(7);
 			case "onemonth":  return now - this.getDayPeriodInSec(30);
+			case "none": return 0;
 			default: return Math.round((parseInt(period)/1000));
 		}
 	},
