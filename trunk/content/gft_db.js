@@ -147,7 +147,9 @@ var gft_db = {
 		console.log("Debug[insertBattleDetails()]: battleid: " + battleid + ", beid: " + beid + ", server: " + server + ", winner: " + winner + ", gold: " + gold + ", exp:" + exp);
 		if (this.gft_dbConn)
 		{
-			var winnerid = this.getPlayerId(winner, server, "name");
+			var winnerid = -1;
+			if(winner != "-")
+				winnerid = this.getPlayerId(winner, server, "name");
 			try 
 			{
 				var oStatement = this.gft_dbConn.createStatement("INSERT INTO reports (battleid, beid, winnerid, gold, exp) " + 

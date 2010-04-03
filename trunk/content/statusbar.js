@@ -34,10 +34,10 @@ var gft_statusbar = {
 		{
 			case 0:
 				// take no action on left click event
-				return;
+				break;
 			case 1:
 				this.handleAction("options");  // Set action via options
-				return;
+				break;
 			// Button 2 shows popup menu via context attribute
 		}
 	},
@@ -59,17 +59,19 @@ var gft_statusbar = {
 		switch (action)
 		{
 			case "options":
-				window.openDialog("chrome://gft/content/options.xul",
-								  "gftOptions", "chrome,dialogger.log,centerscreen");
-				return;
+				alert("Not supported in this release");
+				//window.openDialog("chrome://gft/content/options.xul",
+				//				  "gftOptions", "chrome,dialogger.log,centerscreen");
+				break;
 			case "battles":
-				window.openDialog("chrome://gft/content/battles.xul",
-								  "gftBattles", "chrome,dialogger.log,centerscreen");
-				return;
+				alert("Not supported in this release");
+				//window.openDialog("chrome://gft/content/battles.xul",
+				//				  "gftBattles", "chrome,dialogger.log,centerscreen");
+				break;
 			case "about":
 				window.openDialog("chrome://gft/content/about.xul",
 								  "gftAbout", "chrome,dialogger.log,centerscreen");
-				return;
+				break;
 		}
 	},
 	
