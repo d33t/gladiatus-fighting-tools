@@ -224,7 +224,7 @@ var gft = {
 					{
 						gft_utils.getPrefBranch().setCharPref(gft_utils.getServer() + ".lastopponent", defender);
 						gft_utils.getPrefBranch().setCharPref("nextbattletime", (gft_utils.getTime() +  waitTime) + ""); 
-						gft_statusbar.showReverseCounter(waitTime);
+						//gft_statusbar.showReverseCounter(waitTime);
 						//this.updateStatusBarToolTip();
 					}
 				}
