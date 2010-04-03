@@ -33,7 +33,7 @@ function createAndInjectBattleInfo()
 	msgDiv.style.marginLeft = "17px";
 	msgDiv.style.marginRight = "26px";
 	descriptionDiv.parentNode.insertBefore(msgDiv, descriptionDiv);
-	msgDiv.innerHTML = isPlayerPage() ? getBattleStatsTable("Battle stats", GM_getContent(document), "hidden") : getBattleStatsTable("My stats", GM_getMyStats(document), "hidden");
+	msgDiv.innerHTML = isPlayerPage() ? getBattleStatsTable(GM_getString("battleStatsTitle"), GM_getContent(document), "hidden") : getBattleStatsTable("My stats", GM_getMyStats(document), "hidden");
 
 }
 
