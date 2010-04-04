@@ -33,7 +33,8 @@ function createAndInjectBattleInfo()
 	msgDiv.style.marginLeft = "17px";
 	msgDiv.style.marginRight = "26px";
 	descriptionDiv.parentNode.insertBefore(msgDiv, descriptionDiv);
-	msgDiv.innerHTML = isPlayerPage() ? getBattleStatsTable(GM_getString("battleStatsTitle"), GM_getContent(document), "hidden") : getBattleStatsTable("My stats", GM_getMyStats(document), "hidden");
+	var visibility = "hidden";
+	msgDiv.innerHTML = isPlayerPage() ? getBattleStatsTable(GM_getString("battleStatsTitle"), ((visibility == "hidden") ? "" : GM_getContent(document, "none")), "hidden") : getBattleStatsTable("My stats", ((visibility == "hidden") ? "" : GM_getMyStats(document, "none")), "hidden");
 
 }
 
@@ -70,7 +71,7 @@ function handleButtonClick(event)
 			{
 				var visibility = "visible";
 				div.style.visibility = visibility;
-				div.innerHTML = isPlayerPage() ? getBattleStatsTableContent(GM_getContent(document), visibility) : getBattleStatsTableContent(GM_getMyStats(document), visibility);
+				div.innerHTML = isPlayerPage() ? getBattleStatsTableContent(GM_getContent(document, "none"), visibility) : getBattleStatsTableContent(GM_getMyStats(document, "none"), visibility);
 			} 
 			else 
 			{
