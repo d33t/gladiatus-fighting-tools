@@ -24,9 +24,11 @@
 */
 
 var gftScriptLoader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"].getService(Components.interfaces.mozIJSSubScriptLoader);
-gftScriptLoader.loadSubScript("chrome://gft/content/gft_utils.js");
 gftScriptLoader.loadSubScript("chrome://gft/content/objects.js");
-gftScriptLoader.loadSubScript("chrome://gft/content/gft_db.js");
+if(!gft_utils)
+	gftScriptLoader.loadSubScript("chrome://gft/content/gft_utils.js");
+if(!gft_db)	
+	gftScriptLoader.loadSubScript("chrome://gft/content/gft_db.js");
 
 var battles = {
 	initialized: false,
@@ -37,10 +39,11 @@ var battles = {
 	
 	init: function()
 	{
-		this.initialized = true;
-		gft_db.init();
+		if(!this.initialized)
+			gft_db.init();
 		this.defaultSearch();
-		document.getElementById("searchplayername").focus();	
+		document.getElementById("searchplayername").focus();
+		this.initialized = true;
 	},
 	
 	onLoad: function() 

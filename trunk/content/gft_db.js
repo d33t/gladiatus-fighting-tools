@@ -862,6 +862,7 @@ var gft_db = {
 			{
 				var oStatement = this.gft_dbConn.createStatement("SELECT count(battleid) AS nBattles from battles " + 
 																"where myid=:my_id AND atime > (strftime('%s', date('now', 'start of day')) - :b_time)");
+				oStatement.params.my_id = myid;
 				oStatement.params.b_time = this.getDayPeriodInSec(days);
 				while (oStatement.executeStep())
 				{
