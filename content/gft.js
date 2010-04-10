@@ -37,7 +37,7 @@ var gft = {
 	
 	onLoad: function() 
 	{
-		if(this.initialized || gft_utils.getPrefBranch().getBoolPref("init"))
+		if(this.initialized)
 			return;	
 			
 		window.removeEventListener("load", function(e) { gft.onLoad(e); }, false);
@@ -56,9 +56,16 @@ var gft = {
 	{
 		//initialize
 		//gft_utils.getPrefBranch().setBoolPref("debug", true);
-		gft_utils.getPrefBranch().setCharPref("sessionstart", gft_utils.getTime() + "");
+		if(!gft_utils.getPrefBranch().getBoolPref("init"))
+		{
+			gft_utils.getPrefBranch().setCharPref("sessionstart", gft_utils.getTime() + "");
+			gft_utils.getPrefBranch().setBoolPref("init", true);
+		
+		}
 		// init the db
 		gft_db.init();
+		this.initialized = true;
+		
 		/* make db table for each server and then init counter if user is on gladiatus page
 		var server = gft_utils.getServer();
 		var lastopponent = gft_utils.getPrefBranch().getCharPref(server + ".lastopponent")
@@ -74,9 +81,7 @@ var gft = {
 		document.getElementById("statusmenu-tooltip-atacks-since-session-start").value = 0;
 		document.getElementById("statusmenu-tooltip-atacks-since-start-of-the-day").value = gft_db.getAllAtacksSinceTodayAndDefDaysBack(0, gft_utils.getServer());
 		document.getElementById("statusmenu-tooltip-atacks-since-definied-period").value = gft_db.getAllAtacksSinceTodayAndDefDaysBack(6, gft_utils.getServer());
-		*/
-		this.initialized = true;
-		gft_utils.getPrefBranch().setBoolPref("init", true);
+		*/	
 	},
 	
 	insertBattle: function(pid, opp, server, atype, beid, winner, gold, exp)
@@ -297,9 +302,22 @@ var gft = {
 		return nextPossibleAtackTime - now;
 	},
 	
+	doCreateTableEntry: function(name, value, deliminator)
+	{
+		return '<tr><th>' + name + deliminator + '</th> <td style="white-space: nowrap;" class="stats_value">' + value + '</td></tr>\n';
+	},
+	
 	createTableEntry: function(name, value)
 	{
-		return '<tr><th>' + name + ':</th> <td style="white-space: nowrap;" class="stats_value">' + value + '</td></tr>\n';
+		return this.doCreateTableEntry(name, value, ":")
+	},
+	
+	createNBSP: function(count)
+	{
+		var nbsp = "";
+		for(i=0; i < count; i++)
+			nbsp += "&nbsp; ";
+		return nbsp;
 	}
 };
 
@@ -333,7 +351,8 @@ function PlayerPageContent() //TODO
 		var pid = gft_utils.getPidFromUrl(doc.location+"");
 		var atacks = gft_db.getNumberOfBattlesWithin(pid, server, "pid", 1, "oneday"); //identifier, server, by, atype, period
 		var nextAtack = gft.getNextPossibleAtack(pid, server, "pid", atacks);
-		return gft.createTableEntry(gft_utils.getString("battlesforlast24h"), atacks) +
+		return 	gft.doCreateTableEntry(gft.createNBSP(51), gft.createNBSP(8), "") +
+				gft.createTableEntry(gft_utils.getString("battlesforlast24h"), atacks) +
 				gft.createTableEntry(gft_utils.getString("nextpossiblefight"), nextAtack) +
 				this.getGoldRaised(doc, period) +
 				this.getGoldLost(doc, period) +
@@ -349,7 +368,8 @@ function PlayerPageContent() //TODO
 			period = "oneday";
 		var todayAtacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(0, doc.domain);
 		var oneWeekAtacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(6, doc.domain);
-		return gft.createTableEntry(gft_utils.getString("atackssincestartoftheday"), todayAtacks) +
+		return 	gft.doCreateTableEntry(gft.createNBSP(51), gft.createNBSP(8), "") +
+				gft.createTableEntry(gft_utils.getString("atackssincestartoftheday"), todayAtacks) +
 				gft.createTableEntry(gft_utils.getString("atackssinceoneweek"), oneWeekAtacks) +
 				this.getAllExpRaised(doc, period);	
 	};
