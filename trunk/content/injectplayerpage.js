@@ -33,8 +33,15 @@ function createAndInjectBattleInfo()
 	msgDiv.style.marginLeft = "17px";
 	msgDiv.style.marginRight = "26px";
 	descriptionDiv.parentNode.insertBefore(msgDiv, descriptionDiv);
-	var visibility = "hidden";
-	msgDiv.innerHTML = isPlayerPage() ? getBattleStatsTable(GM_getString("battleStatsTitle"), ((visibility == "hidden") ? "" : GM_getContent(document, "none")), "hidden") : getBattleStatsTable("My stats", ((visibility == "hidden") ? "" : GM_getMyStats(document, "none")), "hidden");
+	
+	var hidden = true; // should be an option
+	var content = "";
+	
+	if(isPlayerPage())
+		content = getBattleStatsTable(GM_getString("battleStatsTitle"), (hidden ? "" : GM_getContent(document, "none")), "hidden");
+	else
+		content = getBattleStatsTable(GM_getString("myBattleStatsTitle"), (hidden ? "" : GM_getMyStats(document, "none")), "hidden");
+	msgDiv.innerHTML = content;
 
 }
 
@@ -48,8 +55,25 @@ function getBattleStatsTable(title, content, visibility)
 function getBattleStatsTableContent(content, visibility)
 {
 	if(visibility == "visible")
-		return '<div class="title2_inner">\n<table class="table1" cellpadding="0" cellspacing="0">\n<tbody>\n' + content + '\n</tbody></table></div>';
+		return '<div class="title2_inner">\n<table class="table1" cellpadding="0" cellspacing="3">\n<tbody>\n' + createNavigationEntry() + content + '\n</tbody></table></div>';
 	return '';
+}
+
+function createTDEntry(value, id, width)
+{
+	return '\t<td style="white-space: nowrap; width:' + width + '%;"><a id="' + id + '" href="#">' + value + '</a></td>\n';
+}
+
+function createNavigationEntry()
+{
+	var navigation = '<tr>\n';
+	navigation += createTDEntry(GM_getString("all"), "none", 15);
+	navigation += createTDEntry(GM_getString("oneDay"), "oneday", 20);
+	navigation += createTDEntry(GM_getString("treeDays"), "threedays", 20);
+	navigation += createTDEntry(GM_getString("oneWeek"), "oneweek", 20);
+	navigation += createTDEntry(GM_getString("oneMonth"), "onemonth", 20);
+	navigation += '</tr>\n';
+	return navigation;
 }
 
 function isPlayerPage()
@@ -63,22 +87,39 @@ function isPlayerPage()
 function handleButtonClick(event)
 {
     if(event.button == 0) {
-	    if(event.target.id == "gfBattleStatsTitle") 
+		var period = "none";
+		var div = document.getElementById("gfBattleStatsBody");
+		var visibility = div.style.visibility;
+		switch(event.target.id)
 		{
-			var div = document.getElementById("gfBattleStatsBody");
-			
-			if(!div || div.style.visibility == "hidden")
+			case "none": ;
+			case "oneday": ;
+			case "threedays": ;
+			case "oneweek": ;
+			case "onemonth": { period = event.target.id +""; break; }
+			case "gfBattleStatsTitle":
 			{
-				var visibility = "visible";
-				div.style.visibility = visibility;
-				div.innerHTML = isPlayerPage() ? getBattleStatsTableContent(GM_getContent(document, "none"), visibility) : getBattleStatsTableContent(GM_getMyStats(document, "none"), visibility);
-			} 
-			else 
-			{
-				div.style.visibility = "hidden";
-				div.innerHTML = "";
+				if(!div || visibility == "hidden")
+					visibility = "visible";
+				else 
+					visibility = "hidden";
+				break;
 			}
-	    }
+			default: break;
+		}
+		
+		div.style.visibility = visibility;
+		if(visibility == "hidden")
+			div.innerHTML = "";
+		else
+		{
+			var content = "";
+			if(isPlayerPage())
+				content = GM_getContent(document, period);
+			else
+				content = GM_getMyStats(document, period);
+			div.innerHTML = getBattleStatsTableContent(content, visibility);		
+		}
 	}
 }
 /*
