@@ -762,14 +762,8 @@ var gft_db = {
 	{
 		console.log("Debug[getOpponentsWithCriteria()]: period: " + period + ", orderBy: " + orderBy + ", orderDirection: " + orderDirection + ", level: " + level + ", player: " + player);
 		// create query
-		var query = "SELECT player.name, player.pid, player.server, player.level, player.guild, c.battlesCount, d.lastAttack " +
-					"FROM oinfo INNER JOIN player ON oinfo.oid = player.apid " +
-					"INNER JOIN battles ON oinfo.oid = battles.oid" +
-					"WHERE atime > " + this.getTimePeriod(period) + "";
-		var query = "select p.name, p.pid, p.server, p.level, p.guild, c.battlesCount from " +
-					"(select distinct pid, count(pid) as battlesCount from battles where atime > " 
-					+ this.getTimePeriod(period) + " group by pid) as c left join pinfo p on p.pid = c.pid";
-		
+		var query = "";
+
 		var where = false;
 		
 		// add to query where criteria player name
@@ -964,11 +958,45 @@ var gft_db = {
 				
 				if(allBattles <= 0)
 					return "none";
-				return Math.round((battlesWon/allBattles)*100);
+				return (battlesWon/allBattles)*100;
 			}
 			catch (e) {alert("DB query failed. Could not compute max gold\n" + e);}
 		}
 		return 0;		
+	},
+	
+	getLastDayWinChance: function(pid, server)
+	{
+		console.log("Debug[getWinChance()]: pid: " + pid + ", server: " + server);
+		if (this.gft_dbConn)
+		{
+			var myid = this.getMyId(server);
+			var oid = this.getPlayerId(pid, server, "pid");
+			
+			var battlesWon = 0;
+			var allBattles = 0;
+			try 
+			{
+				var oStatement = this.gft_dbConn.createStatement("SELECT count(b.battleid) as battlesWon, " + 
+																	"(select count(battleid) from battles where oid=:o_id and atime < strftime('%s', date('now', 'start of day'))) as allBattles " + 
+																	"from reports r inner join battles b on r.battleid=b.battleid " + 
+																	"WHERE r.winnerid=:my_id AND b.oid=:o_id and b.atime < strftime('%s', date('now', 'start of day'))");
+				oStatement.params.my_id = myid;
+				oStatement.params.o_id = oid;
+				while (oStatement.executeStep())
+				{
+					battlesWon = oStatement.row.battlesWon;
+					allBattles = oStatement.row.allBattles;
+				}
+				oStatement.reset();
+				
+				if(allBattles <= 0)
+					return "none";
+				return (battlesWon/allBattles)*100;
+			}
+			catch (e) {alert("DB query failed. Could not compute max gold\n" + e);}
+		}
+		return 0;
 	},
 	
 	getExpRaised: function(pid, server, period)
@@ -1005,6 +1033,11 @@ var gft_db = {
 	getAllExpRaised: function(server, period)
 	{
 		return this.getExpRaised(-1, server, period);
+	},
+	
+	isEmpty: function(str)
+	{
+		return !str || str == "";
 	},
 	
 	getTimePeriod: function(period)

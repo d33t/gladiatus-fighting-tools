@@ -302,22 +302,9 @@ var gft = {
 		return nextPossibleAtackTime - now;
 	},
 	
-	doCreateTableEntry: function(name, value, deliminator)
-	{
-		return '<tr><th>' + name + deliminator + '</th> <td style="white-space: nowrap;" class="stats_value">' + value + '</td></tr>\n';
-	},
-	
 	createTableEntry: function(name, value)
 	{
-		return this.doCreateTableEntry(name, value, ":")
-	},
-	
-	createNBSP: function(count)
-	{
-		var nbsp = "";
-		for(i=0; i < count; i++)
-			nbsp += "&nbsp; ";
-		return nbsp;
+		return '<tr><th colspan="4">' + name + ':</th> <td colspan="1" style="white-space: nowrap;" class="stats_value">' + value + '</td></tr>\n';
 	}
 };
 
@@ -345,14 +332,12 @@ function PlayerPageContent() //TODO
 	
 	this.getContent = function(doc, period) 
 	{
-		if(!period)
-			period = "oneday";
 		var server = doc.domain+"";
 		var pid = gft_utils.getPidFromUrl(doc.location+"");
-		var atacks = gft_db.getNumberOfBattlesWithin(pid, server, "pid", 1, "oneday"); //identifier, server, by, atype, period
+		var atacks = gft_db.getNumberOfBattlesWithin(pid, server, "pid", 1, "oneday");
 		var nextAtack = gft.getNextPossibleAtack(pid, server, "pid", atacks);
-		return 	gft.doCreateTableEntry(gft.createNBSP(51), gft.createNBSP(8), "") +
-				gft.createTableEntry(gft_utils.getString("battlesforlast24h"), atacks) +
+
+		return	gft.createTableEntry(gft_utils.getString("battlesforlast24h"), atacks) +
 				gft.createTableEntry(gft_utils.getString("nextpossiblefight"), nextAtack) +
 				this.getGoldRaised(doc, period) +
 				this.getGoldLost(doc, period) +
@@ -364,12 +349,10 @@ function PlayerPageContent() //TODO
 	
 	this.getMyStats = function(doc, period)
 	{
-		if(!period)
-			period = "oneday";
 		var todayAtacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(0, doc.domain);
 		var oneWeekAtacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(6, doc.domain);
-		return 	gft.doCreateTableEntry(gft.createNBSP(51), gft.createNBSP(8), "") +
-				gft.createTableEntry(gft_utils.getString("atackssincestartoftheday"), todayAtacks) +
+
+		return	gft.createTableEntry(gft_utils.getString("atackssincestartoftheday"), todayAtacks) +
 				gft.createTableEntry(gft_utils.getString("atackssinceoneweek"), oneWeekAtacks) +
 				this.getAllExpRaised(doc, period);	
 	};
@@ -412,7 +395,25 @@ function PlayerPageContent() //TODO
 		var server = doc.domain+"";
 		var pid = gft_utils.getPidFromUrl(doc.location+"");	
 		var winChance = gft_db.getWinChance(pid, server);
-		return gft.createTableEntry(gft_utils.getString("realWinChance"),  winChance + (winChance != "none" ? " %" : ""));
+		var lastDayWinChance = gft_db.getLastDayWinChance(pid, server);
+		
+		var diff = 0;
+		var diffSpan = '';
+		if(winChance != "none" && lastDayWinChance != "none")
+		{
+			diff = winChance - lastDayWinChance;
+			diffSpan = '<span style="color: ';
+			if(diff == 0)
+				diffSpan += 'orange; font-weight: bold;">';
+			else if(diff > 0)
+				diffSpan += 'green; font-weight: bold;">+';
+			else
+				diffSpan += 'red; font-weight: bold;">';
+			diffSpan += diff.toFixed(2) + '%</span>';
+		}
+			
+		winChance = (winChance != "none" ? winChance.toFixed(1) + "%&nbsp;&nbsp;" + diffSpan : gft_utils.getString("noData"));
+		return gft.createTableEntry(gft_utils.getString("realWinChance"),  winChance);
 	};
 	
 	this.getString = function(string) { return gft_utils.getStrings().getString(string) };
