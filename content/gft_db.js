@@ -148,7 +148,7 @@ var gft_db = {
 		if (this.gft_dbConn)
 		{
 			var winnerid = -1;
-			if(winner != "-")
+			if(winner != "")
 				winnerid = this.getPlayerId(winner, server, "name");
 			try 
 			{

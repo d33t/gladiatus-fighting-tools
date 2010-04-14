@@ -211,9 +211,11 @@ var gft = {
 					raisedExp = (nodesSnapshot.snapshotItem(0)) ? parseInt(nodesSnapshot.snapshotItem(0).textContent.match(/\s+\d+\s+/g)[0]) : 0;
 				}
 				
-				// who is the winner ?
+				// who is the winner ? 
 				nodesSnapshot = this.evaluateXPath("//div[@id='battlerep']/div[2]/div[3]/div/span[2]/a");
-				var winner = trimmer.trim(nodesSnapshot.snapshotItem(0).textContent);
+				var winner = ""; 
+				if(nodesSnapshot.snapshotItem(0))
+					winner = trimmer.trim(nodesSnapshot.snapshotItem(0).textContent);
 				
 				console.log("Gold: " + gft_utils.partitionateNumber(raisedGold) + "\n"
 							+ "Exp: " +  raisedExp + "\n"
