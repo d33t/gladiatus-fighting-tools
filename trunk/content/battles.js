@@ -23,13 +23,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var gftScriptLoader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"].getService(Components.interfaces.mozIJSSubScriptLoader);
-gftScriptLoader.loadSubScript("chrome://gft/content/objects.js");
-if(!gft_utils)
-	gftScriptLoader.loadSubScript("chrome://gft/content/gft_utils.js");
-if(!gft_db)	
-	gftScriptLoader.loadSubScript("chrome://gft/content/gft_db.js");
-
 var battles = {
 	initialized: false,
 	orderPlayer: false,

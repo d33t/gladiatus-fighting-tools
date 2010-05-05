@@ -34,44 +34,45 @@ function createAndInjectBattleInfo()
 	msgDiv.style.marginRight = "26px";
 	descriptionDiv.parentNode.insertBefore(msgDiv, descriptionDiv);
 	
-	var hidden = true; // should be an option
+	var hidden = true; //TODO should be an option
 	var content = "";
 	
 	if(isPlayerPage())
-		content = getBattleStatsTable(GM_getString("battleStatsTitle"), (hidden ? "" : GM_getContent(document, "none")), "hidden");
+		content = getBattleStatsTable(GM_getString("battleStatsTitle"), (hidden ? "" : GM_getContent(document, "none")), "hidden", "oneday");
 	else
-		content = getBattleStatsTable(GM_getString("myBattleStatsTitle"), (hidden ? "" : GM_getMyStats(document, "none")), "hidden");
+		content = getBattleStatsTable(GM_getString("myBattleStatsTitle"), (hidden ? "" : GM_getMyStats(document, "none")), "hidden", "oneday");
 	msgDiv.innerHTML = content;
-
 }
 
-function getBattleStatsTable(title, content, visibility)
+function getBattleStatsTable(title, content, visibility, hightlightId)
 {
-	return 	'<div class="title_box"><div id="gfBattleStatsTitle" style="text-align:center;" class="title_inner">' + title +  '</div></div>\n' + 
+	return 	'<div class="title_box"><div style="text-align:center;" class="title_inner"><a style="text-decoration: none;" href="#" id="gfBattleStatsTitle">' + title +  '</a></div></div>\n' + 
 			'<div id="gfBattleStatsBody" style="visibility:' + visibility + ';" class="title2_box">\n' +
-			getBattleStatsTableContent(content, visibility) + '</div>';			
+			getBattleStatsTableContent(content, visibility,  hightlightId) + '</div>';			
 }
 
-function getBattleStatsTableContent(content, visibility)
+function getBattleStatsTableContent(content, visibility, hightlightId)
 {
 	if(visibility == "visible")
-		return '<div class="title2_inner">\n<table class="table1" cellpadding="0" cellspacing="3">\n<tbody>\n' + createNavigationEntry() + content + '\n</tbody></table></div>';
+		return '<div class="title2_inner">\n<table class="table1" cellpadding="0" cellspacing="3">\n<tbody>\n' + createNavigationEntry(hightlightId) + content + '\n</tbody></table></div>';
 	return '';
 }
 
-function createTDEntry(value, id, width)
+function createTDEntry(value, id, width, hightlightId)
 {
-	return '\t<td style="white-space: nowrap; width:' + width + '%;"><a id="' + id + '" href="#">' + value + '</a></td>\n';
+	var style = (id == hightlightId) ? 'style="font-weight:bold; border-bottom: 1px solid #b28b60; background-color:#FDC733;"' : '';
+	return '\t<td style="white-space: nowrap; width:' + width + '%;"><a id="' + id + '" href="#" ' + style + '>' + value + '</a></td>\n';
 }
 
-function createNavigationEntry()
+function createNavigationEntry(hightlightId)
 {
 	var navigation = '<tr>\n';
-	navigation += createTDEntry(GM_getString("all"), "none", 15);
-	navigation += createTDEntry(GM_getString("oneDay"), "oneday", 20);
-	navigation += createTDEntry(GM_getString("treeDays"), "threedays", 20);
-	navigation += createTDEntry(GM_getString("oneWeek"), "oneweek", 20);
-	navigation += createTDEntry(GM_getString("oneMonth"), "onemonth", 20);
+	navigation += createTDEntry(GM_getString("all"), "none", 16, hightlightId);
+	navigation += createTDEntry(GM_getString("oneDay"), "oneday", 16, hightlightId);
+	navigation += createTDEntry(GM_getString("treeDays"), "threedays", 16, hightlightId);
+	navigation += createTDEntry(GM_getString("fiveDays"), "fivedays", 16, hightlightId);
+	navigation += createTDEntry(GM_getString("oneWeek"), "oneweek", 16, hightlightId);
+	navigation += createTDEntry(GM_getString("oneMonth"), "onemonth", 16, hightlightId);
 	navigation += '</tr>\n';
 	return navigation;
 }
@@ -87,56 +88,53 @@ function isPlayerPage()
 function handleButtonClick(event)
 {
     if(event.button == 0) {
-		var period = "none";
+		var period = "oneday";
 		var div = document.getElementById("gfBattleStatsBody");
 		var visibility = div.style.visibility;
+		var handleClick = false;
+		
 		switch(event.target.id)
 		{
 			case "none": ;
 			case "oneday": ;
 			case "threedays": ;
+			case "fivedays": ;
 			case "oneweek": ;
-			case "onemonth": { period = event.target.id +""; break; }
+			case "onemonth": 
+			{ 
+				period = event.target.id +""; 
+				displayTableContent(div, visibility, period); 
+				break; 
+			}
 			case "gfBattleStatsTitle":
 			{
 				if(!div || visibility == "hidden")
 					visibility = "visible";
 				else 
 					visibility = "hidden";
+				displayTableContent(div, visibility, "oneday");
 				break;
 			}
 			default: break;
 		}
-		
-		div.style.visibility = visibility;
-		if(visibility == "hidden")
-			div.innerHTML = "";
-		else
-		{
-			var content = "";
-			if(isPlayerPage())
-				content = GM_getContent(document, period);
-			else
-				content = GM_getMyStats(document, period);
-			div.innerHTML = getBattleStatsTableContent(content, visibility);		
-		}
 	}
 }
-/*
-function getToolTipElem(text, toolTipText)
+
+function displayTableContent(div, visibility, period)
 {
-	return '<a href="#" onmouseover="return escape(\'' + getToolTipTable(toolTipText) + '\')">' + text + '</a>';
+	div.style.visibility = visibility;
+	if(visibility == "hidden")
+		div.innerHTML = "";
+	else
+	{
+		var content = "";
+		if(isPlayerPage())
+			content = GM_getContent(document, period);
+		else
+			content = GM_getMyStats(document, period);
+		div.innerHTML = getBattleStatsTableContent(content, visibility, period);		
+	} 	
 }
 
-function getToolTipTable(toolTipText)
-{
-	return '<table cellspacing=2 cellpadding=2 valign=middle style=\'background:black;filter:alpha(opacity=85); -moz-opacity:0.85;opacity: 0.85;border: 1px solid #999; font-family:Tahoma;\'><tr><td style=\'color:white; font-weight: bold; font-size:9pt\' colspan=\'2\' nowrap=\'nowrap\'>' + toolTipText + '</td></tr></table>';
-}
-
-function getBoldElem(text)
-{
-	return '<span style="color: blue; font-weight: bold;">' + text + '</span>';
-}
-*/
 window.addEventListener('load', createAndInjectBattleInfo, false);
 window.addEventListener('click', handleButtonClick, true);

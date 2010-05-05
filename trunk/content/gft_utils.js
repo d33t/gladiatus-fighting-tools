@@ -152,7 +152,7 @@ function PlayerInfoRequest(reqUrl, handler)
 		  .getService(Components.interfaces.nsIScriptableUnescapeHTML)
 		  .parseFragment(aHTMLString, false, null, parseDOM));
 	   return parseDOM;
-	}
+	};
 	
 	//this.getPlayerData = function() { return this.player; };
 }
@@ -183,7 +183,7 @@ function playerInfoHandler(http_request, handler)
    } 
 }
 
-gft_utils = {
+var gft_utils = {
 	getPrefBranch: function()
     {
         var prefService = Components.classes["@mozilla.org/preferences-service;1"]
@@ -203,7 +203,7 @@ gft_utils = {
 	
 	getPidFromUrl: function(url)
 	{
-		var pidRegEx = /mod=player&p=(\d+).*&sh=.*/
+		var pidRegEx = /mod=player&p=(\d+).*&sh=.*/;
 		url.match(pidRegEx);
 		var pid = RegExp.$1;
 		if(pid)
@@ -217,7 +217,7 @@ gft_utils = {
 	
 	getRepIdFromUrl: function(url)
 	{
-		var repidRegEx = /mod=report&beid=(\d+)&sh=.*/
+		var repidRegEx = /mod=report&beid=(\d+)&sh=.*/;
 		url.match(repidRegEx);
 		var repid = RegExp.$1;
 		if(repid)

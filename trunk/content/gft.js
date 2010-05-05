@@ -23,15 +23,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var gftScriptLoader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"].getService(Components.interfaces.mozIJSSubScriptLoader);
-gftScriptLoader.loadSubScript("chrome://gft/content/objects.js");
-if(!gft_db)
-	gftScriptLoader.loadSubScript("chrome://gft/content/gft_db.js");
-if(!gft_utils)
-	gftScriptLoader.loadSubScript("chrome://gft/content/gft_utils.js");
-if(!statusbar)
-	gftScriptLoader.loadSubScript("chrome://gft/content/statusbar.js");
-
 var gft = {
 	initialized: false,
 	
@@ -60,7 +51,6 @@ var gft = {
 		{
 			gft_utils.getPrefBranch().setCharPref("sessionstart", gft_utils.getTime() + "");
 			gft_utils.getPrefBranch().setBoolPref("init", true);
-		
 		}
 		// init the db
 		gft_db.init();
@@ -102,7 +92,7 @@ var gft = {
 		return exists;
 	},
 	
-	getNextPossibleAtackTime: function(identifier, server, by, day) //TODO
+	getNextPossibleAtackTime: function(identifier, server, by, day) 
 	{
 		if(day)
 		{
@@ -119,7 +109,7 @@ var gft = {
 		}
 	},
 	
-	getNextPossibleAtack: function(identifier, server, by, atacks) //TODO
+	getNextPossibleAtack: function(identifier, server, by, atacks) 
 	{
 		var nextAtack = "undefined";
 		
@@ -167,6 +157,17 @@ var gft = {
 			
 			if(opponentNode)
 			{
+//				nodesSnapshot = this.evaluateXPath("//div[@id='battlerep']/div[2]/div[1]/div");
+//				var battleDateTime = nodesSnapshot.snapshotItem(0).textContent;
+//				battleDateTime = battleDateTime.match(/\d{2}\.\d{2}.\d{4}\s{1}\d{2}:\d{2}:\d{2}/) + "";
+//				var battleDate = battleDateTime.split(" ")[0].split["."];
+//				var battleTime = battleDateTime.split(" ")[1].split[":"];
+//				var d = new Date();
+//				d.setFullYear(battleDate[2], battleDate[1], battleDate[0]);
+//				d.setHours(battleTime[2], battleTime[1], battleTime[0], 0);
+//					
+//				console.log("Battle time: " + d);
+				
 				var atacker = trimmer.trim(myPlayerNode.textContent);
 				var defender = trimmer.trim(opponentNode.textContent);
 				
@@ -239,7 +240,7 @@ var gft = {
 				{
 					console.log(atacker + " has atacked me.");
 					gft_db.updatePlayerData(atackerID, atacker, server, atackerLevel, atackerGuild);
-					this.insertBattle(atackerID, atacker, server, 0, repid, winner, raisedGold, raisedExp)
+					this.insertBattle(atackerID, atacker, server, 0, repid, winner, raisedGold, raisedExp);
 				}
 			}
 			else
@@ -306,93 +307,65 @@ var gft = {
 	
 	createTableEntry: function(name, value)
 	{
-		return '<tr><th colspan="4">' + name + ':</th> <td colspan="1" style="white-space: nowrap;" class="stats_value">' + value + '</td></tr>\n';
+		return '<tr><th colspan="4">' + name + ':</th> <td colspan="2" style="padding-left: 3px; white-space: nowrap;" class="stats_value">' + value + '</td></tr>\n';
 	}
 };
 
-function PlayerPageContent() //TODO
+function PlayerPageContent() 
 {
-	this.getGold = function(doc, atype, period, infoMsg)
+	function splitNumberValueInGroups(value)
+	{
+		var tmp = "";
+		value = (value+"").split("").reverse();
+		
+		for(var i = 0; i < value.length; i++)
+		{
+			if(i > 0 && i % 3 == 0)
+				tmp += "," + value[i];
+			else
+				tmp += value[i];
+		}
+		
+		tmp = tmp.split("").reverse().join("");
+		return tmp;
+	}
+	
+	function getGoldEntry(value, infoMsg)
+	{
+		var gold = gft_utils.getString("goldImg");
+		return gft.createTableEntry(gft_utils.getString(infoMsg), splitNumberValueInGroups(value) +
+				' <img border="0" align="absmiddle" title="' + gold + '" alt="' + gold + '" src="img/res2.gif">');
+	}
+	
+	function getGold(doc, atype, period, infoMsg)
 	{
 		var server = doc.domain+"";
 		var pid = gft_utils.getPidFromUrl(doc.location+"");
-		var gold = gft_utils.getString("goldImg");
-		return gft.createTableEntry(gft_utils.getString(infoMsg), 
-				gft_db.getGoldRaised(pid, server, atype, period) +
-				' <img border="0" align="absmiddle" title="' + gold + '" alt="' + gold + '" src="img/res2.gif">');
-	};
+		return getGoldEntry(gft_db.getGoldRaised(pid, server, atype, period), infoMsg);
+	}
 	
-	this.getMaxGold = function(doc, atype, period, infoMsg)
+	function getMaxGold(doc, atype, period, infoMsg)
 	{
 		var server = doc.domain+"";
 		var pid = gft_utils.getPidFromUrl(doc.location+"");	
 		var gold = gft_utils.getString("goldImg");
-		return gft.createTableEntry(gft_utils.getString(infoMsg), 
-				gft_db.getMaxGold(pid, server, atype, period) +
-				' <img border="0" align="absmiddle" title="' + gold + '" alt="' + gold + '" src="img/res2.gif">');
-	};
+		return getGoldEntry(gft_db.getMaxGold(pid, server, atype, period), infoMsg);
+	}
 	
-	this.getContent = function(doc, period) 
+	function getExpRaised(doc, period)
 	{
 		var server = doc.domain+"";
 		var pid = gft_utils.getPidFromUrl(doc.location+"");
-		var atacks = gft_db.getNumberOfBattlesWithin(pid, server, "pid", 1, "oneday");
-		var nextAtack = gft.getNextPossibleAtack(pid, server, "pid", atacks);
-
-		return	gft.createTableEntry(gft_utils.getString("battlesforlast24h"), atacks) +
-				gft.createTableEntry(gft_utils.getString("nextpossiblefight"), nextAtack) +
-				this.getGoldRaised(doc, period) +
-				this.getGoldLost(doc, period) +
-				this.getMaxGoldRaised(doc, period) +
-				this.getMaxGoldLost(doc, period) +
-				this.getExpRaised(doc, period) +
-				this.getWinChance(doc);
-	};
+		return gft.createTableEntry(gft_utils.getString("expRaised"), splitNumberValueInGroups(gft_db.getExpRaised(pid, server, period)));
+	}
 	
-	this.getMyStats = function(doc, period)
-	{
-		var todayAtacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(0, doc.domain);
-		var oneWeekAtacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(6, doc.domain);
-
-		return	gft.createTableEntry(gft_utils.getString("atackssincestartoftheday"), todayAtacks) +
-				gft.createTableEntry(gft_utils.getString("atackssinceoneweek"), oneWeekAtacks) +
-				this.getAllExpRaised(doc, period);	
-	};
-
-	this.getGoldRaised = function(doc, period)
-	{
-		return this.getGold(doc, 1, period, "goldRaised");
-	};
-	
-	this.getGoldLost = function(doc, period)
-	{
-		return this.getGold(doc, 0, period, "goldLost");
-	};
-	
-	this.getMaxGoldRaised = function(doc, period)
-	{
-		return this.getMaxGold(doc, 1, period, "maxGoldRaised");
-	};
-	
-	this.getMaxGoldLost = function(doc, period)
-	{
-		return this.getMaxGold(doc, 0, period, "maxGoldLost");
-	};
-
-	this.getExpRaised = function(doc, period)
+	function getAllExpRaised(doc, period)
 	{
 		var server = doc.domain+"";
-		var pid = gft_utils.getPidFromUrl(doc.location+"");
-		return gft.createTableEntry(gft_utils.getString("expRaised"), gft_db.getExpRaised(pid, server, period));
-	};
+		return gft.createTableEntry(gft_utils.getString("allExpRaised"), splitNumberValueInGroups(gft_db.getAllExpRaised(server, period)));
+	}
 	
-	this.getAllExpRaised = function(doc, period)
-	{
-		var server = doc.domain+"";
-		return gft.createTableEntry(gft_utils.getString("allExpRaised"), gft_db.getAllExpRaised(server, period));
-	};
-	
-	this.getWinChance = function(doc)
+	function getWinChance(doc)
 	{
 		var server = doc.domain+"";
 		var pid = gft_utils.getPidFromUrl(doc.location+"");	
@@ -416,11 +389,58 @@ function PlayerPageContent() //TODO
 			
 		winChance = (winChance != "none" ? winChance.toFixed(1) + "%&nbsp;&nbsp;" + diffSpan : gft_utils.getString("noData"));
 		return gft.createTableEntry(gft_utils.getString("realWinChance"),  winChance);
+	}
+	
+	this.getContent = function(doc, period) 
+	{
+		var server = doc.domain+"";
+		var pid = gft_utils.getPidFromUrl(doc.location+"");
+		var attackForLastDay = gft_db.getNumberOfBattlesWithin(pid, server, "pid", 1, "oneday");
+		var attacks = gft_db.getNumberOfBattlesWithin(pid, server, "pid", 1, period);
+		var defenses = gft_db.getNumberOfBattlesWithin(pid, server, "pid", 0, period);
+		var nextAtack = gft.getNextPossibleAtack(pid, server, "pid", attackForLastDay);
+
+		return	gft.createTableEntry(gft_utils.getString("nextpossiblefight"), nextAtack) +
+				gft.createTableEntry(gft_utils.getString("attackssinceperiod"), attacks) +
+				gft.createTableEntry(gft_utils.getString("defensessinceperiod"), defenses) +
+				getGold(doc, 1, period, "goldRaised") +
+				getGold(doc, 0, period, "goldLost") +
+				getMaxGold(doc, 1, period, "maxGoldRaised") +
+				getMaxGold(doc, 0, period, "maxGoldLost") +
+				getExpRaised(doc, period) +
+				getWinChance(doc);
 	};
 	
-	this.getString = function(string) { return gft_utils.getStrings().getString(string) };
+	this.getMyStats = function(doc, period)
+	{		
+		var todayattacks = gft_db.getAllAtacksSinceTodayAndDefDaysBack(0, doc.domain);
+		var attacks = gft_db.getNumberOfBattlesSinceCustomTime(period, doc.domain, 1);
+		var defenses = gft_db.getNumberOfBattlesSinceCustomTime(period, doc.domain, 0);
+		var battlesWon = gft_db.getBattlesWon(doc.domain, period);
+		var winRatio = (battlesWon/(attacks + defenses))*100;
+		var winRatioSpan = '';
+		if(winRatio != "none")
+		{
+			winRatioSpan = '<span style="color: ';
+			if(winRatio >= 50)
+				winRatioSpan += 'green; font-weight: bold;">+';
+			else
+				winRatioSpan += 'red; font-weight: bold;">';
+			winRatioSpan += winRatio.toFixed(1) + '%</span>';
+		}
+		
+		return	gft.createTableEntry(gft_utils.getString("todayattacks"), todayattacks) +
+				gft.createTableEntry(gft_utils.getString("attackssinceperiod"), attacks) +
+				gft.createTableEntry(gft_utils.getString("defensessinceperiod"), defenses) +
+				getGoldEntry(gft_db.getAllGoldRaised(doc.domain, 1, period), "goldRaised") +
+				getGoldEntry(gft_db.getAllGoldRaised(doc.domain, 0, period), "goldLost") +
+				getAllExpRaised(doc, period) +
+				gft.createTableEntry(gft_utils.getString("winratio"), winRatioSpan);	
+	};
 	
-	this.insertPlayer = function(pid, pname, plevel, inwar, pguild) { gft_db.updatePlayerData(pid, pname, plevel, inwar, pguild) };
+	this.getString = function(string) { return gft_utils.getStrings().getString(string); };
+	
+	this.insertPlayer = function(pid, pname, plevel, inwar, pguild) { gft_db.updatePlayerData(pid, pname, plevel, inwar, pguild); };
 	
 	this.getPidFromUrl = function(url) { return gft_utils.getPidFromUrl(url); };
 	
