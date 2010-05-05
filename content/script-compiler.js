@@ -83,7 +83,7 @@ injectScript: function(script, url, unsafeContentWin) {
 	sandbox.XPathResult=Components.interfaces.nsIDOMXPathResult;
 
 	// add our own APIs
-	sandbox.GM_addStyle=function(css) { injectplayerpage_gmCompiler.addStyle(sandbox.document, css) };
+	sandbox.GM_addStyle=function(css) { injectplayerpage_gmCompiler.addStyle(sandbox.document, css); };
 	sandbox.GM_setValue=injectplayerpage_gmCompiler.hitch(storage, "setValue");
 	sandbox.GM_getValue=injectplayerpage_gmCompiler.hitch(storage, "getValue");
 	var ppc = new PlayerPageContent();
@@ -234,7 +234,7 @@ onUnLoad: function() {
 	window.removeEventListener('unload', injectplayerpage_gmCompiler.onUnLoad, false);
 	window.document.getElementById("appcontent")
 		.removeEventListener("DOMContentLoaded", injectplayerpage_gmCompiler.contentLoad, false);
-},
+}
 
 }; //object injectplayerpage_gmCompiler
 
@@ -244,10 +244,10 @@ function injectplayerpage_ScriptStorage() {
 }
 injectplayerpage_ScriptStorage.prototype.setValue = function(name, val) {
 	this.prefMan.setValue(name, val);
-}
+};
 injectplayerpage_ScriptStorage.prototype.getValue = function(name, defVal) {
 	return this.prefMan.getValue(name, defVal);
-}
+};
 
 
 window.addEventListener('load', injectplayerpage_gmCompiler.onLoad, false);

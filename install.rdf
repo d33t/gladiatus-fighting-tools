@@ -6,12 +6,12 @@
    
     <em:id>gft@demonsteam.net</em:id>
     <em:name>Gladiatus Fighting Tools</em:name>
-    <em:version>1.1</em:version>
+    <em:version>1.2</em:version>
     <em:description>Fighting Tools for the web based game - Gladiatus</em:description>
     <em:creator>Demons Team</em:creator>
     
     <em:homepageURL>http://addons.demonsteam.net</em:homepageURL>
-	<em:optionsURL>chrome://gft/content/options.xul</em:optionsURL>
+	<!-- <em:optionsURL>chrome://gft/content/options.xul</em:optionsURL> -->
 	<em:iconURL>chrome://gft/skin/gft-ico.png</em:iconURL>
     <em:aboutURL>chrome://gft/content/about.xul</em:aboutURL>
     

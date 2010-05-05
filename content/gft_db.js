@@ -871,6 +871,46 @@ var gft_db = {
 		return -1;
 	},
 	
+	/**
+	 * Returns all battles won for defined period of time depending from attack type. <br />
+	 * Atype parameter specifies the attack type and it's optional.
+	 * 
+	 * @param server - gladiatus server
+	 * @param atype - optional parameter. if 1 battles in attack, 0 in defense, if not defined all both attack types
+	 * @param period - period of time
+	 * @return - all battles won, or 'none' if no battles exists
+	 */
+	getBattlesWon: function(server, period, atype)
+	{
+		console.log("Debug[getBattlesWon()]: server: " + server + ", atype: " + atype + ", period: " + period);
+		
+		if (this.gft_dbConn)
+		{
+			var myid = this.getMyId(server);
+			
+			var battlesWon = 0;
+			try 
+			{
+				var oStatement = this.gft_dbConn.createStatement("SELECT count(b.battleid) as battlesWon " +
+																	"from reports r inner join battles b on r.battleid=b.battleid " + 
+																	"WHERE r.winnerid=:my_id AND b.atime > :a_time" + (atype ? (" AND b.atype=" + atype) : ""));
+				oStatement.params.my_id = myid;
+				oStatement.params.a_time = this.getTimePeriod(period);
+				while (oStatement.executeStep())
+				{
+					battlesWon = oStatement.row.battlesWon;
+				}
+				oStatement.reset();
+				
+				if(battlesWon <= 0)
+					return "none";
+				return battlesWon;
+			}
+			catch (e) {alert("DB query failed. Could not get battles won\n" + e);}
+		}
+		return "none";		
+	},
+	
 	getGoldRaised: function(pid, server, atype, period)
 	{
 		console.log("Debug[getGoldRaised()]: pid: " + pid + ", server: " + server + ", atype: " + atype + ", period: " + period);
@@ -897,6 +937,33 @@ var gft_db = {
 				return gold;
 			}
 			catch (e) {alert("DB query failed. Could not compute gold raised\n" + e);}
+		}
+		return 0;
+	},
+	
+	getAllGoldRaised: function(server, atype, period)
+	{
+		console.log("Debug[getAllGoldRaised()]: server: " + server + ", atype: " + atype + ", period: " + period);
+		if (this.gft_dbConn)
+		{			
+			var gold = 0;
+			try 
+			{
+				var oStatement = this.gft_dbConn.createStatement("SELECT sum(r.gold) as RaisedGold from reports r inner join battles b on r.battleid=b.battleid " + 
+																	"WHERE b.atype=:a_type AND atime >= :period");
+				oStatement.params.a_type = atype;
+				oStatement.params.period = this.getTimePeriod(period);
+				while (oStatement.executeStep())
+				{
+					gold = oStatement.row.RaisedGold;
+				}
+				oStatement.reset();
+				
+				if(!gold || gold == null)
+					return 0;
+				return gold;
+			}
+			catch (e) {alert("DB query failed. Could not compute all gold raised\n" + e);}
 		}
 		return 0;
 	},
@@ -960,9 +1027,9 @@ var gft_db = {
 					return "none";
 				return (battlesWon/allBattles)*100;
 			}
-			catch (e) {alert("DB query failed. Could not compute max gold\n" + e);}
+			catch (e) {alert("DB query failed. Could not compute win chance\n" + e);}
 		}
-		return 0;		
+		return "none";		
 	},
 	
 	getLastDayWinChance: function(pid, server)

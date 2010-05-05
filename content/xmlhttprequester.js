@@ -3,18 +3,21 @@ function injectplayerpage_xmlhttpRequester(unsafeContentWin, chromeWindow) {
 	this.chromeWindow = chromeWindow;
 }
 
-// this function gets called by user scripts in content security scope to
-// start a cross-domain xmlhttp request.
-//
-// details should look like:
-// {method,url,onload,onerror,onreadystatechange,headers,data}
-// headers should be in the form {name:value,name:value,etc}
-// can't support mimetype because i think it's only used for forcing
-// text/xml and we can't support that
+/* 
+ * this function gets called by user scripts in content security scope to
+ * start a cross-domain xmlhttp request.
+ * details should look like:
+ * {method,url,onload,onerror,onreadystatechange,headers,data}
+ * headers should be in the form {name:value,name:value,etc}
+ * can't support mimetype because i think it's only used for forcing
+ * text/xml and we can't support that
+ */
 injectplayerpage_xmlhttpRequester.prototype.contentStartRequest = function(details) {
-	// important to store this locally so that content cannot trick us up with
-	// a fancy getter that checks the number of times it has been accessed,
-	// returning a dangerous URL the time that we actually use it.
+	/*
+	 * important to store this locally so that content cannot trick us up with
+	 * a fancy getter that checks the number of times it has been accessed,
+	 * returning a dangerous URL the time that we actually use it.
+	 */
 	var url = details.url;
 
 	// make sure that we have an actual string so that we can't be fooled with
@@ -39,7 +42,7 @@ injectplayerpage_xmlhttpRequester.prototype.contentStartRequest = function(detai
 		default:
 			throw new Error("Invalid url: " + url);
 	}
-}
+};
 
 // this function is intended to be called in chrome's security context, so
 // that it can access other domains without security warning
@@ -59,7 +62,7 @@ injectplayerpage_xmlhttpRequester.prototype.chromeStartRequest=function(safeUrl,
 	}
 
 	req.send(details.data);
-}
+};
 
 // arranges for the specified 'event' on xmlhttprequest 'req' to call the
 // method by the same name which is a property of 'details' in the content
@@ -76,7 +79,7 @@ function(unsafeContentWin, req, event, details) {
 				responseHeaders:(req.readyState==4?req.getAllResponseHeaders():''),
 				status:(req.readyState==4?req.status:0),
 				statusText:(req.readyState==4?req.statusText:'')
-			}
+			};
 
 			// Pop back onto browser thread and call event handler.
 			// Have to use nested function here instead of GM_hitch because
@@ -84,6 +87,6 @@ function(unsafeContentWin, req, event, details) {
 			// can be abused to get increased priveledges.
 			new XPCNativeWrapper(unsafeContentWin, "setTimeout()")
 				.setTimeout(function(){details[event](responseState);}, 0);
-		}
+		};
 	}
-}
+};

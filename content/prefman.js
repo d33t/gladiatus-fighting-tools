@@ -10,7 +10,7 @@ function injectplayerpage_PrefManager() {
 	// whether a preference exists
 	this.exists=function(prefName) {
 		return pref.getPrefType(prefName) != 0;
-	}
+	};
 
 	// returns the named preference, or defaultValue if it does not exist
 	this.getValue=function(prefName, defaultValue) {
@@ -26,7 +26,7 @@ function injectplayerpage_PrefManager() {
 			case pref.PREF_BOOL: return pref.getBoolPref(prefName);
 			case pref.PREF_INT: return pref.getIntPref(prefName);
 		}
-	}
+	};
 
 	// sets the named preference to the specified value. values must be strings,
 	// booleans, or integers.
@@ -59,12 +59,12 @@ function injectplayerpage_PrefManager() {
 			case "boolean": pref.setBoolPref(prefName, value); break;
 			case "number": pref.setIntPref(prefName, Math.floor(value)); break;
 		}
-	}
+	};
 
 	// deletes the named preference or subtree
 	this.remove=function(prefName) {
 		pref.deleteBranch(prefName);
-	}
+	};
 
 	// call a function whenever the named preference subtree changes
 	this.watch=function(prefName, watcher) {
@@ -80,7 +80,7 @@ function injectplayerpage_PrefManager() {
 
 		pref.QueryInterface(Components.interfaces.nsIPrefBranchInternal).
 			addObserver(prefName, observer, false);
-	}
+	};
 
 	// stop watching
 	this.unwatch=function(prefName, watcher) {
@@ -88,5 +88,5 @@ function injectplayerpage_PrefManager() {
 			pref.QueryInterface(Components.interfaces.nsIPrefBranchInternal)
 				.removeObserver(prefName, observers[watcher]);
 		}
-	}
+	};
 }

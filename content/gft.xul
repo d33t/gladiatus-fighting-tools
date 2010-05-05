@@ -8,9 +8,7 @@
 	</stringbundleset>
 	<script type="application/x-javascript" src="chrome://gft/content/xmlhttprequester.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/prefman.js"/>
-	<!--
-	<script type="application/x-javascript" src="chrome://gft/content/objects.js"/>
-	-->
+	<script type="application/x-javascript" src="chrome://gft/content/custom_objects.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/gft_db.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/gft_utils.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/statusbar.js"/>
