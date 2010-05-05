@@ -947,12 +947,15 @@ var gft_db = {
 		if (this.gft_dbConn)
 		{			
 			var gold = 0;
+			var myid = this.getMyId(server);
 			try 
 			{
 				var oStatement = this.gft_dbConn.createStatement("SELECT sum(r.gold) as RaisedGold from reports r inner join battles b on r.battleid=b.battleid " + 
-																	"WHERE b.atype=:a_type AND atime >= :period");
+																	"WHERE b.myid=:my_id AND b.atype=:a_type AND atime >= :period");
+				oStatement.params.my_id = myid;
 				oStatement.params.a_type = atype;
 				oStatement.params.period = this.getTimePeriod(period);
+				
 				while (oStatement.executeStep())
 				{
 					gold = oStatement.row.RaisedGold;
@@ -1072,15 +1075,18 @@ var gft_db = {
 		if (this.gft_dbConn)
 		{			
 			var exp = 0;
+			var myid = this.getMyId(server);
+			
 			try 
 			{
 				var oStatement = this.gft_dbConn.createStatement("SELECT sum(r.exp) as RaisedExp from reports r inner join battles b on r.battleid=b.battleid " + 
-																	"WHERE b.atype=1 AND atime >= :period" + ((pid > 0) ? " AND b.oid=:o_id" : ""));
+																	"WHERE b.myid=:my_id AND b.atype=1 AND atime >= :period" + ((pid > 0) ? " AND b.oid=:o_id" : ""));
 				if(pid > 0)
 				{
 					var oid = this.getPlayerId(pid, server, "pid");
 					oStatement.params.o_id = oid;
 				}
+				oStatement.params.my_id = myid;
 				oStatement.params.period = this.getTimePeriod(period);
 				while (oStatement.executeStep())
 				{

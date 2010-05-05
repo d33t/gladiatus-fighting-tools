@@ -90,9 +90,6 @@ injectScript: function(script, url, unsafeContentWin) {
 	sandbox.GM_getContent=injectplayerpage_gmCompiler.hitch(ppc, "getContent");
 	sandbox.GM_getMyStats=injectplayerpage_gmCompiler.hitch(ppc, "getMyStats");
 	sandbox.GM_getString=injectplayerpage_gmCompiler.hitch(ppc, "getString");
-	sandbox.GM_insertPlayer=injectplayerpage_gmCompiler.hitch(ppc, "insertPlayer");
-	sandbox.GM_getPidFromUrl=injectplayerpage_gmCompiler.hitch(ppc, "getPidFromUrl");
-	sandbox.GM_trim=injectplayerpage_gmCompiler.hitch(ppc, "trim");
 	sandbox.GM_openInTab=injectplayerpage_gmCompiler.hitch(this, "openInTab", unsafeContentWin);
 	sandbox.GM_xmlhttpRequest=injectplayerpage_gmCompiler.hitch(
 		xmlhttpRequester, "contentStartRequest"
