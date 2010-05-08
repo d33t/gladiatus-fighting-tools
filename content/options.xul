@@ -5,73 +5,116 @@
 <window class="dialog"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         orient="vertical"
-        autostretch="always"
-        onload="init();"
-        title="&prefs.title;">
-
+        autostretch="never"
+        persist="width height"
+        onload="GFTOptions.init();"
+        title="&gft.options.windows.title;">
+	<script type="application/x-javascript" src="chrome://gft/content/options.js"/>
+	
     <keyset>
         <key keycode="VK_ESCAPE" oncommand="window.close();"/>
     </keyset>
-    <script type="application/x-javascript" src="chrome://gft/content/options.js"/>
-
-    <groupbox>
-        <caption label="&prefs.appearancecaption;"/>
-        <hbox>
-            <label value="&prefs.poslabel;" control="iconPositionRadiogroup"/>
-            <radiogroup id="gftIconPositionRadiogroup" orient="horizontal" oncommand="apply();">
-                <radio id="L" label="&prefs.posLlabel;"/>
-                <radio id="R" label="&prefs.posRlabel;"/>
-                <radio id="RM" label="&prefs.posRMlabel;"/>
-            </radiogroup>
-        </hbox>
-    </groupbox>
-
-    <separator class="thin"/>
-
-    <groupbox>
-        <caption label="&prefs.worksettings;"/>
-		
-		 <hbox>
-			<radiogroup id="servers" orient="horizontal" oncommand="apply();">
-                <radio id="s1" label="&prefs.server1;"/>
-                <radio id="s2" label="&prefs.server2;"/>
-                <radio id="s3" label="&prefs.server3;"/>
-				<radio id="custom" label="&prefs.custom;"/>
-			</radiogroup>
-		</hbox>
-		
+	<vbox>
 		<hbox>
-			<label control="customservername" value="&prefs.custom.name;"/>
-			<textbox flex="" size="2" id="customservername" value="" oninput="apply();"/>
-			<label id="errorservername" value=""/>
-		</hbox>
-		
-		<hbox>
-			<label control="customserverinitials" value="&prefs.custom.initials;"/>
-			<textbox flex="" size="2" id="customserverinitials" value="" oninput="apply();"/>
-			<label id="errorserverinitials" value=""/>
-		</hbox>
-		
-        <separator class="thin"/>
-		
-		<hbox flex="1" align="center">
-            <label control="gtCheckInterval" value="&check.interval;"/>
-            <textbox flex="" size="2" id="gtCheckInterval" value="3" oninput="apply();"/>
-            <label control="gtCheckInterval" value="&check.sec;"/>
-        </hbox>
-		
-		<separator class="thin"/>
-		
-		<hbox flex="1" align="center">
-			<checkbox id="usesimplecounter" label="&prefs.simpleCounter;" oncommand="apply();"/>
-            <spacer minwidth="5" flex="1"/>
-			<checkbox id="checkInfinity" label="&check.infinity;" oncommand="apply();"/>
-			<spacer minwidth="5" flex="1"/>
-        </hbox>
-    </groupbox>
-
-    <hbox>
-        <button label="&close;" oncommand="window.close();" default="true"/>
-    </hbox>
-
+			<tabbox>
+				<tabs>
+					<tab label="&gft.options.tabs.main.title;" />
+					<tab label="&gft.options.tabs.battlesTable.title;" />
+					<tab label="&gft.options.tabs.versions.title;" />
+				</tabs>
+				<tabpanels>
+					<tabpanel id="main">
+						<vbox>
+					    <groupbox>
+					        <caption label="&gft.options.tabs.main.appearance.caption;"/>
+					        <hbox>
+					            <label value="&gft.options.tabs.main.icon.label;"/>
+					            <radiogroup id="gftIconPositionRadiogroup" orient="horizontal" oncommand="GFTOptions.apply();">
+					                <radio id="iconPosL" label="&gft.options.tabs.main.icon.leftPosition;"/>
+					                <radio id="iconPosR" label="&gft.options.tabs.main.icon.rightPosition;"/>
+					                <radio id="iconPosRM" label="&gft.options.tabs.main.icon.mostRightPosition;"/>
+					                <radio id="iconPosHide" label="&gft.options.tabs.main.icon.hide;"/>
+					            </radiogroup>
+					        </hbox>
+					    </groupbox>
+					    <separator class="thin"/>
+					    <groupbox>
+					    	<caption label="&gft.options.tabs.main.bashing.caption;" />
+					    	<hbox>
+					            <label value="&gft.options.tabs.main.bashing.cycle;"/>
+					            <radiogroup id="gftIconPositionRadiogroup" orient="horizontal" oncommand="GFTOptions.apply();">
+					                <radio id="firstToLast" label="&gft.options.tabs.main.bashing.firstToLast;"/>
+					                <radio id="startOfDay" label="&gft.options.tabs.main.bashing.startOfDay;"/>
+				                </radiogroup>
+					    	</hbox>
+					    	<separator class="thin"/>
+					    	<vbox>
+					    		<label value="&gft.options.tabs.main.bashing.desc;"/>
+					    		<separator class="thin"/>
+						    	<hbox>
+						    		<label value="&gft.options.tabs.main.bashing.wordfor;"/>
+						    		<textbox flex="" size="2" id="bashingOneDay" readonly="true" value="1"/>
+				    				<label control="bashingOneDayAttacks" value="&gft.options.tabs.main.bashing.wordday;"/>
+									<textbox flex="" size="2" id="bashingOneDayAttacks" value="" tooltiptext="&gft.options.tabs.main.bashing.tooltip;" onchange="GFTOptions.apply();"/>
+									<label control="bashingCustomDays" value="&gft.options.tabs.main.bashing.attacks;"/>
+									<label id="errBashingOneDay" value=""/>	
+						    	</hbox>
+						    	<separator class="thin"/>
+						    	<hbox>
+				    				<label control="bashingCustomDays" value="&gft.options.tabs.main.bashing.wordfor;"/>
+									<textbox flex="" size="2" id="bashingCustomDays" value="" onchange="GFTOptions.apply();"/>
+									<label control="bashingCustomDays" value="&gft.options.tabs.main.bashing.worddays;"/>
+									<textbox flex="" size="2" id="bashingCustomDaysAttacks" value="" tooltiptext="&gft.options.tabs.main.bashing.tooltip;" onchange="GFTOptions.apply();"/>
+									<label control="bashingCustomDays" value="&gft.options.tabs.main.bashing.attacks;"/>
+									<label id="errBashingCustomDays" value=""/>	
+						    	</hbox>
+					    	</vbox>
+					    </groupbox>
+					    </vbox>
+			    	</tabpanel>
+			    	<tabpanel id="battleTable">
+			    		<vbox style="width: 5em; word-wrap:break-word;">
+			    			<description>&gft.options.tabs.battlesTable.desc;</description>
+			    			<separator class="groove"/>
+				    		<hbox>
+					    		<groupbox>
+							    	<caption label="&gft.options.tabs.battlesTable.captionPpage;" />
+						    		<vbox>
+						    			<checkbox id="pTodayBattles" label="&gft.options.tabs.battlesTable.todayBattles;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="pBattlesInAttacksCount" label="&gft.options.tabs.battlesTable.battlesInAttacksCount;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="pBattlesInDefenceCount" label="&gft.options.tabs.battlesTable.battlesInDefenceCount;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="pGoldRaised" label="&gft.options.tabs.battlesTable.goldRaised;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="pGoldLost" label="&gft.options.tabs.battlesTable.goldLost;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="pExperienceRaised" label="&gft.options.tabs.battlesTable.experienceRaised;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="pChanceForWin" label="&gft.options.tabs.battlesTable.chanceForWin;" oncommand="GFTOptions.apply();"/>
+						    		</vbox>
+					    		</groupbox>
+					    		<separator orient="vertical" class="groove-thin"/>
+					    		<groupbox>
+							    	<caption label="&gft.options.tabs.battlesTable.captionOpage;" />
+						    		<vbox>
+						    			<checkbox id="oNextPossibleAttack" label="&gft.options.tabs.battlesTable.nextPossibleAttack;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="oBattlesInAttacksCount" label="&gft.options.tabs.battlesTable.battlesInAttacksCount;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="oBattlesInDefenceCount" label="&gft.options.tabs.battlesTable.battlesInDefenceCount;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="oGoldRaised" label="&gft.options.tabs.battlesTable.goldRaised;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="oGoldLost" label="&gft.options.tabs.battlesTable.goldLost;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="oMaxGoldRaised" label="&gft.options.tabs.battlesTable.maxGoldRaised;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="oMaxGoldLost" label="&gft.options.tabs.battlesTable.maxGoldLost;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="oExperienceRaised" label="&gft.options.tabs.battlesTable.experienceRaised;" oncommand="GFTOptions.apply();"/>
+						    			<checkbox id="oRealChanceForWin" label="&gft.options.tabs.battlesTable.realChanceForWin;" oncommand="GFTOptions.apply();"/>
+						    		</vbox>	  
+					    		</groupbox>  
+				    		</hbox>
+			    		</vbox>		
+			    	</tabpanel>
+			    	<tabpanel id="versions">
+			    	<textarea></textarea>
+			    	</tabpanel>
+			    </tabpanels>
+		    </tabbox>
+	    </hbox>
+	    <hbox align="right">
+	        <button label="&gft.common.close;" oncommand="window.close();" default="true"/>
+	    </hbox>
+    </vbox>
 </window>
