@@ -145,4 +145,4 @@ var battles = {
 	}
 };
 
-window.addEventListener("load", function(e) { battles.onLoad(e); }, false);
+//window.addEventListener("load", function(e) { battles.onLoad(e); }, false);
