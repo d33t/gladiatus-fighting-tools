@@ -217,7 +217,7 @@ var gft_utils = {
 	
 	getRepIdFromUrl: function(url)
 	{
-		var repidRegEx = /mod=report&beid=(\d+)&sh=.*/;
+		var repidRegEx = /mod=report&beid=(\d+).*&sh=.*/;
 		url.match(repidRegEx);
 		var repid = RegExp.$1;
 		if(repid)
@@ -346,13 +346,15 @@ var validator = {
 	
 	validatePlayerReportPage: function(url)
 	{
-		var retVal = /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&sh=.*/.test(url);
+		var retVal = /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&sh=.*/.test(url)
+					|| /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&t=2&sh=.*/.test(url);
 		return retVal;
 	},
 	
 	validateCombatReportPage: function(url)
 	{
-		var retVal = /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&submod=combatReport&sh=.*/.test(url);
+		var retVal = /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&submod=combatReport&sh=.*/.test(url)
+					|| /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&t=3&sh=.*/.test(url);
 		return retVal;
 	}
 };

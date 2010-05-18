@@ -1,27 +1,85 @@
-﻿<!-- GFT XUL -->
-<!ENTITY gft.statusbar.tooltip.menu.desc "Използвай дясно копче за да отвориш менюто">
-<!ENTITY gft.statusbar.tooltip.atackssincesessionstart "Брой атаки от стартта на сесията: ">
-<!ENTITY gft.statusbar.tooltip.atackssincestartoftheday "Брой атаки от началото на деня: 	">
-<!ENTITY gft.statusbar.tooltip.atackssincedefiniedperiod "Брой атаки за последната една седмица: ">
-<!ENTITY gft.statusbar.menu.optionswindow "Опции">
-<!ENTITY gft.statusbar.menu.battleswindow "Двубои">
-<!ENTITY gft.statusbar.menu.aboutwindow "Относно">
-<!ENTITY gft.fighter.tooltip.lastopponent "Последен опонент: 			">
-<!ENTITY gft.fighter.tooltip.lastdaybattles "Двубои през последния ден:			">
-<!ENTITY gft.fighter.tooltip.nextpossiblebattletime "Следваща възможна атака:	">
+﻿<!-- GFT Common -->
+<!ENTITY gft.common.close "Затвори">
+<!ENTITY gft.common.detach "Отвори в нов прозорец">
+
+<!-- GFT Options XUL - Windows -->
+<!ENTITY gft.windows.options.title "Настройки">
+<!ENTITY gft.windows.battles.title "Двубои">
+
+<!-- GFT Options Main Tab -->
+<!ENTITY gft.options.tabs.main.title "Основни">
+<!ENTITY gft.options.tabs.main.appearance.caption "Интерфейс">
+<!ENTITY gft.options.tabs.main.icon.label "Позиция на иконката">
+<!ENTITY gft.options.tabs.main.icon.leftPosition "ляво">
+<!ENTITY gft.options.tabs.main.icon.rightPosition "дясно">
+<!ENTITY gft.options.tabs.main.icon.mostRightPosition "най-дясно">
+<!ENTITY gft.options.tabs.main.icon.hide "не показвай">
+
+<!ENTITY gft.options.tabs.main.bashing.caption "Башинг">
+<!ENTITY gft.options.tabs.main.bashing.cycle "Башинг стратегия">
+<!ENTITY gft.options.tabs.main.bashing.firstToLast "От първа до последна">
+<!ENTITY gft.options.tabs.main.bashing.startOfDay "От началото на деня">
+<!ENTITY gft.options.tabs.main.bashing.desc "Позволени атаки">
+<!ENTITY gft.options.tabs.main.bashing.tooltip "Според правилата на сървъра, в който играете, посочете броя на позволените атаки за Х дни.">
+<!ENTITY gft.options.tabs.main.bashing.wordfor "За">
+<!ENTITY gft.options.tabs.main.bashing.wordday "ден">
+<!ENTITY gft.options.tabs.main.bashing.worddays "дни">
+<!ENTITY gft.options.tabs.main.bashing.attacks "атаки">
+
+<!-- GFT Options Battles Table Tab -->
+<!ENTITY gft.options.tabs.battlesTable.title "Бойна статистика">
+<!ENTITY gft.options.tabs.battlesTable.desc "Отбележете редовете, които искате да се показват в бойната статистика при зареждането на страницата">
+<!ENTITY gft.options.tabs.battlesTable.captionOpage "Гладиатор">
+<!ENTITY gft.options.tabs.battlesTable.captionPpage "Опонент">
+<!ENTITY gft.options.tabs.battlesTable.todayBattles "Битки днес">
+<!ENTITY gft.options.tabs.battlesTable.battlesInAttacksCount "Брой битки в атака">
+<!ENTITY gft.options.tabs.battlesTable.battlesInDefenceCount "Брой битки в защита">
+<!ENTITY gft.options.tabs.battlesTable.goldRaised "Спечелено злато">
+<!ENTITY gft.options.tabs.battlesTable.goldLost "Загубено злато">
+<!ENTITY gft.options.tabs.battlesTable.experienceRaised "Брой събран опит">
+<!ENTITY gft.options.tabs.battlesTable.chanceForWin "Шанс за победа">
+<!ENTITY gft.options.tabs.battlesTable.nextPossibleAttack "Следваща възможна атака">
+<!ENTITY gft.options.tabs.battlesTable.maxGoldRaised "Макс. заграбено злато">
+<!ENTITY gft.options.tabs.battlesTable.maxGoldLost "Макс. загубено злато">
+<!ENTITY gft.options.tabs.battlesTable.realChanceForWin "Реален шанс за победа">
+
+<!-- GFT Options Versions Tab -->
+<!ENTITY gft.options.tabs.versions.title "Версии">
 
 <!-- BATTLES XUL -->
-<!ENTITY gft.battles.title "Опции на битките">
+<!ENTITY gft.battles.table.caption "Таблица на двубоите">
+<!ENTITY gft.battles.table.name "Име">
+<!ENTITY gft.battles.table.guild "Гилдия">
+<!ENTITY gft.battles.table.level "Ниво">
+<!ENTITY gft.battles.table.server "Сървър">
+<!ENTITY gft.battles.table.attacks "Битки в атака">
+<!ENTITY gft.battles.table.defenses "Битки в защита">
+<!ENTITY gft.battles.table.goldRaised "Спечелено злато">
+<!ENTITY gft.battles.table.goldLost "Загубено злато">
+<!ENTITY gft.battles.table.maxGoldRaised "Макс. спечелено злато">
+<!ENTITY gft.battles.table.maxGoldLost "Макс. загубено злато">
+<!ENTITY gft.battles.table.expRaised "Събран опит">
+<!ENTITY gft.battles.searchby.name "Опонент">
+<!ENTITY gft.battles.searchby.level "Над ниво">
+<!ENTITY gft.battles.searchby.period "Времеви период">
+<!ENTITY gft.battles.searchby.server "Сървър">
+<!ENTITY gft.battles.searchby.period.all "Всички">
+<!ENTITY gft.battles.searchby.period.oneday "Един ден">
+<!ENTITY gft.battles.searchby.period.twodays "Два дни">
+<!ENTITY gft.battles.searchby.period.threedays "Три дни">
+<!ENTITY gft.battles.searchby.period.fivedays "Пет дни">
+<!ENTITY gft.battles.searchby.period.oneweek "Една седмица">
+<!ENTITY gft.battles.searchby.period.onemonth "Един Месец">
+<!ENTITY gft.battles.buttons.search "Покажи двубоите">
 
-<!-- battles.xul: Group Insert player -->
-<!ENTITY gft.battles.battlestablecaption "Таблица на двубоите">
-<!ENTITY gft.battles.pnamecolumn "Опонент">
-<!ENTITY gft.battles.pguildcolumn "Гилдия">
-<!ENTITY gft.battles.battlescountcolumn "Брой атаки">
-<!ENTITY gft.battles.searchplayername "Опонент: ">
-<!ENTITY gft.battles.searchplayerlevel "Над ниво: ">
-<!ENTITY gft.battles.searchtimeperiod "Времеви период">
-<!ENTITY gft.battles.searchbutton "Покажи двубоите">
-
-<!-- Common -->
-<!ENTITY gft.common.close "Затвори">
+<!-- GFT Statusbar XUL -->
+<!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Кликни с ляв бутон за да отвориш двубоите">
+<!ENTITY gft.statusbar.tooltip.menu.desc.row2 "Кликни с десен бутон за да отвориш менюто">
+<!ENTITY gft.statusbar.tooltip.atacks.sessionstart "Брой атаки от стартта на сесията">
+<!ENTITY gft.statusbar.tooltip.atacks.startoftheday "Брой атаки от началото на деня">
+<!ENTITY gft.statusbar.tooltip.lastopponent "Последен опонент">
+<!ENTITY gft.statusbar.tooltip.lastdaybattles "Двубои през последния ден">
+<!ENTITY gft.statusbar.tooltip.nextpossiblebattletime "Следваща възможна атака">
+<!ENTITY gft.statusbar.menu.options "Опции">
+<!ENTITY gft.statusbar.menu.battles "Двубои">
+<!ENTITY gft.statusbar.menu.about "Относно">

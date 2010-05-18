@@ -1,27 +1,85 @@
-<!-- GFT XUL -->
-<!ENTITY gft.statusbar.tooltip.menu.desc "Use right mouse button to open the menu">
-<!ENTITY gft.statusbar.tooltip.atackssincesessionstart "Atacks count since session start: ">
-<!ENTITY gft.statusbar.tooltip.atackssincestartoftheday "Today's atacks count: ">
-<!ENTITY gft.statusbar.tooltip.atackssincedefiniedperiod "Atacks since last week: ">
-<!ENTITY gft.statusbar.menu.optionswindow "Options">
-<!ENTITY gft.statusbar.menu.battleswindow "Battles">
-<!ENTITY gft.statusbar.menu.aboutwindow "About">
-<!ENTITY gft.fighter.tooltip.lastopponent "Last opponent: 			">
-<!ENTITY gft.fighter.tooltip.lastdaybattles "Battles last day:			">
-<!ENTITY gft.fighter.tooltip.nextpossiblebattletime "Next possible atack:	">
-
-<!-- BATTLES XUL -->
-<!ENTITY gft.battles.title "Battles options">
-
-<!-- battles.xul: Group Insert player -->
-<!ENTITY gft.battles.battlestablecaption "Battles table">
-<!ENTITY gft.battles.pnamecolumn "Player name">
-<!ENTITY gft.battles.pguildcolumn "Player guild">
-<!ENTITY gft.battles.battlescountcolumn "Battles for the last ">
-<!ENTITY gft.battles.searchplayername "Player name: ">
-<!ENTITY gft.battles.searchplayerlevel "Above level: ">
-<!ENTITY gft.battles.searchtimeperiod "Time period">
-<!ENTITY gft.battles.searchbutton "Show battles">
-
 <!-- Common -->
 <!ENTITY gft.common.close "close">
+<!ENTITY gft.common.detach "open in new window">
+
+<!-- GFT Options XUL - Windows -->
+<!ENTITY gft.windows.options.title "Options">
+<!ENTITY gft.windows.battles.title "Battles">
+
+<!-- GFT Options Main Tab -->
+<!ENTITY gft.options.tabs.main.title "Main">
+<!ENTITY gft.options.tabs.main.appearance.caption "Interface">
+<!ENTITY gft.options.tabs.main.icon.label "Icon position">
+<!ENTITY gft.options.tabs.main.icon.leftPosition "left">
+<!ENTITY gft.options.tabs.main.icon.rightPosition "right">
+<!ENTITY gft.options.tabs.main.icon.mostRightPosition "most right">
+<!ENTITY gft.options.tabs.main.icon.hide "hide">
+
+<!ENTITY gft.options.tabs.main.bashing.caption "Bashing">
+<!ENTITY gft.options.tabs.main.bashing.cycle "Bashing strategy">
+<!ENTITY gft.options.tabs.main.bashing.firstToLast "from first to last">
+<!ENTITY gft.options.tabs.main.bashing.startOfDay "from start of the day">
+<!ENTITY gft.options.tabs.main.bashing.desc "Attacks allowed">
+<!ENTITY gft.options.tabs.main.bashing.tooltip "According to the server rules, where you play, enter the number of attacks allowed for X days.">
+<!ENTITY gft.options.tabs.main.bashing.wordfor "For">
+<!ENTITY gft.options.tabs.main.bashing.wordday "day">
+<!ENTITY gft.options.tabs.main.bashing.worddays "days">
+<!ENTITY gft.options.tabs.main.bashing.attacks "attacks">
+
+<!-- GFT Options Battles Table Tab -->
+<!ENTITY gft.options.tabs.battlesTable.title "Battle statistic">
+<!ENTITY gft.options.tabs.battlesTable.desc "Mark the rows, that you wish to be displayed by default in the battle table, when the page loads.">
+<!ENTITY gft.options.tabs.battlesTable.captionOpage "Gladiator">
+<!ENTITY gft.options.tabs.battlesTable.captionPpage "Opponent">
+<!ENTITY gft.options.tabs.battlesTable.todayBattles "Battles today">
+<!ENTITY gft.options.tabs.battlesTable.battlesInAttacksCount "Attacks count">
+<!ENTITY gft.options.tabs.battlesTable.battlesInDefenceCount "Defenses count">
+<!ENTITY gft.options.tabs.battlesTable.goldRaised "Gold raised">
+<!ENTITY gft.options.tabs.battlesTable.goldLost "Gold lost">
+<!ENTITY gft.options.tabs.battlesTable.experienceRaised "Experience raised">
+<!ENTITY gft.options.tabs.battlesTable.chanceForWin "Chance for win">
+<!ENTITY gft.options.tabs.battlesTable.nextPossibleAttack "Next possible attack">
+<!ENTITY gft.options.tabs.battlesTable.maxGoldRaised "Max gold raised">
+<!ENTITY gft.options.tabs.battlesTable.maxGoldLost "Max gold lost">
+<!ENTITY gft.options.tabs.battlesTable.realChanceForWin "Real chance for win">
+
+<!-- GFT Options Versions Tab -->
+<!ENTITY gft.options.tabs.versions.title "Versions">
+
+<!-- BATTLES XUL -->
+<!ENTITY gft.battles.table.caption "Battles table">
+<!ENTITY gft.battles.table.name "Name">
+<!ENTITY gft.battles.table.guild "Guild">
+<!ENTITY gft.battles.table.level "Level">
+<!ENTITY gft.battles.table.server "Server">
+<!ENTITY gft.battles.table.attacks "Attacks">
+<!ENTITY gft.battles.table.defenses "Defenses">
+<!ENTITY gft.battles.table.goldRaised "Gold raised">
+<!ENTITY gft.battles.table.goldLost "Gold lost">
+<!ENTITY gft.battles.table.maxGoldRaised "Max gold raised">
+<!ENTITY gft.battles.table.maxGoldLost "Max gold lost">
+<!ENTITY gft.battles.table.expRaised "Experience raised">
+<!ENTITY gft.battles.searchby.name "Opponent">
+<!ENTITY gft.battles.searchby.level "above level">
+<!ENTITY gft.battles.searchby.period "Time period">
+<!ENTITY gft.battles.searchby.server "Server">
+<!ENTITY gft.battles.searchby.period.all "All">
+<!ENTITY gft.battles.searchby.period.oneday "One day">
+<!ENTITY gft.battles.searchby.period.twodays "Two days">
+<!ENTITY gft.battles.searchby.period.threedays "Three days">
+<!ENTITY gft.battles.searchby.period.fivedays "Five days">
+<!ENTITY gft.battles.searchby.period.oneweek "One week">
+<!ENTITY gft.battles.searchby.period.onemonth "One month">
+<!ENTITY gft.battles.buttons.search "show battles">
+
+<!-- GFT Statusbar XUL -->
+<!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Use the left mouse button to open the battles gui">
+<!ENTITY gft.statusbar.tooltip.menu.desc.row2 "Use the right mouse button to open the menu">
+<!ENTITY gft.statusbar.tooltip.atacks.sessionstart "Attacks count since session start">
+<!ENTITY gft.statusbar.tooltip.atacks.startoftheday "Attacks count since start of the day">
+<!ENTITY gft.statusbar.tooltip.lastopponent "Last opponent">
+<!ENTITY gft.statusbar.tooltip.lastdaybattles "Attacks within last day">
+<!ENTITY gft.statusbar.tooltip.nextpossiblebattletime "Next possible attack time">
+<!ENTITY gft.statusbar.menu.options "Options">
+<!ENTITY gft.statusbar.menu.battles "Battles">
+<!ENTITY gft.statusbar.menu.about "About">

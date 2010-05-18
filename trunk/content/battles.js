@@ -23,126 +23,199 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var battles = {
-	initialized: false,
-	orderPlayer: false,
-	orderGuild: false,
-	orderBattles: false,
-	infoTimeOut: -1,
+GFTBattles = (function()
+{
+	var orderByName = false;
+	var orderByGuild = false;
+	var orderByLevel = false;
+	var orderByServer = false;
+	var orderByAttacks = false;
+	var orderByDefenses = false;
+	var orderByGoldRaised = false;
+	var orderByGoldLost = false;
+	var orderByMaxGoldRaised = false;
+	var orderByMaxGoldLost = false;
+	var orderByExpRaised = false;
+	var infoTimeOut = -1;
 	
-	init: function()
+	function initDB()
 	{
-		if(!this.initialized)
-			gft_db.init();
-		this.defaultSearch();
-		document.getElementById("searchplayername").focus();
-		this.initialized = true;
-	},
+		gft_db.init();
+		sortBy("name");
+		document.getElementById("search-name").focus();
+	}
 	
-	onLoad: function() 
+	function sortBy(type)
 	{
-		if(this.initialized)
-			return;	
-
-		window.removeEventListener("load", function(e) { battles.onLoad(e); }, false);
-		this.init();
-	},
-	
-	onUnLoad: function() 
-	{
-		this.initialized = false;
-	},
-	
-	defaultSearch: function()
-	{
-		this.sort("player");
-	},
-	
-	sort: function(type)
-	{
-		var order = "asc";
+		var orderDirection = "asc";
 		switch (type)
 		{
-			case "player": { 
-							this.orderPlayer = !this.orderPlayer;
-							this.orderPlayer ? order = "asc" : order = "desc"; 
-							this.search("p.pname", order);
-							break;
-						}
+			case "name": { 
+				orderByName = !orderByName;
+				orderByName ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("name", orderDirection);
+				break;
+				}
 			case "guild": { 
-							this.orderGuild = !this.orderGuild;
-							this.orderGuild ? order = "asc" : order = "desc"; 
-							this.search("p.pguild", order);
-							break;
-						}
-			case "battlescount": { 
-							this.orderBattles = !this.orderBattles;
-							this.orderBattles ? order = "asc" : order = "desc"; 
-							this.search("c.battlesCount", order);
-							break;
-						}
+				orderByGuild = !orderByGuild;
+				orderByGuild ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("guild", orderDirection);
+				break;
+				}
+			case "level": { 
+				orderByLevel = !orderByLevel;
+				orderByLevel ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("level", orderDirection);
+				break;
+			}
+			case "server": { 
+				orderByServer = !orderByServer;
+				orderByServer ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("server", orderDirection);
+				break;
+			}
+			case "attacks": { 
+				orderByAttacks = !orderByAttacks;
+				orderByAttacks ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("a.attacks", orderDirection);
+				break;
+			}
+			case "defenses": { 
+				orderByDefenses = !orderByDefenses;
+				orderByDefenses ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("d.defenses", orderDirection);
+				break;
+			}
+			case "goldRaised": { 
+				orderByGoldRaised = !orderByGoldRaised;
+				orderByGoldRaised ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("a.goldRaised", orderDirection);
+				break;
+			}
+			case "goldLost": { 
+				orderByGoldLost = !orderByGoldLost;
+				orderByGoldLost ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("d.goldLost", orderDirection);
+				break;
+			}
+			case "maxGoldRaised": { 
+				orderByMaxGoldRaised = !orderByMaxGoldRaised;
+				orderByMaxGoldRaised ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("a.maxGoldRaised", orderDirection);
+				break;
+			}
+			case "maxGoldLost": { 
+				orderByMaxGoldLost = !orderByMaxGoldLost;
+				orderByMaxGoldLost ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("d.maxGoldLost", orderDirection);
+				break;
+			}
+			case "expRaised": { 
+				orderByExpRaised = !orderByExpRaised;
+				orderByExpRaised ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("a.expRaised", orderDirection);
+				break;
+			}
 			default: console.log("nothing clicked"); break;
 		}
-	},
+	}
 	
-	search: function(orderBy, orderDirection)
+	function search(orderBy, orderDirection)
 	{	
-		if(document.getElementById("showbattlestreechildren").firstChild)
-			this.removeAllTreeChildren();
+		if(document.getElementById("battles-rows").firstChild)
+			removeAllTreeChildren();
 		
-		if(this.infoTimeOut != -1)
-			window.clearTimeout(this.infoTimeOut);
+		if(infoTimeOut != -1)
+			window.clearTimeout(infoTimeOut);
 		
-		var player = document.getElementById("searchplayername").value;
-		var abovelvl = document.getElementById("searchplayerlevel").value;
-		var period = document.getElementById("selectsearchtimeperiod").selectedItem.value;
+		//TODO search servers
+		var name = document.getElementById("search-name").value;
+		var level = document.getElementById("search-level").value;
+		var period = document.getElementById("search-period").selectedItem.id;
 		
-		var opponents = gft_db.getOpponentsWithCriteria(period, orderBy, orderDirection, abovelvl, player);
+		var opponents = gft_db.getOpponentsWithCriteria(period, orderBy, orderDirection, name, level);
 		
-		var info = document.getElementById("loadinginfo");
+		var info = document.getElementById("load-info");
 		info.hidden = false;
 		info.value = opponents.length + " " + gft_utils.getString("loadedEntries") + ".";
 		
 		for(var i = 0; i < opponents.length; i++)
 		{
 			var playerData = opponents[i];
-			var pid = playerData.pid;
-			var pname = playerData.name;
-			var pGuild = playerData.guild;
-			var battlesCount = playerData.battlesCount;
-			this.createTreeItemElement((pname && pname != "") ? pname : "undefined[" + pid + "]", pGuild, battlesCount);
+			createTreeRow(playerData);
 		} 
-		this.infoTimeOut = window.setTimeout(function(e) { info.hidden = true; }, 10000);
-	},
+		infoTimeOut = window.setTimeout(function(e) { info.hidden = true; }, 10000);
+	}
 	
-	createTreeItemElement: function(playerdata, guilddata, battlescountdata)
+	function createTreeCell(labelValue)
 	{
-		var treechildren = document.getElementById("showbattlestreechildren");
+		var treeCell = document.createElement("treecell");
+		treeCell.setAttribute("label", labelValue);
+		return treeCell;
+	}
+	
+	function createTreeRow(playerData)
+	{
+		var treechildren = document.getElementById("battles-rows");
 		var treeitem = document.createElement("treeitem");
 		var treerow = document.createElement("treerow");
 		
-		var treecellplayer = document.createElement("treecell");
-		treecellplayer.setAttribute("label", playerdata);
+		var nameCell = createTreeCell(playerData.name);
+		var guildCell = createTreeCell(getValueOrNone(playerData.guild));
+		var levelCell = createTreeCell(playerData.level);
+		var serverCell = createTreeCell(playerData.server);
+		var attacksCell = createTreeCell(getValueOrZero(playerData.attacks));
+		var defensesCell = createTreeCell(getValueOrZero(playerData.defenses));
+		var goldRaisedCell = createTreeCell(getValueOrZero(playerData.goldRaised));
+		var goldLostCell = createTreeCell(getValueOrZero(playerData.goldLost));
+		var maxGoldRaisedCell = createTreeCell(getValueOrZero(playerData.maxGoldRaised));
+		var maxGoldLostCell = createTreeCell(getValueOrZero(playerData.maxGoldLost));
+		var expRaisedCell = createTreeCell(getValueOrZero(playerData.expRaised));
 		
-		var treecellguild = document.createElement("treecell");
-		treecellguild.setAttribute("label", guilddata);
-		
-		var treecellbattlescount = document.createElement("treecell");
-		treecellbattlescount.setAttribute("label", battlescountdata);
-		
-		treerow.appendChild(treecellplayer);
-		treerow.appendChild(treecellguild);
-		treerow.appendChild(treecellbattlescount);
+		treerow.appendChild(nameCell);
+		treerow.appendChild(guildCell);
+		treerow.appendChild(levelCell);
+		treerow.appendChild(serverCell);
+		treerow.appendChild(attacksCell);
+		treerow.appendChild(defensesCell);
+		treerow.appendChild(goldRaisedCell);
+		treerow.appendChild(goldLostCell);
+		treerow.appendChild(maxGoldRaisedCell);
+		treerow.appendChild(maxGoldLostCell);
+		treerow.appendChild(expRaisedCell);
 		treeitem.appendChild(treerow);
 		treechildren.appendChild(treeitem);
-	},
+	}
 	
-	removeAllTreeChildren: function()
+	function getValueOrZero(value)
 	{
-		var treechildren = document.getElementById("showbattlestreechildren");
+		return (value && value != "" ? value : "0");
+	}
+	
+	function getValueOrNone(value)
+	{
+		return (value != "none" ? value : gft_utils.getString("none"));
+	}
+	
+	function removeAllTreeChildren()
+	{
+		var treechildren = document.getElementById("battles-rows");
 		while (treechildren.firstChild) 
 			treechildren.removeChild(treechildren.firstChild);
 	}
-};
-
-//window.addEventListener("load", function(e) { battles.onLoad(e); }, false);
+	
+	return {
+		init: function()
+		{
+			initDB();
+		},
+		defaultSearch: function()
+		{
+			sortBy("name");
+		},
+		sort: function(type)
+		{
+			sortBy(type);
+		}
+	};
+})();

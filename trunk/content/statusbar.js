@@ -33,12 +33,16 @@ var gft_statusbar = {
 		switch (event.button)
 		{
 			case 0:
-				// take no action on left click event
+				if(event.target.id == "gftCloseButton"
+					|| event.target.id == "gft-status-icon")
+				{
+					this.handleAction("battles");
+				}
+				//this.handleAction("battles");
 				break;
 			case 1:
-				this.handleAction("options");  // Set action via options
+				// Button 2 shows popup menu via context attribute
 				break;
-			// Button 2 shows popup menu via context attribute
 		}
 	},
 
@@ -50,7 +54,7 @@ var gft_statusbar = {
 	handleMenu: function(menupopup)  // Decides which menu items to grey out
 	{
 		var menuItems = menupopup.getElementsByTagName("menuitem");
-		for (var i=0; i < menuItems.length; i++)  // menuItems[i].value is not reliable in FF3betas; using getAttribute() instead!
+		for (var i=0; i < menuItems.length; i++)
 			menuItems[i].setAttribute( "disabled", false );
 	},
 
@@ -64,9 +68,15 @@ var gft_statusbar = {
 				//				  "gftOptions", "chrome,dialogger.log,centerscreen");
 				break;
 			case "battles":
-				alert("Not supported in this release");
-				//window.openDialog("chrome://gft/content/battles.xul",
-				//				  "gftBattles", "chrome,dialogger.log,centerscreen");
+				var battlesSearchSplitter = document.getElementById("battlesSearchSplitter");
+				var battlesSearch = document.getElementById("battlesSearch");
+				battlesSearchSplitter.collapsed = !battlesSearchSplitter.collapsed;
+				battlesSearch.collapsed = !battlesSearch.collapsed;
+				if(!battlesSearch.collapsed)
+				{
+					GFTBattles.defaultSearch();
+					document.getElementById("search-name").focus();
+				}
 				break;
 			case "about":
 				window.openDialog("chrome://gft/content/about.xul",

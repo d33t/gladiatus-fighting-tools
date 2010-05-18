@@ -1,4 +1,5 @@
-<!ENTITY about "About">
-<!ENTITY version "Version:">
-<!ENTITY createdBy "Created By:">
-<!ENTITY homepage "Home Page:">
+<!ENTITY gft.about.about "About">
+<!ENTITY gft.about.version "Version">
+<!ENTITY gft.about.createdBy "Created By">
+<!ENTITY gft.about.homepage "Home Page">
+<!ENTITY gft.about.translators "Translators">
