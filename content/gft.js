@@ -151,6 +151,9 @@ var gft = {
 		}	
 		else if(validator.validatePlayerReportPage(loc))
 		{
+			if(!gft_db.isServerActive(gft_utils.getServer()))
+				return;
+			
 			var nodesSnapshot = this.evaluateXPath("//span[@class='playername_achievement']");
 			var myPlayerNode = nodesSnapshot.snapshotItem(0);
 			var opponentNode = nodesSnapshot.snapshotItem(1);
@@ -224,7 +227,7 @@ var gft = {
 							+ "Server: " +  server);
 							
 				var mypid = gft_db.getMyPid(server);
-				if(defenderID != mypid) //TODO somebody has atacked me
+				if(defenderID != mypid) 
 				{
 					gft_db.updatePlayerData(defenderID, defender, server, defenderLevel, defenderGuild);
 					
@@ -316,12 +319,13 @@ function PlayerPageContent()
 	function splitNumberValueInGroups(value)
 	{
 		var tmp = "";
+		var separator = ".";
 		value = (value+"").split("").reverse();
 		
 		for(var i = 0; i < value.length; i++)
 		{
 			if(i > 0 && i % 3 == 0)
-				tmp += "," + value[i];
+				tmp += separator + value[i];
 			else
 				tmp += value[i];
 		}
@@ -382,7 +386,7 @@ function PlayerPageContent()
 		return gft.createTableEntry(gft_utils.getString("realWinChance"),  winChance);
 	}
 	
-	this.getContent = function(doc, period) 
+	this.getContent = function(doc, period) //TODO options
 	{
 		var server = doc.domain+"";
 		var pid = gft_utils.getPidFromUrl(doc.location+"");
@@ -403,7 +407,7 @@ function PlayerPageContent()
 				getWinChance(pid, server);
 	};
 	
-	this.getMyStats = function(doc, period)
+	this.getMyStats = function(doc, period) //TODO options
 	{	
 		var server = doc.domain+"";
 		console.log("[getMyStats]: Server" +  server);

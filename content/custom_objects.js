@@ -23,12 +23,19 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-function DBPlayerData(id, pname, pguild, battles) 
+function DBPlayerData(name, guild, level, server, attacks, defenses, goldRaised, goldLost, maxGoldRaised, maxGoldLost, expRaised) 
 {
-	this.pid = id;
-	this.name = pname;
-	this.guild = pguild;
-	this.battlesCount = battles;
+	this.name = name;
+	this.guild = guild;
+	this.level = level;
+	this.server = server;
+	this.attacks = attacks;
+	this.defenses = defenses;
+	this.goldRaised = goldRaised;
+	this.goldLost = goldLost;
+	this.maxGoldRaised = maxGoldRaised;
+	this.maxGoldLost = maxGoldLost;
+	this.expRaised = expRaised;
 }
 
 function HttpPlayerData(pname, pguild, plevel, hp)

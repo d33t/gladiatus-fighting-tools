@@ -1,0 +1,67 @@
+.toolbarbutton-iconic {
+    margin: 0 4px 0 1px !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.toolbarbutton-iconic > .toolbarbutton-icon {
+    padding: 0;
+}
+
+#gftCloseButton {
+    list-style-image: url(chrome://gft/skin/close.png) !important;
+}
+
+#gftCloseButton:hover {
+    list-style-image: url(chrome://gft/skin/closeHover.png) !important;
+}
+
+#gftCloseButton:hover:active {
+    list-style-image: url(chrome://gft/skin/closeActive.png) !important;
+}
+
+#gftDetachButton {
+    list-style-image: url(chrome://gft/skin/detach.png) !important;
+}
+
+#gftDetachButton:hover {
+    list-style-image: url(chrome://gft/skin/detachHover.png) !important;
+}
+
+#gftDetachButton:hover:active {
+    list-style-image: url(chrome://gft/skin/detachActive.png) !important;
+}
+
+.search-box {
+	float:left;
+    -moz-appearance: none;
+    margin: 0 0px 1px 2px;
+    border: 1px solid;
+    -moz-border-radius: 5px;
+    -moz-border-top-colors: #96969D;
+    -moz-border-right-colors: #96969D;
+    -moz-border-bottom-colors: #96969D;
+    -moz-border-left-colors: #96969D;
+    padding: 2px 0 2px 3px;
+    background: -moz-field;
+    font: icon;
+    font-size: 11px;
+    height: 10px;
+    direction: ltr;
+}
+
+#battlesSearchSplitter {
+    border-top: 1px solid !important;
+    -moz-border-top-colors: threedShadow !important;
+    border-bottom: 1px solid !important;
+    -moz-border-bottom-colors: #EEEEEE !important;
+    min-height: 3px;
+    max-height: 3px;
+    background-color: #FFFFFF;
+}
+
+#load-info {
+	font-size:9px;
+	color:#43CD80;
+}

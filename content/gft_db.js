@@ -452,7 +452,7 @@ var gft_db = {
 					console.log("Debug[updatePlayerData()]: Inserting data for " + server + " - " + pname + "[" + pid + "]..." + 
 								"\nData: Level: " + plevel + "; Guild: " + pguild);
 					this.insertPlayer(pid, pname, server, plevel, pguild);
-				} else if (update < this.getTimePeriod("oneweek"))
+				} else if (update < this.getTimePeriod("oneday"))
 				{
 					console.log("Debug[updatePlayerData()]: Inserting data for " + server + " - " + pname + "[" + pid + "]..." + 
 								"\nData: Level: " + plevel + "; Guild: " + pguild);// + "; In war?: " + (inwar == 1 ? "yes" : "no"));
@@ -758,34 +758,64 @@ var gft_db = {
 	},
 	
 	//TODO !!!
-	getOpponentsWithCriteria: function(period, orderBy, orderDirection, level, player)
+	getOpponentsWithCriteria: function(period, orderBy, orderDirection, name, level, server)
 	{
-		console.log("Debug[getOpponentsWithCriteria()]: period: " + period + ", orderBy: " + orderBy + ", orderDirection: " + orderDirection + ", level: " + level + ", player: " + player);
+		console.log("Debug[getOpponentsWithCriteria()]: period: " + period + ", orderBy: " + orderBy + ", orderDirection: " + orderDirection + ", level: " + level + ", player: " + name + ", server: " + server);
 		// create query
-		var query = "";
+//		var query = "select a.name, a.guild, a.level, a.server, a.attacks, d.defenses, a.goldRaised, d.goldLost, a.maxGoldRaised, d.maxGoldLost, a.expRaised"
+//		+ " from"
+//		+ " (select p.apid, p.name, p.guild, p.level, p.server, b.atime as aTime, count(b.battleid) as attacks, sum(r.gold) as goldRaised, sum(r.exp) as expRaised, max(r.gold) as maxGoldRaised"
+//		+ " from player p inner join battles b on p.apid=b.oid inner join reports r on b.battleid = r.battleid where b.atype=1 group by b.oid) a"
+//		+ " left join"
+//		+ " (select p.apid, p.name, p.guild, p.level, p.server, b.atime as aTime, count(b.battleid) as defenses, sum(r.gold) as goldLost, max(r.gold) as maxGoldLost"
+//		+ " from player p inner join battles b on p.apid=b.oid inner join reports r on b.battleid = r.battleid where b.atype=0 group by b.oid) d"
+//		+ " on d.apid = a.apid"
+//		+ " where a.aTime > " + this.getTimePeriod(period);
 
-		var where = false;
+		var select = "select name as rName, guild as rGuild, level as rLevel, server as rServer, a.attacks as rAttacks, d.defenses as rDefenses, a.goldRaised as rGoldRaised, d.goldLost as rGoldLost, a.maxGoldRaised as rMaxGoldRaised, d.maxGoldLost as rMaxGoldLost, a.expRaised as rExpRaised"
+		+ " from";
+		var attacksTable = " (select p.apid, p.name, p.guild, p.level, p.server, b.atime as aTime, count(b.battleid) as attacks, sum(r.gold) as goldRaised, sum(r.exp) as expRaised, max(r.gold) as maxGoldRaised"
+		+ " from player p inner join battles b on p.apid=b.oid inner join reports r on b.battleid = r.battleid where b.atype=1 group by b.oid) a";
+		var leftJoin = " left join";
+		var defensesTable = " (select p.apid, p.name, p.guild, p.level, p.server, b.atime as aTime, count(b.battleid) as defenses, sum(r.gold) as goldLost, max(r.gold) as maxGoldLost"
+		+ " from player p inner join battles b on p.apid=b.oid inner join reports r on b.battleid = r.battleid where b.atype=0 group by b.oid) d";
+		var joinOn =  " on d.apid = a.apid";
+		var whereClause = " where aTime > " + this.getTimePeriod(period);
 		
-		// add to query where criteria player name
-		if(level && level != "")
+		var query1 = select.replace("name", "a.name").
+							replace("guild", "a.guild").
+							replace("level", "a.level").
+							replace("server", "a.server")
+							+ attacksTable + leftJoin + defensesTable + joinOn
+							+ whereClause.replace("aTime", "a.aTime");
+		var query2 = select.replace("name", "d.name").
+							replace("guild", "d.guild").
+							replace("level", "d.level").
+							replace("server", "d.server") 
+							+ defensesTable + leftJoin + attacksTable + joinOn 
+							+ whereClause.replace("aTime", "d.aTime");
+		
+		if(!this.isEmpty(level))
 		{
-			where = true;
-			query +=  " where p.plevel > " + level;
+			query1 +=  " and a.level > " + level;
+			query2 +=  " and d.level > " + level;
 		}
 		
-		// add to query where criteria level abave
-		if(player && player != "")
+		if(!this.isEmpty(name))
 		{
-			if(where)
-				query += " and";
-			else
-				query += " where";
+			query1 += " and a.name LIKE '%" + name + "%'";
+			query2 += " and d.name LIKE '%" + name + "%'";
 			
-			query += " p.pname LIKE \'%" + player + "%\'";
 		}
-		// add to query order by orderBy orderDirection
-		query += " order by " + orderBy + " " + orderDirection; 
 		
+		if(!this.isEmpty(server))
+		{
+			query1 += " and a.server = '" + server + "'";
+			query2 += " and d.server = '" + server + "'";
+		}
+		query1 += " order by " + ((orderBy.indexOf("a.") > 0 ||  orderBy.indexOf("d.") > 0) ? orderBy: 'a.' + orderBy) + " " + orderDirection; 
+		
+		var query =  query2 + " UNION " + query1;
 		console.log("Debug[getOpponentsWithCriteria()]: Query = \"" +  query + "\"");
  		if (this.gft_dbConn)
 		{
@@ -797,26 +827,32 @@ var gft_db = {
 				var step = 0;
 				while (oStatement.executeStep())
 				{
-					var pid = oStatement.row.pid;
-					var player = oStatement.row.pname;
-					var guild = oStatement.row.pguild;
-					var battlesCount = oStatement.row.battlesCount;
-					result[step] = new DBPlayerData(pid, player, guild, battlesCount);
+					result[step] = new DBPlayerData(oStatement.row.rName,
+													oStatement.row.rGuild,
+													oStatement.row.rLevel,
+													oStatement.row.rServer,
+													oStatement.row.rAttacks,
+													oStatement.row.rDefenses,
+													oStatement.row.rGoldRaised,
+													oStatement.row.rGoldLost,
+													oStatement.row.rMaxGoldRaised,
+													oStatement.row.rMaxGoldLost,
+													oStatement.row.rExpRaised);
 					step++;
 				}
 				oStatement.reset();
 	
 				return result;
 			}
-			catch (e) {alert("DB query failed. Could not get opponents list with criteria\n Period: " + period + "\nOrder by: " + orderBy + "\nDirection: " + orderDirection + "\nException: " + e);}
+			catch (e) {alert("DB query failed. Could not get opponents list with criteria.\nException: " + e);}
 		}
 	},
 	
 	/**
-	* returns number of battles( atacks or defences) since specified time 
+	* returns number of battles( attacks or defenses) since specified time 
 	* @param time - user defined time
 	* @param server - server played on
-	* @param atype - 1 if atacks, 0 if defences
+	* @param atype - 1 if attacks, 0 if defenses
 	*/
 	getNumberOfBattlesSinceCustomTime: function(time, server, atype)
 	{
