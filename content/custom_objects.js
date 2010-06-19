@@ -23,8 +23,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-function DBPlayerData(name, guild, level, server, attacks, defenses, goldRaised, goldLost, maxGoldRaised, maxGoldLost, expRaised) 
-{
+GFT.DBPlayerData = function(name, guild, level, server, attacks, defenses, goldRaised, goldLost, maxGoldRaised, maxGoldLost, expRaised) {
 	this.name = name;
 	this.guild = guild;
 	this.level = level;
@@ -36,12 +35,11 @@ function DBPlayerData(name, guild, level, server, attacks, defenses, goldRaised,
 	this.maxGoldRaised = maxGoldRaised;
 	this.maxGoldLost = maxGoldLost;
 	this.expRaised = expRaised;
-}
+};
 
-function HttpPlayerData(pname, pguild, plevel, hp)
-{
+GFT.HttpPlayerData = function(pname, pguild, plevel, hp) {
 	this.name = pname;
 	this.guild = pguild;
 	this.level = plevel;
 	this.lifepoints = hp;
-}
+};

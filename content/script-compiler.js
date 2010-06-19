@@ -1,4 +1,4 @@
-var injectplayerpage_gmCompiler={
+GFT.gmCompiler={
 
 // getUrlContents adapted from Greasemonkey Compiler
 // http://www.letitblog.com/code/python/greasemonkey.py.txt
@@ -7,6 +7,7 @@ var injectplayerpage_gmCompiler={
 // most everything else below based heavily off of Greasemonkey
 // http://greasemonkey.devjavu.com/
 // used under GPL permission
+console: GFT.Utils.console,
 
 getUrlContents: function(aUrl){
 	var	ioService=Components.classes["@mozilla.org/network/io-service;1"]
@@ -51,16 +52,16 @@ contentLoad: function(e) {
 	var href=new XPCNativeWrapper(unsafeLoc, "href").href;
 
 	if (
-		injectplayerpage_gmCompiler.isGreasemonkeyable(href)
+		GFT.gmCompiler.isGreasemonkeyable(href)
 		&& (( /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=player&p=\d+&sh=.*/.test(href) )
 		|| ( /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=player&p=\d+&doll=1&sh=.*/.test(href) ))
 		&& true
 	) {
-		var script=injectplayerpage_gmCompiler.getUrlContents(
+		var script=GFT.gmCompiler.getUrlContents(
 			'chrome://gft/content/injectplayerpage.js'
 		);
 		
-		injectplayerpage_gmCompiler.injectScript(script, href, unsafeWin);
+		GFT.gmCompiler.injectScript(script, href, unsafeWin);
 	}
 },
 
@@ -70,8 +71,8 @@ injectScript: function(script, url, unsafeContentWin) {
 
 	sandbox=new Components.utils.Sandbox(safeWin);
 
-	var storage=new injectplayerpage_ScriptStorage();
-	xmlhttpRequester=new injectplayerpage_xmlhttpRequester(
+	var storage=new GFT.PrefManager();
+	xmlhttpRequester=new GFT.xmlhttpRequester(
 		unsafeContentWin, window//appSvc.hiddenDOMWindow
 	);
 
@@ -83,15 +84,15 @@ injectScript: function(script, url, unsafeContentWin) {
 	sandbox.XPathResult=Components.interfaces.nsIDOMXPathResult;
 
 	// add our own APIs
-	sandbox.GM_addStyle=function(css) { injectplayerpage_gmCompiler.addStyle(sandbox.document, css); };
-	sandbox.GM_setValue=injectplayerpage_gmCompiler.hitch(storage, "setValue");
-	sandbox.GM_getValue=injectplayerpage_gmCompiler.hitch(storage, "getValue");
-	var ppc = new PlayerPageContent();
-	sandbox.GM_getContent=injectplayerpage_gmCompiler.hitch(ppc, "getContent");
-	sandbox.GM_getMyStats=injectplayerpage_gmCompiler.hitch(ppc, "getMyStats");
-	sandbox.GM_getString=injectplayerpage_gmCompiler.hitch(ppc, "getString");
-	sandbox.GM_openInTab=injectplayerpage_gmCompiler.hitch(this, "openInTab", unsafeContentWin);
-	sandbox.GM_xmlhttpRequest=injectplayerpage_gmCompiler.hitch(
+	//sandbox.GM_addStyle=function(css) { GFT.gmCompiler.addStyle(sandbox.document, css); };
+	sandbox.GM_setValue=GFT.gmCompiler.hitch(storage, "setValue");
+	sandbox.GM_getValue=GFT.gmCompiler.hitch(storage, "getValue");
+	var ppc = new GFT.PlayerPageContent();
+	sandbox.GM_getContent=GFT.gmCompiler.hitch(ppc, "getContent");
+	sandbox.GM_getMyStats=GFT.gmCompiler.hitch(ppc, "getMyStats");
+	sandbox.GM_getString=GFT.gmCompiler.hitch(ppc, "getString");
+	sandbox.GM_openInTab=GFT.gmCompiler.hitch(this, "openInTab", unsafeContentWin);
+	sandbox.GM_xmlhttpRequest=GFT.gmCompiler.hitch(
 		xmlhttpRequester, "contentStartRequest"
 	);
 	//unsupported
@@ -112,7 +113,7 @@ injectScript: function(script, url, unsafeContentWin) {
 		e2.fileName=script.filename;
 		e2.lineNumber=0;
 		//GM_logError(e2);
-		alert(e2);
+		this.console.log(e2);
 	}
 },
 
@@ -188,7 +189,7 @@ hitch: function(obj, meth) {
 	var staticArgs = Array.prototype.splice.call(arguments, 2, arguments.length);
 
 	return function() {
-		if (injectplayerpage_gmCompiler.apiLeakCheck(hitchCaller)) {
+		if (GFT.gmCompiler.apiLeakCheck(hitchCaller)) {
 			return;
 		}
 		
@@ -217,35 +218,36 @@ addStyle:function(doc, css) {
 	head.appendChild(style);
 },
 
-onLoad: function() {
+onLoad: function(e) {
 	var	appcontent=window.document.getElementById("appcontent");
 	if (appcontent && !appcontent.greased_injectplayerpage_gmCompiler) {
 		appcontent.greased_injectplayerpage_gmCompiler=true;
-		appcontent.addEventListener("DOMContentLoaded", injectplayerpage_gmCompiler.contentLoad, false);
+		appcontent.addEventListener("DOMContentLoaded", GFT.gmCompiler.contentLoad, false);
 	}
 },
 
 onUnLoad: function() {
 	//remove now unnecessary listeners
-	window.removeEventListener('load', injectplayerpage_gmCompiler.onLoad, false);
-	window.removeEventListener('unload', injectplayerpage_gmCompiler.onUnLoad, false);
+	window.removeEventListener('load', GFT.gmCompiler.onLoad, false);
+	window.removeEventListener('unload', GFT.gmCompiler.onUnLoad, false);
 	window.document.getElementById("appcontent")
-		.removeEventListener("DOMContentLoaded", injectplayerpage_gmCompiler.contentLoad, false);
+		.removeEventListener("DOMContentLoaded", GFT.gmCompiler.contentLoad, false);
 }
 
 }; //object injectplayerpage_gmCompiler
 
+/*
+GFT.ScriptStorage = function() {
+	this.prefMan=new GFT.PrefManager();
+};
 
-function injectplayerpage_ScriptStorage() {
-	this.prefMan=new injectplayerpage_PrefManager();
-}
-injectplayerpage_ScriptStorage.prototype.setValue = function(name, val) {
+GFT.ScriptStorage.prototype.setValue = function(name, val) {
 	this.prefMan.setValue(name, val);
 };
-injectplayerpage_ScriptStorage.prototype.getValue = function(name, defVal) {
+GFT.ScriptStorage.prototype.getValue = function(name, defVal) {
 	return this.prefMan.getValue(name, defVal);
 };
+*/
 
-
-window.addEventListener('load', injectplayerpage_gmCompiler.onLoad, false);
-window.addEventListener('unload', injectplayerpage_gmCompiler.onUnLoad, false);
+window.addEventListener('load', GFT.gmCompiler.onLoad, false);
+window.addEventListener('unload', GFT.gmCompiler.onUnLoad, false);

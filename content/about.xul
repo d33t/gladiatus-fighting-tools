@@ -9,7 +9,7 @@
                  margin: 5px;
                  border: 1px solid Grey;">
 		<text value="Gladiatus Fighting Tools" style="font-weight: bold; font-size: x-large;"/>
-		<text value="&gft.about.version; 1.3"/>
+		<text value="&gft.about.version; 1.4"/>
 		<separator class="thin"/>
 		<text value="&gft.about.createdBy;" style="font-weight: bold;"/>
 		<text value="Demons Team"/>

@@ -1,4 +1,4 @@
-function injectplayerpage_PrefManager() {
+GFT.PrefManager = function() {
 	var startPoint="extensions.gft.";
 
 	var pref=Components.classes["@mozilla.org/preferences-service;1"].
@@ -89,4 +89,4 @@ function injectplayerpage_PrefManager() {
 				.removeObserver(prefName, observers[watcher]);
 		}
 	};
-}
+};

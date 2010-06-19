@@ -23,16 +23,18 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var gft_db = {
-	gft_dbConn: null,
+GFT.DB = {
+	dbConn: null,
+	console: GFT.Utils.console,
+	
 	init: function() 
 	{
-		if (!this.gft_dbConn)
+		if (!this.dbConn)
 		{
 			var oFile = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("ProfD", Components.interfaces.nsIFile);
 			oFile.append("gft.sqlite");
 			var oStorageService = Components.classes["@mozilla.org/storage/service;1"].getService(Components.interfaces.mozIStorageService);
-			this.gft_dbConn = oStorageService.openDatabase(oFile);
+			this.dbConn = oStorageService.openDatabase(oFile);
 			this.createDB();
 
 		}
@@ -40,12 +42,12 @@ var gft_db = {
 	
 	createDB: function()
 	{
-		try { this.gft_dbConn.executeSimpleSQL("SELECT apid, pid, name, server, level, guild, lastupdate FROM player"); }
+		try { this.dbConn.executeSimpleSQL("SELECT apid, pid, name, server, level, guild, lastupdate FROM player"); }
 		catch (e)
 		{
 			//Create pinfo database
-			console.log("Debug[createDB()]: Creating table player...");
-			this.gft_dbConn.executeSimpleSQL("DROP TABLE IF EXISTS player;" +
+			this.console.log("Debug[createDB()]: Creating table player...");
+			this.dbConn.executeSimpleSQL("DROP TABLE IF EXISTS player;" +
 												"CREATE TABLE player (" +
 												"apid INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, " +
 												"pid INTEGER NOT NULL, " +
@@ -56,35 +58,35 @@ var gft_db = {
 												"lastupdate DATETIME DEFAULT (strftime('%s', 'now')))");
 		}	
 		
-		try { this.gft_dbConn.executeSimpleSQL("SELECT myid, activated FROM myinfo"); }
+		try { this.dbConn.executeSimpleSQL("SELECT myid, activated FROM myinfo"); }
 		catch (e)
 		{
 			//Create pinfo database
-			console.log("Debug[createDB()]: Creating table myinfo...");
-			this.gft_dbConn.executeSimpleSQL("DROP TABLE IF EXISTS myinfo;" +
+			this.console.log("Debug[createDB()]: Creating table myinfo...");
+			this.dbConn.executeSimpleSQL("DROP TABLE IF EXISTS myinfo;" +
 												"CREATE TABLE myinfo (" +
 												"myid INTEGER NOT NULL," +
 												"activated INTEGER DEFAULT 0)");
 		}			
 		
-		try { this.gft_dbConn.executeSimpleSQL("SELECT oid, inwar FROM oinfo"); }
+		try { this.dbConn.executeSimpleSQL("SELECT oid, inwar FROM oinfo"); }
 		catch (e)
 		{
 			//Create pinfo database
-			console.log("Debug[createDB()]: Creating table oinfo...");
-			this.gft_dbConn.executeSimpleSQL("DROP TABLE IF EXISTS oinfo; " +
+			this.console.log("Debug[createDB()]: Creating table oinfo...");
+			this.dbConn.executeSimpleSQL("DROP TABLE IF EXISTS oinfo; " +
 												"CREATE TABLE oinfo (" +
 												"oid INTEGER NOT NULL, " +
 												"inwar INTEGER DEFAULT 0)");
 		}
 		
-		try {this.gft_dbConn.executeSimpleSQL("SELECT battleid, myid, oid, atype, atime FROM battles");}
+		try {this.dbConn.executeSimpleSQL("SELECT battleid, myid, oid, atype, atime FROM battles");}
 		catch (e)
 		{
 			//Create battles database
 			//atype: a bit showing if I'm atacking or defending (value 1 if atacking, 0 if defending)
-			console.log("Debug[createDB()]: Creating table battles...");
-			this.gft_dbConn.executeSimpleSQL("DROP TABLE IF EXISTS battles; " +
+			this.console.log("Debug[createDB()]: Creating table battles...");
+			this.dbConn.executeSimpleSQL("DROP TABLE IF EXISTS battles; " +
 												"CREATE TABLE battles (" +
 												"battleid INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, " +
 												"myid INTEGER NOT NULL , " +
@@ -93,12 +95,12 @@ var gft_db = {
 												"atime DATETIME DEFAULT (strftime('%s', 'now')))");
 		}
 		
-		try {this.gft_dbConn.executeSimpleSQL("SELECT battleid, beid, winnerid, gold, exp FROM reports");}
+		try {this.dbConn.executeSimpleSQL("SELECT battleid, beid, winnerid, gold, exp FROM reports");}
 		catch (e)
 		{
 			//Create battles database
-			console.log("Debug[createDB()]: Creating table reports...");
-			this.gft_dbConn.executeSimpleSQL("DROP TABLE IF EXISTS reports; " +
+			this.console.log("Debug[createDB()]: Creating table reports...");
+			this.dbConn.executeSimpleSQL("DROP TABLE IF EXISTS reports; " +
 												"CREATE TABLE reports (" +
 												"battleid INTEGER NOT NULL, " +
 												"beid INTEGER NOT NULL, " +
@@ -110,25 +112,25 @@ var gft_db = {
 		try
 		{
 			// check if tables exists
-			this.gft_dbConn.executeSimpleSQL("SELECT myid FROM myinfo");
-			this.gft_dbConn.executeSimpleSQL("SELECT oid FROM oinfo");
-			this.gft_dbConn.executeSimpleSQL("SELECT battleid FROM battles");
-			this.gft_dbConn.executeSimpleSQL("SELECT battleid FROM reports");
-			console.log("Debug[createDB()]: DB was successful intialized...");
+			this.dbConn.executeSimpleSQL("SELECT myid FROM myinfo");
+			this.dbConn.executeSimpleSQL("SELECT oid FROM oinfo");
+			this.dbConn.executeSimpleSQL("SELECT battleid FROM battles");
+			this.dbConn.executeSimpleSQL("SELECT battleid FROM reports");
+			this.console.log("Debug[createDB()]: DB was successful intialized...");
 		}
 		catch (e) {alert("Could not create the database\n" + e);}
 	},
 	
 	insertBattle: function(identifier, server, by, atype) 
 	{
-		console.log("Debug[insertBattle()]: Identifier: " + identifier + ", server: " + server + ", by: " + by + ", atype: " + atype);
-		if (this.gft_dbConn)
+		this.console.log("Debug[insertBattle()]: Identifier: " + identifier + ", server: " + server + ", by: " + by + ", atype: " + atype);
+		if (this.dbConn)
 		{
 			var oid = this.getPlayerId(identifier, server, by);
 			var myid = this.getMyId(server);
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("INSERT INTO battles (myid, oid, atype) " + 
+				var oStatement = this.dbConn.createStatement("INSERT INTO battles (myid, oid, atype) " + 
 																"VALUES (:my_id , :o_id, :a_type)");
 				oStatement.params.my_id = myid;
 				oStatement.params.o_id = oid;
@@ -144,15 +146,15 @@ var gft_db = {
 
 	insertBattleDetails: function(battleid, beid, server,  winner, gold, exp) 
 	{
-		console.log("Debug[insertBattleDetails()]: battleid: " + battleid + ", beid: " + beid + ", server: " + server + ", winner: " + winner + ", gold: " + gold + ", exp:" + exp);
-		if (this.gft_dbConn)
+		this.console.log("Debug[insertBattleDetails()]: battleid: " + battleid + ", beid: " + beid + ", server: " + server + ", winner: " + winner + ", gold: " + gold + ", exp:" + exp);
+		if (this.dbConn)
 		{
 			var winnerid = -1;
 			if(winner != "")
 				winnerid = this.getPlayerId(winner, server, "name");
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("INSERT INTO reports (battleid, beid, winnerid, gold, exp) " + 
+				var oStatement = this.dbConn.createStatement("INSERT INTO reports (battleid, beid, winnerid, gold, exp) " + 
 																"VALUES (:p_battleid , :p_beid, :p_winnerid, :p_gold, :p_exp)");
 				oStatement.params.p_battleid = battleid;
 				oStatement.params.p_beid = beid;
@@ -171,13 +173,13 @@ var gft_db = {
 	
 	getLastBattleId: function()
 	{
-		console.log("Debug[getLastBattleId()]");
+		this.console.log("Debug[getLastBattleId()]");
 		var bid = -1;
-		if (this.gft_dbConn)
+		if (this.dbConn)
 		{
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT max(battleid) as LastBattleId from battles");
+				var oStatement = this.dbConn.createStatement("SELECT max(battleid) as LastBattleId from battles");
 				
 				while (oStatement.executeStep())
 				{
@@ -194,13 +196,13 @@ var gft_db = {
 	
 	getLastPlayerId: function()
 	{
-		console.log("Debug[getLastPlayerId()]");
+		this.console.log("Debug[getLastPlayerId()]");
 		var apid = -1;
-		if (this.gft_dbConn)
+		if (this.dbConn)
 		{			
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT max(apid) as LastBattleId from player");
+				var oStatement = this.dbConn.createStatement("SELECT max(apid) as LastBattleId from player");
 				
 				while (oStatement.executeStep())
 				{
@@ -216,12 +218,12 @@ var gft_db = {
 	
 	insertPlayer: function(pid, pname, server, plevel, pguild)
 	{
-		console.log("Debug[insertPlayer()]: pid: " + pid + ", pname: " + pname + ", server: " + server + ", plevel: " + plevel + ", pguild: " + pguild);
-		if (this.gft_dbConn)
+		this.console.log("Debug[insertPlayer()]: pid: " + pid + ", pname: " + pname + ", server: " + server + ", plevel: " + plevel + ", pguild: " + pguild);
+		if (this.dbConn)
 		{
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("INSERT INTO player (pid, name, server, level, guild) " +  
+				var oStatement = this.dbConn.createStatement("INSERT INTO player (pid, name, server, level, guild) " +  
 																"VALUES (:p_id , :p_name, :p_server, :p_level, :p_guild)");
 				oStatement.params.p_id = pid;
 				oStatement.params.p_name = pname;
@@ -237,17 +239,17 @@ var gft_db = {
 	
 	insertOpponent: function(pid, pname, server, plevel, pguild, inwar) 
 	{
-		console.log("Debug[insertOpponent()]: pid: " + pid + ", pname: " + pname + ", server: " + server + ", plevel: " + plevel + ", pguild: " + pguild + ", inwar: " + inwar);
-		if (this.gft_dbConn)
+		this.console.log("Debug[insertOpponent()]: pid: " + pid + ", pname: " + pname + ", server: " + server + ", plevel: " + plevel + ", pguild: " + pguild + ", inwar: " + inwar);
+		if (this.dbConn)
 		{
 			try 
 			{
-				console.log("Inserting profile...\n " + pname + "[" + pid + "]" + ", Level:" + plevel + ", Guild: " + pguild + ", Inwar" + inwar);
+				this.console.log("Inserting profile...\n " + pname + "[" + pid + "]" + ", Level:" + plevel + ", Guild: " + pguild + ", Inwar" + inwar);
 				
 				this.insertPlayer(pid, pname, server, plevel, pguild);
 				var apid = this.getLastPlayerId();
 				
-				var oStatement = this.gft_dbConn.createStatement("INSERT INTO oinfo (oid, inwar) VALUES (:a_pid, :p_inwar)");
+				var oStatement = this.dbConn.createStatement("INSERT INTO oinfo (oid, inwar) VALUES (:a_pid, :p_inwar)");
 				oStatement.params.a_pid = apid;
 				oStatement.params.p_inwar = inwar;
 				oStatement.execute();
@@ -259,17 +261,17 @@ var gft_db = {
 
 	insertMyData: function(pid, pname, server, plevel, pguild, activated) 
 	{
-		console.log("Debug[insertMyData()]: pid: " + pid + ", pname: " + pname + ", server: " + server + ", plevel: " + plevel + ", pguild: " + pguild + ", activated: " + activated);
-		if (this.gft_dbConn)
+		this.console.log("Debug[insertMyData()]: pid: " + pid + ", pname: " + pname + ", server: " + server + ", plevel: " + plevel + ", pguild: " + pguild + ", activated: " + activated);
+		if (this.dbConn)
 		{
 			try 
 			{
-				console.log("Inserting profile...\n " + pname + "[" + pid + "]" + ", Level:" + plevel + ", Guild: " + pguild);
+				this.console.log("Inserting profile...\n " + pname + "[" + pid + "]" + ", Level:" + plevel + ", Guild: " + pguild);
 				
 				this.insertPlayer(pid, pname, server, plevel, pguild);
 				var apid = this.getLastPlayerId();
 				
-				var oStatement = this.gft_dbConn.createStatement("INSERT INTO myinfo (myid, activated) VALUES (:a_pid, :p_activated)");
+				var oStatement = this.dbConn.createStatement("INSERT INTO myinfo (myid, activated) VALUES (:a_pid, :p_activated)");
 				oStatement.params.a_pid = apid;
 				oStatement.params.p_activated = activated;
 				oStatement.execute();
@@ -281,14 +283,14 @@ var gft_db = {
 	
 	getMyId: function(server)
 	{
-		console.log("Debug[getMyId()]: Server - " + server);
+		this.console.log("Debug[getMyId()]: Server - " + server);
 		var id = -1;
 		
-		if (this.gft_dbConn)
+		if (this.dbConn)
 		{
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT myid FROM myinfo INNER JOIN player ON myinfo.myid=player.apid where player.server=:p_server");
+				var oStatement = this.dbConn.createStatement("SELECT myid FROM myinfo INNER JOIN player ON myinfo.myid=player.apid where player.server=:p_server");
 				oStatement.params.p_server = server;
 				
 				while (oStatement.executeStep())
@@ -305,14 +307,14 @@ var gft_db = {
 
 	getMyPid: function(server)
 	{
-		console.log("Debug[getMyPid()]: Server - " + server);
+		this.console.log("Debug[getMyPid()]: Server - " + server);
 		var id = -1;
 		
-		if (this.gft_dbConn)
+		if (this.dbConn)
 		{
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT pid FROM myinfo INNER JOIN player ON myinfo.myid=player.apid where player.server=:p_server");
+				var oStatement = this.dbConn.createStatement("SELECT pid FROM myinfo INNER JOIN player ON myinfo.myid=player.apid where player.server=:p_server");
 				oStatement.params.p_server = server;
 				
 				while (oStatement.executeStep())
@@ -329,14 +331,14 @@ var gft_db = {
 	
 	isServerActive: function(server)
 	{
-		console.log("Debug[isServerActive()]: Server - " + server);
+		this.console.log("Debug[isServerActive()]: Server - " + server);
 		var active = -1;
 		
-		if (this.gft_dbConn)
+		if (this.dbConn)
 		{
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT activated FROM myinfo INNER JOIN player ON myinfo.myid=player.apid where player.server=:p_server");
+				var oStatement = this.dbConn.createStatement("SELECT activated FROM myinfo INNER JOIN player ON myinfo.myid=player.apid where player.server=:p_server");
 				oStatement.params.p_server = server;
 				
 				while (oStatement.executeStep())
@@ -362,14 +364,14 @@ var gft_db = {
 	*/	
 	getPlayerId: function(identifier, server, by)
 	{
-		console.log("Debug[getPlayerId()]: identifier: " + identifier + ", server: " + server + ", by: " + by);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getPlayerId()]: identifier: " + identifier + ", server: " + server + ", by: " + by);
+		if (this.dbConn)
 		{
 			var id = -1;
 			try 
 			{
 				var query = "SELECT apid FROM player where " + by + "=:identifier AND server=:p_server";		
-				var oStatement = this.gft_dbConn.createStatement(query);
+				var oStatement = this.dbConn.createStatement(query);
 				oStatement.params.identifier = identifier;
 				oStatement.params.p_server = server;
 				
@@ -387,19 +389,19 @@ var gft_db = {
 	
 	deletePlayer: function(pid, server) 
 	{
-		console.log("Debug[deletePlayer()]: pid: " + pid + ", server: " + server);
-		if (this.gft_dbConn)
+		this.console.log("Debug[deletePlayer()]: pid: " + pid + ", server: " + server);
+		if (this.dbConn)
 		{
 			try 
 			{
 				var apid = this.getPlayerId(pid, server, "pid");
 				
-				var oStatement = this.gft_dbConn.createStatement("DELETE FROM oinfo WHERE oid=:a_pid");
+				var oStatement = this.dbConn.createStatement("DELETE FROM oinfo WHERE oid=:a_pid");
 				oStatement.params.a_pid = apid;
 				oStatement.execute();
 				oStatement.reset();
 				
-				oStatement = this.gft_dbConn.createStatement("DELETE FROM player WHERE apid=:a_pid");
+				oStatement = this.dbConn.createStatement("DELETE FROM player WHERE apid=:a_pid");
 				oStatement.params.a_pid = apid;
 				oStatement.execute();
 				oStatement.reset();
@@ -410,12 +412,12 @@ var gft_db = {
 
 	updatePlayer: function(apid, pname, plevel, pguild)
 	{
-		console.log("Debug[updatePlayer()]: apid: " + apid + ", pname: " + pname + ", plevel: " + plevel + ", pguild: " + pguild);
-		if (this.gft_dbConn)
+		this.console.log("Debug[updatePlayer()]: apid: " + apid + ", pname: " + pname + ", plevel: " + plevel + ", pguild: " + pguild);
+		if (this.dbConn)
 		{
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("UPDATE player SET name=:p_name, level=:p_level, guild=:p_guild " +
+				var oStatement = this.dbConn.createStatement("UPDATE player SET name=:p_name, level=:p_level, guild=:p_guild " +
 																"where apid=:a_pid");
 				oStatement.params.a_pid = apid;
 				oStatement.params.p_name = pname;
@@ -430,14 +432,14 @@ var gft_db = {
 	
 	updatePlayerData: function(pid, pname, server, plevel, pguild)
 	{	
-		console.log("Debug[updatePlayerData()]: pid: " + pid + ", pname: " + pname + ", server: " + server + ", plevel: " + plevel + ", pguild: " + pguild);
-		if (this.gft_dbConn)
+		this.console.log("Debug[updatePlayerData()]: pid: " + pid + ", pname: " + pname + ", server: " + server + ", plevel: " + plevel + ", pguild: " + pguild);
+		if (this.dbConn)
 		{
 			var update;
 			try 
 			{
 				var apid = this.getPlayerId(pid, server, "pid");
-				var oStatement = this.gft_dbConn.createStatement("SELECT lastupdate from player where apid=:a_pid");
+				var oStatement = this.dbConn.createStatement("SELECT lastupdate from player where apid=:a_pid");
 				oStatement.params.a_pid = apid;
 				
 				while (oStatement.executeStep())
@@ -449,17 +451,17 @@ var gft_db = {
 
 				if(!update)
 				{
-					console.log("Debug[updatePlayerData()]: Inserting data for " + server + " - " + pname + "[" + pid + "]..." + 
+					this.console.log("Debug[updatePlayerData()]: Inserting data for " + server + " - " + pname + "[" + pid + "]..." + 
 								"\nData: Level: " + plevel + "; Guild: " + pguild);
 					this.insertPlayer(pid, pname, server, plevel, pguild);
 				} else if (update < this.getTimePeriod("oneday"))
 				{
-					console.log("Debug[updatePlayerData()]: Inserting data for " + server + " - " + pname + "[" + pid + "]..." + 
+					this.console.log("Debug[updatePlayerData()]: Inserting data for " + server + " - " + pname + "[" + pid + "]..." + 
 								"\nData: Level: " + plevel + "; Guild: " + pguild);// + "; In war?: " + (inwar == 1 ? "yes" : "no"));
 					this.updatePlayer(apid, pname, plevel, pguild);
 				}
 				else
-					console.log("Debug[updatePlayerData()]: Skipping update for " + server + " - " + pname + "[" + pid + "]...");
+					this.console.log("Debug[updatePlayerData()]: Skipping update for " + server + " - " + pname + "[" + pid + "]...");
 			}
 			catch (e) {alert("DB query failed. Could not update player data\n" + e);}
 		}
@@ -467,13 +469,13 @@ var gft_db = {
 	
 	setInWar: function(pid, server, value)
 	{
-		console.log("Debug[setInWar()]: pid: " + pid + ", server: " + server + ", value: " + value);
-		if (this.gft_dbConn)
+		this.console.log("Debug[setInWar()]: pid: " + pid + ", server: " + server + ", value: " + value);
+		if (this.dbConn)
 		{
 			try 
 			{
 				var apid = this.getPlayerId(pid, server, "pid");
-				var oStatement = this.gft_dbConn.createStatement("UPDATE oinfo SET inwar=:p_inwar where apid=:a_pid");
+				var oStatement = this.dbConn.createStatement("UPDATE oinfo SET inwar=:p_inwar where apid=:a_pid");
 				oStatement.params.a_pid = apid;
 				oStatement.params.p_inwar = value;
 				oStatement.execute();
@@ -492,8 +494,8 @@ var gft_db = {
 	*/	
 	getNumberOfBattlesWithin: function(identifier, server, by, atype, period) 
 	{
-		console.log("Debug[getNumberOfBattlesWithin()]: identifier: " + identifier + ", server: " + server + ", by: " + by + ", atype: " + atype + ", period: " + period);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getNumberOfBattlesWithin()]: identifier: " + identifier + ", server: " + server + ", by: " + by + ", atype: " + atype + ", period: " + period);
+		if (this.dbConn)
 		{
 			var n_battles = 0;
 			try 
@@ -505,12 +507,12 @@ var gft_db = {
 				
 				if(oid < 0)
 				{
-					console.log("Debug[getNumberOfBattlesWithin()]: Opponent doesn't exists in the DB.");
-					console.log("MyID: " + myid + ", OID: " +oid);
+					this.console.log("Debug[getNumberOfBattlesWithin()]: Opponent doesn't exists in the DB.");
+					this.console.log("MyID: " + myid + ", OID: " +oid);
 					return 0;
 				}
 				
-				var oStatement = this.gft_dbConn.createStatement("SELECT count(battleid) AS nBattles from battles " + 
+				var oStatement = this.dbConn.createStatement("SELECT count(battleid) AS nBattles from battles " + 
 																"WHERE myid=:my_id AND oid=:o_id AND atype=:a_type AND atime >= :b_time");
 				oStatement.params.my_id = myid;
 				oStatement.params.o_id = oid;
@@ -538,8 +540,8 @@ var gft_db = {
 	*/		
 	getFirstBattleInLastDay: function(identifier, server, by) 
 	{
-		console.log("Debug[getFirstBattleInLastDay()]: identifier: " + identifier + ", server: " + server + ", by: " + by);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getFirstBattleInLastDay()]: identifier: " + identifier + ", server: " + server + ", by: " + by);
+		if (this.dbConn)
 		{
 			var oid = this.getPlayerId(identifier, server, by);
 			var myid = this.getMyId(server);
@@ -548,13 +550,13 @@ var gft_db = {
 			
 			if(oid < 0)
 			{
-				console.log("Debug[getFirstBattleInLastDay()]: Opponent doesn't exists in the DB.");
+				this.console.log("Debug[getFirstBattleInLastDay()]: Opponent doesn't exists in the DB.");
 				return firstBattleInLastDay;
 			}
 			try 
 			{
 				// returns the first battle time in last 24h 
-				var oStatement = this.gft_dbConn.createStatement("SELECT min(atime) as FirstBattle FROM battles where myid=:my_id AND oid=:o_id AND atype=1 AND atime >= :b_time");
+				var oStatement = this.dbConn.createStatement("SELECT min(atime) as FirstBattle FROM battles where myid=:my_id AND oid=:o_id AND atype=1 AND atime >= :b_time");
 				oStatement.params.my_id = myid;
 				oStatement.params.o_id = oid;
 				oStatement.params.b_time = this.getTimePeriod("oneday");
@@ -580,8 +582,8 @@ var gft_db = {
 	*/			
 	getLastBattleInLastDay: function(identifier, server, by) 
 	{
-		console.log("Debug[getLastBattleForPidInLastDay()]: identifier: " + identifier + ", server: " + server + ", by: " + by);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getLastBattleForPidInLastDay()]: identifier: " + identifier + ", server: " + server + ", by: " + by);
+		if (this.dbConn)
 		{
 			var oid = this.getPlayerId(identifier, server, by);
 			var myid = this.getMyId(server);
@@ -589,13 +591,13 @@ var gft_db = {
 			var lastBattleInLastDay = -1;
 			if(oid < 0)
 			{
-				console.log("Debug[getLastBattleForPidInLastDay()]: Opponent doesn't exists in the DB.");
+				this.console.log("Debug[getLastBattleForPidInLastDay()]: Opponent doesn't exists in the DB.");
 				return lastBattleInLastDay;
 			}
 			try 
 			{
 				// returns the first battle time in last 24h 
-				var oStatement = this.gft_dbConn.createStatement("SELECT max(atime) as LastBattle FROM battles where myid=:my_id AND oid = :o_id AND atype=1 AND atime >= :b_time");
+				var oStatement = this.dbConn.createStatement("SELECT max(atime) as LastBattle FROM battles where myid=:my_id AND oid = :o_id AND atype=1 AND atime >= :b_time");
 				oStatement.params.my_id = myid;
 				oStatement.params.o_id = oid;
 				oStatement.params.b_time = this.getTimePeriod("oneday");
@@ -614,15 +616,15 @@ var gft_db = {
 	
 	battleExists: function(repid, server) 
 	{
-		console.log("Debug[battleExists()]: repid: " + repid + ", server: " + server);
-		if (this.gft_dbConn)
+		this.console.log("Debug[battleExists()]: repid: " + repid + ", server: " + server);
+		if (this.dbConn)
 		{
 			var rExists = false;
 			try 
 			{
 				var rID = 0;
 				// returns if the report repid for pid exists
-				var oStatement = this.gft_dbConn.createStatement("SELECT battles.battleid FROM myinfo " +
+				var oStatement = this.dbConn.createStatement("SELECT battles.battleid FROM myinfo " +
 																"INNER JOIN player ON myinfo.myid = player.apid " +
 																"INNER JOIN battles ON myinfo.myid = battles.myid " +
 																"INNER JOIN reports ON battles.battleid = reports.battleid " +																
@@ -645,13 +647,13 @@ var gft_db = {
 	
 	isInWar: function(value, server, by)
 	{
-		console.log("Debug[isInWar()]: value: " + value + ", server: " + server + ", by: " + by);
-		if (this.gft_dbConn)
+		this.console.log("Debug[isInWar()]: value: " + value + ", server: " + server + ", by: " + by);
+		if (this.dbConn)
 		{
 			var oid = this.getPlayerId(value, server, by);
 			try 
 			{
-				var	oStatement = this.gft_dbConn.createStatement("SELECT oinfo.inwar FROM oinfo where oinfo.oid=:o_id");
+				var	oStatement = this.dbConn.createStatement("SELECT oinfo.inwar FROM oinfo where oinfo.oid=:o_id");
 				oStatement.params.o_id = oid;
 				
 				var inwar = -1;
@@ -669,22 +671,22 @@ var gft_db = {
 		}
 		else
 		{
-			console.log("Cannot establish connection to the DB.");
+			this.console.log("Cannot establish connection to the DB.");
 			return false;
 		}		
 	},
 	
 	getPidForName: function(cOpponent, server) 
 	{
-		console.log("Debug[getPidForName()]: cOpponent: " + cOpponent + ", server: " + server);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getPidForName()]: cOpponent: " + cOpponent + ", server: " + server);
+		if (this.dbConn)
 		{
 			var oid = this.getPlayerId(cOpponent, server, "name");
 			
 			var pid = -1;
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT pid from player where apid=:a_pid");
+				var oStatement = this.dbConn.createStatement("SELECT pid from player where apid=:a_pid");
 				oStatement.params.a_pid = oid;
 				
 				while (oStatement.executeStep())
@@ -693,7 +695,7 @@ var gft_db = {
 				}
 				oStatement.reset();
 				
-				console.log("Debug[getPidForName()]: Name:" + cOpponent + ", PID=" + pid);
+				this.console.log("Debug[getPidForName()]: Name:" + cOpponent + ", PID=" + pid);
 				if(pid == null)
 					pid = -1;
 				return pid;
@@ -705,14 +707,14 @@ var gft_db = {
 	
 	getNameForPid: function(pid, server) 
 	{
-		console.log("Debug[getNameForPid()]: pid: " + pid + ", server: " + server);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getNameForPid()]: pid: " + pid + ", server: " + server);
+		if (this.dbConn)
 		{
 			var oid = this.getPlayerId(pid, server, "pid");
 			var oName = "";
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT name FROM player where apid = :o_id");
+				var oStatement = this.dbConn.createStatement("SELECT name FROM player where apid = :o_id");
 				oStatement.params.o_id = oid; 
 				while (oStatement.executeStep())
 				{
@@ -720,7 +722,7 @@ var gft_db = {
 				}
 				oStatement.reset();
 				
-				console.log("Debug[getNameForPid()]: Name:" + oName + ", PID=" + pid + " - " + server);
+				this.console.log("Debug[getNameForPid()]: Name:" + oName + ", PID=" + pid + " - " + server);
 				if(oName == null)
 					oName = "";
 				return oName;
@@ -732,14 +734,14 @@ var gft_db = {
 	
 	getGuild: function(value, server, by) 
 	{
-		console.log("Debug[getGuild()]: value: " + value + ", server: " + server + ", by: " + by);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getGuild()]: value: " + value + ", server: " + server + ", by: " + by);
+		if (this.dbConn)
 		{
 			var oid = this.getPlayerId(value, server, by);
 			var guild = "#none#";
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT guild FROM player WHERE apid = :o_id");
+				var oStatement = this.dbConn.createStatement("SELECT guild FROM player WHERE apid = :o_id");
 				oStatement.params.o_id = oid; 
 				while (oStatement.executeStep())
 				{
@@ -747,7 +749,7 @@ var gft_db = {
 				}
 				oStatement.reset();
 				
-				console.log("Debug[getGuild()]: Guild:" + guild + ", PID=" + oid);
+				this.console.log("Debug[getGuild()]: Guild:" + guild + ", PID=" + oid);
 				if(guild == null)
 					guild = "#none#";
 				return guild;
@@ -760,7 +762,7 @@ var gft_db = {
 	//TODO !!!
 	getOpponentsWithCriteria: function(period, orderBy, orderDirection, name, level, server)
 	{
-		console.log("Debug[getOpponentsWithCriteria()]: period: " + period + ", orderBy: " + orderBy + ", orderDirection: " + orderDirection + ", level: " + level + ", player: " + name + ", server: " + server);
+		this.console.log("Debug[getOpponentsWithCriteria()]: period: " + period + ", orderBy: " + orderBy + ", orderDirection: " + orderDirection + ", level: " + level + ", player: " + name + ", server: " + server);
 		// create query
 //		var query = "select a.name, a.guild, a.level, a.server, a.attacks, d.defenses, a.goldRaised, d.goldLost, a.maxGoldRaised, d.maxGoldLost, a.expRaised"
 //		+ " from"
@@ -816,18 +818,18 @@ var gft_db = {
 		query1 += " order by " + ((orderBy.indexOf("a.") > 0 ||  orderBy.indexOf("d.") > 0) ? orderBy: 'a.' + orderBy) + " " + orderDirection; 
 		
 		var query =  query2 + " UNION " + query1;
-		console.log("Debug[getOpponentsWithCriteria()]: Query = \"" +  query + "\"");
- 		if (this.gft_dbConn)
+		this.console.log("Debug[getOpponentsWithCriteria()]: Query = \"" +  query + "\"");
+ 		if (this.dbConn)
 		{
 			var result = new Array();
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement(query);
+				var oStatement = this.dbConn.createStatement(query);
 
 				var step = 0;
 				while (oStatement.executeStep())
 				{
-					result[step] = new DBPlayerData(oStatement.row.rName,
+					result[step] = new GFT.DBPlayerData(oStatement.row.rName,
 													oStatement.row.rGuild,
 													oStatement.row.rLevel,
 													oStatement.row.rServer,
@@ -856,14 +858,14 @@ var gft_db = {
 	*/
 	getNumberOfBattlesSinceCustomTime: function(time, server, atype)
 	{
-		console.log("Debug[getNumberOfBattlesSinceCustomTime()]: time: " + time + ", server: " + server + ", atype: " + atype);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getNumberOfBattlesSinceCustomTime()]: time: " + time + ", server: " + server + ", atype: " + atype);
+		if (this.dbConn)
 		{
 			var myid = this.getMyId(server);
 			var n_battles = -1;
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT count(battleid) AS nBattles from battles " + 
+				var oStatement = this.dbConn.createStatement("SELECT count(battleid) AS nBattles from battles " + 
 																"WHERE myid=:my_id AND atype=:a_type AND atime >= :b_time");
 				oStatement.params.my_id = myid;
 				oStatement.params.a_type = atype;
@@ -883,14 +885,14 @@ var gft_db = {
 	
 	getAllAtacksSinceTodayAndDefDaysBack: function(days, server) // find better name
 	{
-		console.log("Debug[getAllAtacksSinceTodayAndDefDaysBack()]: days: " + days + ", server: " + server);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getAllAtacksSinceTodayAndDefDaysBack()]: days: " + days + ", server: " + server);
+		if (this.dbConn)
 		{
 			var myid = this.getMyId(server);
 			var n_battles = -1;
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT count(battleid) AS nBattles from battles " + 
+				var oStatement = this.dbConn.createStatement("SELECT count(battleid) AS nBattles from battles " + 
 																"where myid=:my_id AND atime > (strftime('%s', date('now', 'start of day')) - :b_time)");
 				oStatement.params.my_id = myid;
 				oStatement.params.b_time = this.getDayPeriodInSec(days);
@@ -918,16 +920,16 @@ var gft_db = {
 	 */
 	getBattlesWon: function(server, period, atype)
 	{
-		console.log("Debug[getBattlesWon()]: server: " + server + ", atype: " + atype + ", period: " + period);
+		this.console.log("Debug[getBattlesWon()]: server: " + server + ", atype: " + atype + ", period: " + period);
 		
-		if (this.gft_dbConn)
+		if (this.dbConn)
 		{
 			var myid = this.getMyId(server);
 			
 			var battlesWon = 0;
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT count(b.battleid) as battlesWon " +
+				var oStatement = this.dbConn.createStatement("SELECT count(b.battleid) as battlesWon " +
 																	"from reports r inner join battles b on r.battleid=b.battleid " + 
 																	"WHERE r.winnerid=:my_id AND b.atime > :a_time" + (atype ? (" AND b.atype=" + atype) : ""));
 				oStatement.params.my_id = myid;
@@ -949,15 +951,15 @@ var gft_db = {
 	
 	getGoldRaised: function(pid, server, atype, period)
 	{
-		console.log("Debug[getGoldRaised()]: pid: " + pid + ", server: " + server + ", atype: " + atype + ", period: " + period);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getGoldRaised()]: pid: " + pid + ", server: " + server + ", atype: " + atype + ", period: " + period);
+		if (this.dbConn)
 		{
 			var oid = this.getPlayerId(pid, server, "pid");
 			
 			var gold = 0;
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT sum(r.gold) as RaisedGold from reports r inner join battles b on r.battleid=b.battleid " + 
+				var oStatement = this.dbConn.createStatement("SELECT sum(r.gold) as RaisedGold from reports r inner join battles b on r.battleid=b.battleid " + 
 																	"WHERE b.atype=:a_type AND b.oid=:o_id AND atime >= :period");
 				oStatement.params.o_id = oid;
 				oStatement.params.a_type = atype;
@@ -979,14 +981,14 @@ var gft_db = {
 	
 	getAllGoldRaised: function(server, atype, period)
 	{
-		console.log("Debug[getAllGoldRaised()]: server: " + server + ", atype: " + atype + ", period: " + period);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getAllGoldRaised()]: server: " + server + ", atype: " + atype + ", period: " + period);
+		if (this.dbConn)
 		{			
 			var gold = 0;
 			var myid = this.getMyId(server);
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT sum(r.gold) as RaisedGold from reports r inner join battles b on r.battleid=b.battleid " + 
+				var oStatement = this.dbConn.createStatement("SELECT sum(r.gold) as RaisedGold from reports r inner join battles b on r.battleid=b.battleid " + 
 																	"WHERE b.myid=:my_id AND b.atype=:a_type AND atime >= :period");
 				oStatement.params.my_id = myid;
 				oStatement.params.a_type = atype;
@@ -1009,15 +1011,15 @@ var gft_db = {
 	
 	getMaxGold: function(pid, server, atype, period)
 	{
-		console.log("Debug[getMaxGold()]: pid: " + pid + ", server: " + server + ", atype: " + atype + ", period: " + period);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getMaxGold()]: pid: " + pid + ", server: " + server + ", atype: " + atype + ", period: " + period);
+		if (this.dbConn)
 		{
 			var oid = this.getPlayerId(pid, server, "pid");
 			
 			var gold = 0;
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT max(r.gold) as RaisedGold from reports r inner join battles b on r.battleid=b.battleid " + 
+				var oStatement = this.dbConn.createStatement("SELECT max(r.gold) as RaisedGold from reports r inner join battles b on r.battleid=b.battleid " + 
 																	"WHERE b.atype=:a_type AND b.oid=:o_id AND atime >= :period");
 				oStatement.params.o_id = oid;
 				oStatement.params.a_type = atype;
@@ -1039,8 +1041,8 @@ var gft_db = {
 
 	getWinChance: function(pid, server)
 	{
-		console.log("Debug[getWinChance()]: pid: " + pid + ", server: " + server);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getWinChance()]: pid: " + pid + ", server: " + server);
+		if (this.dbConn)
 		{
 			var myid = this.getMyId(server);
 			var oid = this.getPlayerId(pid, server, "pid");
@@ -1049,7 +1051,7 @@ var gft_db = {
 			var allBattles = 0;
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT count(b.battleid) as battlesWon, " + 
+				var oStatement = this.dbConn.createStatement("SELECT count(b.battleid) as battlesWon, " + 
 																	"(select count(battleid) from battles where oid=:o_id) as allBattles " + 
 																	"from reports r inner join battles b on r.battleid=b.battleid " + 
 																	"WHERE r.winnerid=:my_id AND b.oid=:o_id");
@@ -1073,8 +1075,8 @@ var gft_db = {
 	
 	getLastDayWinChance: function(pid, server)
 	{
-		console.log("Debug[getWinChance()]: pid: " + pid + ", server: " + server);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getWinChance()]: pid: " + pid + ", server: " + server);
+		if (this.dbConn)
 		{
 			var myid = this.getMyId(server);
 			var oid = this.getPlayerId(pid, server, "pid");
@@ -1083,7 +1085,7 @@ var gft_db = {
 			var allBattles = 0;
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT count(b.battleid) as battlesWon, " + 
+				var oStatement = this.dbConn.createStatement("SELECT count(b.battleid) as battlesWon, " + 
 																	"(select count(battleid) from battles where oid=:o_id and atime < strftime('%s', date('now', 'start of day'))) as allBattles " + 
 																	"from reports r inner join battles b on r.battleid=b.battleid " + 
 																	"WHERE r.winnerid=:my_id AND b.oid=:o_id and b.atime < strftime('%s', date('now', 'start of day'))");
@@ -1107,15 +1109,15 @@ var gft_db = {
 	
 	getExpRaised: function(pid, server, period)
 	{
-		console.log("Debug[getExpRaised()]: pid: " + pid + ", server: " + server + ", period: " + period);
-		if (this.gft_dbConn)
+		this.console.log("Debug[getExpRaised()]: pid: " + pid + ", server: " + server + ", period: " + period);
+		if (this.dbConn)
 		{			
 			var exp = 0;
 			var myid = this.getMyId(server);
 			
 			try 
 			{
-				var oStatement = this.gft_dbConn.createStatement("SELECT sum(r.exp) as RaisedExp from reports r inner join battles b on r.battleid=b.battleid " + 
+				var oStatement = this.dbConn.createStatement("SELECT sum(r.exp) as RaisedExp from reports r inner join battles b on r.battleid=b.battleid " + 
 																	"WHERE b.myid=:my_id AND b.atype=1 AND atime >= :period" + ((pid > 0) ? " AND b.oid=:o_id" : ""));
 				if(pid > 0)
 				{
@@ -1151,7 +1153,7 @@ var gft_db = {
 	
 	getTimePeriod: function(period)
 	{
-		console.log("Debug[getTimePeriod()]: period: " + period);
+		this.console.log("Debug[getTimePeriod()]: period: " + period);
 		var now = Math.round((new Date().getTime()/1000));
 		
 		switch (period)

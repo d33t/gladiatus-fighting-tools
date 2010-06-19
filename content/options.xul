@@ -10,6 +10,8 @@
         persist="width height"
         onload="GFTOptions.init();"
         title="&gft.windows.options.title;">
+	<script type="application/x-javascript" src="chrome://gft/content/namespace.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/prefman.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/options.js"/>
 	
     <keyset>
