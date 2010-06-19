@@ -1,7 +1,7 @@
-function injectplayerpage_xmlhttpRequester(unsafeContentWin, chromeWindow) {
+GFT.xmlhttpRequester = function(unsafeContentWin, chromeWindow) {
 	this.unsafeContentWin = unsafeContentWin;
 	this.chromeWindow = chromeWindow;
-}
+};
 
 /* 
  * this function gets called by user scripts in content security scope to
@@ -12,7 +12,7 @@ function injectplayerpage_xmlhttpRequester(unsafeContentWin, chromeWindow) {
  * can't support mimetype because i think it's only used for forcing
  * text/xml and we can't support that
  */
-injectplayerpage_xmlhttpRequester.prototype.contentStartRequest = function(details) {
+GFT.xmlhttpRequester.prototype.contentStartRequest = function(details) {
 	/*
 	 * important to store this locally so that content cannot trick us up with
 	 * a fancy getter that checks the number of times it has been accessed,
@@ -46,7 +46,7 @@ injectplayerpage_xmlhttpRequester.prototype.contentStartRequest = function(detai
 
 // this function is intended to be called in chrome's security context, so
 // that it can access other domains without security warning
-injectplayerpage_xmlhttpRequester.prototype.chromeStartRequest=function(safeUrl, details) {
+GFT.xmlhttpRequester.prototype.chromeStartRequest=function(safeUrl, details) {
 	var req = new this.chromeWindow.XMLHttpRequest();
 
 	this.setupRequestEvent(this.unsafeContentWin, req, "onload", details);
@@ -67,7 +67,7 @@ injectplayerpage_xmlhttpRequester.prototype.chromeStartRequest=function(safeUrl,
 // arranges for the specified 'event' on xmlhttprequest 'req' to call the
 // method by the same name which is a property of 'details' in the content
 // window's security context.
-injectplayerpage_xmlhttpRequester.prototype.setupRequestEvent =
+GFT.xmlhttpRequester.prototype.setupRequestEvent =
 function(unsafeContentWin, req, event, details) {
 	if (details[event]) {
 		req[event] = function() {

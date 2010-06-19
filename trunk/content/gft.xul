@@ -4,15 +4,17 @@
 <!DOCTYPE overlay SYSTEM "chrome://gft/locale/gft.dtd">
 <overlay id="gft-overlay"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script type="application/x-javascript" src="chrome://gft/content/namespace.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/xmlhttprequester.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/prefman.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/custom_objects.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/gft_db.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/gft_utils.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/statusbar.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft_statusbar.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft_db.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/battles.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft_ppc.js"/>		
+	<script type="application/x-javascript" src="chrome://gft/content/gft.js"/>		
 	<script type="application/x-javascript" src="chrome://gft/content/script-compiler.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/gft.js"/>	
 
 	<stringbundleset id="stringbundleset">
 		<stringbundle id="gft-strings" src="chrome://gft/locale/gft.properties"/>
@@ -35,13 +37,13 @@
 				</tooltip>
 				<image id="gft-status-icon" src="chrome://gft/skin/gft-statusbar.png" width="14" height="16"
 										 context="gft-popup"
-										 onclick="gft_statusbar.handleClick(event);"
-										 onload="gft_statusbar.handleCursor(this);"
+										 onclick="GFT.Statusbar.handleClick(event);"
+										 onload="GFT.Statusbar.handleCursor(this);"
 										 tooltip="gft-statusmenu-tooltip"/>
 			</box>   
 			<menupopup id="gft-popup" position="before_end"
-												onpopupshowing="gft_statusbar.handleMenu(this);"
-												oncommand="gft_statusbar.handleAction(event.target.id);">
+												onpopupshowing="GFT.Statusbar.handleMenu(this);"
+												oncommand="GFT.Statusbar.handleAction(event.target.id);">
 				<menuitem id="options" label="&gft.statusbar.menu.options;"/>
 				<menuitem id="battles" label="&gft.statusbar.menu.battles;"/>
 				<menuitem id="about" label="&gft.statusbar.menu.about;"/>

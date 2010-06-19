@@ -23,7 +23,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-GFTBattles = (function()
+GFT.Battles = (function()
 {
 	var orderByName = false;
 	var orderByGuild = false;
@@ -37,10 +37,13 @@ GFTBattles = (function()
 	var orderByMaxGoldLost = false;
 	var orderByExpRaised = false;
 	var infoTimeOut = -1;
+	var utils = GFT.Utils;
+	var console = GFT.Utils.console;
+	var db = GFT.DB;
 	
 	function initDB()
 	{
-		gft_db.init();
+		db.init();
 		sortBy("name");
 		document.getElementById("search-name").focus();
 	}
@@ -133,11 +136,11 @@ GFTBattles = (function()
 		var level = document.getElementById("search-level").value;
 		var period = document.getElementById("search-period").selectedItem.id;
 		
-		var opponents = gft_db.getOpponentsWithCriteria(period, orderBy, orderDirection, name, level);
+		var opponents = db.getOpponentsWithCriteria(period, orderBy, orderDirection, name, level);
 		
 		var info = document.getElementById("load-info");
 		info.hidden = false;
-		info.value = opponents.length + " " + gft_utils.getString("loadedEntries") + ".";
+		info.value = opponents.length + " " + utils.getString("loadedEntries") + ".";
 		
 		for(var i = 0; i < opponents.length; i++)
 		{
@@ -194,7 +197,7 @@ GFTBattles = (function()
 	
 	function getValueOrNone(value)
 	{
-		return (value != "none" ? value : gft_utils.getString("none"));
+		return (value != "none" ? value : utils.getString("none"));
 	}
 	
 	function removeAllTreeChildren()

@@ -23,10 +23,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var gft_statusbar = {
+GFT.Statusbar = {
 	timeout: -1,
 	endtime: -1,
 	tick: 1000,
+	utils: GFT.Utils,
 	
 	handleClick: function(event)
 	{
@@ -63,9 +64,9 @@ var gft_statusbar = {
 		switch (action)
 		{
 			case "options":
-				alert("Not supported in this release");
-				//window.openDialog("chrome://gft/content/options.xul",
-				//				  "gftOptions", "chrome,dialogger.log,centerscreen");
+				//alert("Not supported in this release");
+				window.openDialog("chrome://gft/content/options.xul",
+								  "gftOptions", "chrome,dialogger.log,centerscreen");
 				break;
 			case "battles":
 				var battlesSearchSplitter = document.getElementById("battlesSearchSplitter");
@@ -74,7 +75,7 @@ var gft_statusbar = {
 				battlesSearch.collapsed = !battlesSearch.collapsed;
 				if(!battlesSearch.collapsed)
 				{
-					GFTBattles.defaultSearch();
+					GFT.Battles.defaultSearch();
 					document.getElementById("search-name").focus();
 				}
 				break;
@@ -92,7 +93,7 @@ var gft_statusbar = {
 	
 	showReverseCounter: function(timeoutmillis)
 	{
-		this.endtime = gft_utils.getTime() + timeoutmillis; 
+		this.endtime = this.utils.getTime() + timeoutmillis; 
 		this.getTimerElement().setAttribute("hidden", "false");
 		this.reverseCounter();
 	},
@@ -107,13 +108,13 @@ var gft_statusbar = {
 	
 	reverseCounter: function()
 	{
-		var currtime = gft_utils.getTime();
+		var currtime = this.utils.getTime();
 		
 		if(currtime < this.endtime)
 		{
 			var timeleft = this.endtime - currtime;
-			this.getTimerElement().setAttribute( "label", gft_utils.millisToHumanReadable(timeleft));
-			this.timeout = window.setTimeout("gft_statusbar.reverseCounter()", this.tick);
+			this.getTimerElement().setAttribute( "label", this.utils.millisToHumanReadable(timeleft));
+			this.timeout = window.setTimeout("GFT.Statusbar.reverseCounter()", this.tick);
 		}
 		else
 			this.hideReverseCounter();
