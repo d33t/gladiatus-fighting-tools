@@ -6,20 +6,23 @@
 		xmlns:html="http://www.w3.org/1999/xhtml"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         orient="vertical"
-        autostretch="always"
+        autostretch="never"
+        width="480px"
+        height="390px"
         persist="width height"
         onload="GFTOptions.init();"
         title="&gft.windows.options.title;">
-	<script type="application/x-javascript" src="chrome://gft/content/namespace.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/ns.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/prefman.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/options.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/options-gui.js"/>
 	
     <keyset>
         <key keycode="VK_ESCAPE" oncommand="window.close();"/>
     </keyset>
-	<vbox>
+
+	<vbox flex="1">
 		<hbox>
-			<tabbox>
+			<tabbox autostretch="always">
 				<tabs>
 					<tab label="&gft.options.tabs.main.title;" />
 					<tab label="&gft.options.tabs.battlesTable.title;" />
@@ -130,7 +133,7 @@
 						<hbox maxwidth="400px">
 							<groupbox>
 				    			<description style="width: 400px; height: 200px;">
-				    				<html:p id="versionsarea" />
+				    				<html:div id="versionsarea" style="height:200px;overflow:auto;"/>				    				
 				    			</description>
 			    			</groupbox>
 			    		</hbox>

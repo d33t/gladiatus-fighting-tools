@@ -58,7 +58,7 @@ contentLoad: function(e) {
 		&& true
 	) {
 		var script=GFT.gmCompiler.getUrlContents(
-			'chrome://gft/content/injectplayerpage.js'
+			'chrome://gft/content/inject_gft.js'
 		);
 		
 		GFT.gmCompiler.injectScript(script, href, unsafeWin);
