@@ -311,6 +311,7 @@ GFT.Main = (function(){
 })();
 
 (function(){
+	String.prototype.trim = function(){};
 	window.addEventListener(
 	  "load",
 	  function () {

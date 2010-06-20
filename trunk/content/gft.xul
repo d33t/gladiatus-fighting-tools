@@ -4,16 +4,16 @@
 <!DOCTYPE overlay SYSTEM "chrome://gft/locale/gft.dtd">
 <overlay id="gft-overlay"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-	<script type="application/x-javascript" src="chrome://gft/content/namespace.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/ns.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/xmlhttprequester.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/prefman.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/custom_objects.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/gft_utils.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/gft_statusbar.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/gft_db.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/battles.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/gft_ppc.js"/>		
-	<script type="application/x-javascript" src="chrome://gft/content/gft.js"/>		
+	<script type="application/x-javascript" src="chrome://gft/content/custom-objects.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-utils.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-statusbar.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-db.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/battles-gui.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-ppc.js"/>		
+	<script type="application/x-javascript" src="chrome://gft/content/gft-main.js"/>		
 	<script type="application/x-javascript" src="chrome://gft/content/script-compiler.js"/>
 
 	<stringbundleset id="stringbundleset">

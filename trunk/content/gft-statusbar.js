@@ -64,9 +64,8 @@ GFT.Statusbar = {
 		switch (action)
 		{
 			case "options":
-				//alert("Not supported in this release");
 				window.openDialog("chrome://gft/content/options.xul",
-								  "gftOptions", "chrome,dialogger.log,centerscreen");
+								  "gftOptions", "chrome,dialogger.log,centerscreen,resizable=no");
 				break;
 			case "battles":
 				var battlesSearchSplitter = document.getElementById("battlesSearchSplitter");
