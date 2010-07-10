@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
@@ -10,8 +10,8 @@
     <em:description>Fighting Tools for the web based game - Gladiatus</em:description>
     <em:creator>Demons Team</em:creator>
     
-    <em:homepageURL>http://addons.demonsteam.net</em:homepageURL>
-	<!-- <em:optionsURL>chrome://gft/content/options.xul</em:optionsURL> -->
+    <em:homepageURL>https://addons.mozilla.org/en-US/firefox/addon/124049/</em:homepageURL>
+	<em:optionsURL>chrome://gft/content/options.xul</em:optionsURL>
 	<em:iconURL>chrome://gft/skin/gft-ico.png</em:iconURL>
     <em:aboutURL>chrome://gft/content/about.xul</em:aboutURL>
     

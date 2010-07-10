@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) <2009> <Rusi Rusev>
  *
   * Permission is hereby granted, free of charge, to any person
@@ -27,6 +27,7 @@ GFT.PlayerPageContent = function() {
 	var utils = GFT.Utils;
 	var db = GFT.DB;
 	var console = GFT.Utils.console;
+	var prefMan = new GFT.PrefManager();
 	
 	function splitNumberInGroups(value)
 	{
@@ -44,6 +45,18 @@ GFT.PlayerPageContent = function() {
 		
 		tmp = tmp.split("").reverse().join("");
 		return tmp;
+	}
+	
+	function getRowOrNothing(row, prefValue, expand) {
+		if(expand) {
+			return row;
+		} else {
+			var display = prefMan.getValue(prefValue, false);
+			if(!display) {
+				return "";
+			}
+			return row;
+		}
 	}
 	
 	function getGoldEntry(value, infoMsg) {
@@ -95,29 +108,37 @@ GFT.PlayerPageContent = function() {
 		return utils.createTableEntry(utils.getString("realWinChance"),  winChance);
 	}
 	
-	this.getContent = function(doc, period) {//TODO options
+	this.getContent = function(doc, period, expand) {
 		var server = doc.domain+"";
+		if(!db.isServerActive(server)) {
+			return '<tr><td colspan="6" style="padding-left: 3px; white-space: nowrap;" class="stats_value">' + utils.getString("serverNotActiveError") + '</td></tr>';
+		}
+		
 		var pid = utils.getPidFromUrl(doc.location+"");
 		console.log("[getContent]: Pid: " + pid + ", Server: " + server);
-		var attackForLastDay = db.getNumberOfBattlesWithin(pid, server, "pid", 1, "oneday");
+		
 		var attacks = db.getNumberOfBattlesWithin(pid, server, "pid", 1, period);
 		var defenses = db.getNumberOfBattlesWithin(pid, server, "pid", 0, period);
-		var nextAtack = GFT.Main.getNextPossibleAtack(pid, server, "pid", attackForLastDay);
+		var nextPossibleAttack = GFT.Main.getNextPossibleAtack(pid, server, "pid", false);
 
-		return	utils.createTableEntry(utils.getString("nextpossiblefight"), nextAtack) +
-				utils.createTableEntry(utils.getString("attackssinceperiod"), attacks) +
-				utils.createTableEntry(utils.getString("defensessinceperiod"), defenses) +
-				getGold(pid, server, 1, period, "goldRaised") +
-				getGold(pid, server, 0, period, "goldLost") +
-				getMaxGold(pid, server, 1, period, "maxGoldRaised") +
-				getMaxGold(pid, server, 0, period, "maxGoldLost") +
-				getExpRaised(pid, server, period) +
-				getWinChance(pid, server);
+		return	getRowOrNothing(utils.createTableEntry(utils.getString("nextpossiblefight"), nextPossibleAttack),"options.tabs.battlesTable.oNextPossibleAttack",expand) +
+				getRowOrNothing(utils.createTableEntry(utils.getString("attackssinceperiod"), attacks),"options.tabs.battlesTable.oBattlesInAttacksCount",expand) +
+				getRowOrNothing(utils.createTableEntry(utils.getString("defensessinceperiod"), defenses),"options.tabs.battlesTable.oBattlesInDefenceCount",expand) +
+				getRowOrNothing(getGold(pid, server, 1, period, "goldRaised"),"options.tabs.battlesTable.oGoldRaised",expand) +
+				getRowOrNothing(getGold(pid, server, 0, period, "goldLost"),"options.tabs.battlesTable.oGoldLost",expand) +
+				getRowOrNothing(getMaxGold(pid, server, 1, period, "maxGoldRaised"),"options.tabs.battlesTable.oMaxGoldRaised",expand) +
+				getRowOrNothing(getMaxGold(pid, server, 0, period, "maxGoldLost"),"options.tabs.battlesTable.oMaxGoldLost",expand) +
+				getRowOrNothing(getExpRaised(pid, server, period),"options.tabs.battlesTable.oExperienceRaised",expand) +
+				getRowOrNothing(getWinChance(pid, server),"options.tabs.battlesTable.oRealChanceForWin",expand);
 	};
 	
-	this.getMyStats = function(doc, period) {//TODO options
+	this.getMyStats = function(doc, period, expand) {
 		var server = doc.domain+"";
 		console.log("[getMyStats]: Server" +  server);
+		if(!db.isServerActive(server)) {
+			return '<tr><td colspan="6" style="padding: 5px 2px 0 2px; word-wrap:break-word;" class="stats_value">' + utils.getString("serverNotActiveError") + '</td></tr>';
+		}
+		
 		var todayattacks = db.getAllAtacksSinceTodayAndDefDaysBack(0, server);
 		var attacks = db.getNumberOfBattlesSinceCustomTime(period, server, 1);
 		var defenses = db.getNumberOfBattlesSinceCustomTime(period, server, 0);
@@ -134,13 +155,13 @@ GFT.PlayerPageContent = function() {
 			}
 			winRatioSpan += winRatio.toFixed(1) + '%</span>';
 		}
-		return	utils.createTableEntry(utils.getString("todayattacks"), todayattacks) +
-				utils.createTableEntry(utils.getString("attackssinceperiod"), attacks) +
-				utils.createTableEntry(utils.getString("defensessinceperiod"), defenses) +
-				getGoldEntry(db.getAllGoldRaised(server, 1, period), "goldRaised") +
-				getGoldEntry(db.getAllGoldRaised(server, 0, period), "goldLost") +
-				getAllExpRaised(server, period) +
-				utils.createTableEntry(utils.getString("winratio"), winRatioSpan);	
+		return	getRowOrNothing(utils.createTableEntry(utils.getString("todayattacks"), todayattacks),"options.tabs.battlesTable.pTodayBattles",expand) +
+				getRowOrNothing(utils.createTableEntry(utils.getString("attackssinceperiod"), attacks),"options.tabs.battlesTable.pBattlesInAttacksCount",expand) +
+				getRowOrNothing(utils.createTableEntry(utils.getString("defensessinceperiod"), defenses),"options.tabs.battlesTable.pBattlesInDefenceCount",expand) +
+				getRowOrNothing(getGoldEntry(db.getAllGoldRaised(server, 1, period), "goldRaised"),"options.tabs.battlesTable.pGoldRaised",expand) +
+				getRowOrNothing(getGoldEntry(db.getAllGoldRaised(server, 0, period), "goldLost"),"options.tabs.battlesTable.pGoldLost",expand) +
+				getRowOrNothing(getAllExpRaised(server, period),"options.tabs.battlesTable.pExperienceRaised",expand) +
+				getRowOrNothing(utils.createTableEntry(utils.getString("winratio"), winRatioSpan),"options.tabs.battlesTable.pChanceForWin",expand);	
 	};
 	
 	this.getString = function(string) { return utils.getString(string); };	

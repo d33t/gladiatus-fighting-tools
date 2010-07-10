@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <?xul-overlay href="chrome://gft/content/battles.xul"?>
 <?xml-stylesheet href="chrome://gft/skin/gft.css" type="text/css"?>
 <!DOCTYPE overlay SYSTEM "chrome://gft/locale/gft.dtd">
@@ -23,9 +23,9 @@
 	<vbox id="appcontent">
 		<splitter id="battlesSearchSplitter" collapsed="true"/>
 		<vbox id="battlesSearch" collapsed="true" persist="height">
-		</vbox>			
+		</vbox>		
 	</vbox>
-	    
+	
 	<statusbar id="status-bar">
 		<statusbarpanel id="gft-status" label="" hidden="false">
 			<box width="20" height="16" align="center" pack="center">
@@ -49,22 +49,6 @@
 				<menuitem id="about" label="&gft.statusbar.menu.about;"/>
 			</menupopup>
 		</statusbarpanel>
-		<!--
-		<tooltip id="gft-timer-tooltip" orient="vertical" style="background-color: #33DD00;">
-			<hbox>
-				<description value="&gft.fighter.tooltip.lastopponent;"/>
-				<description id="timer-fighter-tooltip-lastopponent" style="font-weight: bold;" value=""/>
-			</hbox>
-			<hbox>
-				<description value="&gft.fighter.tooltip.lastdaybattles;"/>
-				<description id="timer-fighter-tooltip-lastdaybattles" style="font-weight: bold;" value=""/>
-			</hbox>
-			<hbox>
-				<description value="&gft.fighter.tooltip.nextpossiblebattletime;"/>
-				<description id="timer-fighter-tooltip-nextpossiblebattletime" style="font-weight: bold;" value=""/>
-			</hbox>
-		</tooltip>
-		<statusbarpanel id="gft-timer" label=""  hidden="true"  tooltip="gft-timer-tooltip"/>-->
 	</statusbar>	
 
 </overlay> 

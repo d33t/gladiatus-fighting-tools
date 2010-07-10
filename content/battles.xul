@@ -1,76 +1,117 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <?xml-stylesheet href="chrome://gft/skin/gft.css" type="text/css"?>
 <!DOCTYPE window SYSTEM "chrome://gft/locale/gft.dtd">
 <overlay id="battles-overlay"
-    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<vbox id="battlesSearch">
-				<hbox id="gftWindowButtons" align="right">
-                        <toolbarbutton id="gftDetachButton" class="toolbarbutton-iconic"
-                            tooltiptext="&gft.common.detach;" onclick="GFT.Statusbar.handleClick(event);"/>
-                        <toolbarbutton id="gftCloseButton" class="toolbarbutton-iconic"
-                            tooltiptext="&gft.common.close;" onclick="GFT.Statusbar.handleClick(event);"/>
-                </hbox>
-				<hbox>
-					<label control="search-name" value="&gft.battles.searchby.name;"/>
-					<textbox id="search-name" oninput="GFT.Battles.defaultSearch();" class="search-box" flex="" size="50" value=""/>
-					
-					<label control="search-level" value="&gft.battles.searchby.level;"/>
-					<textbox id="search-level" oninput="GFT.Battles.defaultSearch();" class="search-box" flex="" size="3" value=""/>
-					
-					<label constrol="search-period" value="&gft.battles.searchby.period;"/>
-					<menulist id="search-period" class="search-box" oncommand="GFT.Battles.defaultSearch();">
-						<menupopup>
-							<menuitem id="none" label="&gft.battles.searchby.period.all;" selected="true" />
-							<menuitem id="oneday" label="&gft.battles.searchby.period.oneday;"/>
-							<menuitem id="twodays" label="&gft.battles.searchby.period.twodays;"/>
-							<menuitem id="threedays" label="&gft.battles.searchby.period.threedays;"/>
-							<menuitem id="fivedays" label="&gft.battles.searchby.period.fivedays;"/>
-							<menuitem id="oneweek" label="&gft.battles.searchby.period.oneweek;"/>
-							<menuitem id="onemonth" label="&gft.battles.searchby.period.onemonth;"/>
-						</menupopup>
-					</menulist>
-					<!--
-					<button label="&gft.battles.buttons.search;" id="search-button" disabled="false" oncommand="GFT.Battles.defaultSearch();"/>
-					-->
-					<label id="load-info" value="" hidden="true"/>
-				</hbox>
-				
-				<separator class="thin"/>
-				<hbox>
-					<tree flex="1" rows="10">
-						<treecols>
-							<treecol label="&gft.battles.table.name;" persist="width" onclick="GFT.Battles.sort('name')" flex="5"/>
-							<splitter class="tree-splitter"/>
-							<treecol label="&gft.battles.table.guild;" persist="width" onclick="GFT.Battles.sort('guild')" flex="4"/>
-							<splitter class="tree-splitter"/>
-							<treecol label="&gft.battles.table.level;" persist="width" onclick="GFT.Battles.sort('level')" flex="1" style="text-align:center;"/>
-							<splitter class="tree-splitter"/>
-							<treecol label="&gft.battles.table.server;" persist="width" onclick="GFT.Battles.sort('server')" flex="4"/>
-							<splitter class="tree-splitter"/>
-							<treecol label="&gft.battles.table.attacks;" persist="width" onclick="GFT.Battles.sort('attacks')" flex="1" style="text-align:center;"/>
-							<splitter class="tree-splitter"/>
-							<treecol label="&gft.battles.table.defenses;" persist="width" onclick="GFT.Battles.sort('defenses')" flex="1" style="text-align:center;"/>
-							<splitter class="tree-splitter"/>
-							<treecol label="&gft.battles.table.goldRaised;" persist="width" onclick="GFT.Battles.sort('goldRaised')" flex="1" style="text-align:center;"/>
-							<splitter class="tree-splitter"/>
-							<treecol label="&gft.battles.table.goldLost;" persist="width" onclick="GFT.Battles.sort('goldLost')" flex="1" style="text-align:center;"/>
-							<splitter class="tree-splitter"/>
-							<treecol label="&gft.battles.table.maxGoldRaised;" persist="width" onclick="GFT.Battles.sort('maxGoldRaised')" flex="1" style="text-align:center;"/>
-							<splitter class="tree-splitter"/>
-							<treecol label="&gft.battles.table.maxGoldLost;" persist="width" onclick="GFT.Battles.sort('maxGoldLost')" flex="1" style="text-align:center;"/>
-							<splitter class="tree-splitter"/>
-							<treecol label="&gft.battles.table.expRaised;" persist="width" onclick="GFT.Battles.sort('expRaised')" flex="1" style="text-align:center;"/>
-							<splitter class="tree-splitter"/>
-						</treecols>
-						<treechildren id="battles-rows">
-						</treechildren>
-					</tree>
-				</hbox>
+		<hbox id="gftWindowButtons" align="right">
+			<!-- <toolbarbutton id="gftDetachButton" class="toolbarbutton-iconic"
+				tooltiptext="&gft.common.detach;" onclick="GFT.Statusbar.handleClick(event);" /> -->
+			<toolbarbutton id="gftCloseButton" class="toolbarbutton-iconic"
+				tooltiptext="&gft.common.close;" onclick="GFT.Statusbar.handleClick(event);" />
+		</hbox>
+		<hbox>
+			<label control="search-by-name" value="&gft.battles.searchby.name;" />
+			<textbox id="search-by-name" oninput="GFT.Battles.defaultSearch();"
+				class="search-box" flex="" size="50" value="" />
+
+			<label control="search-by-level" value="&gft.battles.searchby.level;" />
+			<textbox id="search-by-level" oninput="GFT.Battles.defaultSearch();"
+				class="search-box" flex="" size="3" value="" />
+
+			<label constrol="search-by-server" value="&gft.battles.searchby.server;" />
+			<menulist id="search-by-server" class="search-box"
+				oncommand="GFT.Battles.defaultSearch();">
+				<menupopup id="serversMenu">
+					<menuitem id="allServers" label="&gft.battles.searchby.period.all;"
+						selected="true" />				
+				</menupopup>
+			</menulist>
+			<label constrol="search-by-period" value="&gft.battles.searchby.period;" />
+			<menulist id="search-by-period" class="search-box"
+				oncommand="GFT.Battles.defaultSearch();">
+				<menupopup>
+					<menuitem id="none" label="&gft.battles.searchby.period.all;"/>
+					<menuitem id="oneday" label="&gft.battles.searchby.period.oneday;" selected="true" />
+					<menuitem id="twodays" label="&gft.battles.searchby.period.twodays;" />
+					<menuitem id="threedays" label="&gft.battles.searchby.period.threedays;" />
+					<menuitem id="fivedays" label="&gft.battles.searchby.period.fivedays;" />
+					<menuitem id="oneweek" label="&gft.battles.searchby.period.oneweek;" />
+					<menuitem id="onemonth" label="&gft.battles.searchby.period.onemonth;" />
+				</menupopup>
+			</menulist>
+			<label id="load-info" value="" hidden="true" />
+		</hbox>
+		<hbox>
+			<description id="battleLog" value=""></description>
+		</hbox>
+
+		<separator class="thin" />
+		<popupset>
+		   <popup id="gft-tree-menu" oncommand="GFT.Battles.handleRowMenu(event);">
+		      <menuitem id="fightArena" label="&gft.battles.buttons.fightOnArena;"/>
+		      <menuitem id="fightCirkus" label="&gft.battles.buttons.fightOnCirkusTurma;"/>
+		      <!-- <menuitem id="showProfile" label="&gft.battles.buttons.showPlayerProfile;"/>-->
+		   </popup>
+		</popupset>
+
+		<hbox>
+			<tree id="gft-battles-tree" flex="1" rows="10">
+				<treecols>
+					<treecol label="&gft.battles.table.name;" persist="width"
+						onclick="GFT.Battles.sort('name')" flex="5" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.guild;" persist="width"
+						onclick="GFT.Battles.sort('guild')" flex="4" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.level;" persist="width"
+						onclick="GFT.Battles.sort('level')" flex="1" style="text-align:center;" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.server;" persist="width"
+						onclick="GFT.Battles.sort('server')" flex="5" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.attacks;" persist="width"
+						onclick="GFT.Battles.sort('attacks')" flex="1" style="text-align:center;" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.defenses;" persist="width"
+						onclick="GFT.Battles.sort('defenses')" flex="1" style="text-align:center;" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.goldRaised;" persist="width"
+						onclick="GFT.Battles.sort('goldRaised')" flex="1" style="text-align:center;" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.goldLost;" persist="width"
+						onclick="GFT.Battles.sort('goldLost')" flex="1" style="text-align:center;" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.maxGoldRaised;" persist="width"
+						onclick="GFT.Battles.sort('maxGoldRaised')" flex="1"
+						style="text-align:center;" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.maxGoldLost;" persist="width"
+						onclick="GFT.Battles.sort('maxGoldLost')" flex="1"
+						style="text-align:center;" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.expRaised;" persist="width"
+						onclick="GFT.Battles.sort('expRaised')" flex="1" style="text-align:center;" />
+					<splitter class="tree-splitter" />
+					<treecol label="&gft.battles.table.nextpossiblefight;" persist="width"
+						onclick="return false;" flex="5" style="text-align:center;" />
+					<splitter class="tree-splitter" />
+				</treecols>
+				<treechildren id="battles-rows" context="gft-tree-menu">
+				</treechildren>
+			</tree>
+		</hbox>
+		<separator class="thin" />
+		<vbox align="center">
+			<hbox>
+				<button id="firstPageBtn" tooltiptext="&gft.battles.buttons.firstPage.tooltip;" label="&#60;&#60;" oncommand="GFT.Battles.firstPage()"/>
+				<button id="prevPageBtn" tooltiptext="&gft.battles.buttons.previousPage.tooltip;" label="&#60;" oncommand="GFT.Battles.previousPage()"/>
+				<label id="pageInfo" value="" />
+				<button id="nextPageBtn" tooltiptext="&gft.battles.buttons.nextPage.tooltip;" label="&#62;" oncommand="GFT.Battles.nextPage()"/>
+				<button id="lastPageBtn" tooltiptext="&gft.battles.buttons.lastPage.tooltip;" label="&#62;&#62;" oncommand="GFT.Battles.lastPage()"/>
+			</hbox>
+		</vbox>
 	</vbox>
-	<!--
-    <hbox align="right">
-        <button label="&gft.common.close;" oncommand="window.close();" default="true"/>
-    </hbox>
-    -->
 </overlay> 

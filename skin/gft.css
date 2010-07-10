@@ -1,4 +1,4 @@
-.toolbarbutton-iconic {
+﻿.toolbarbutton-iconic {
     margin: 0 4px 0 1px !important;
     padding: 0 !important;
     border: none !important;
@@ -64,4 +64,14 @@
 #load-info {
 	font-size:9px;
 	color:#43CD80;
+}
+
+.battlelog-success {
+	font-size:10px;
+	color:#43CD80;
+}
+
+.battlelog-failure {
+	font-size:10px;
+	color:#FF0000;
 }

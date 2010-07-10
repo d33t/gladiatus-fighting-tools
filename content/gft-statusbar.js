@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) <2009> <Rusi Rusev>
  *
   * Permission is hereby granted, free of charge, to any person
@@ -72,15 +72,13 @@ GFT.Statusbar = {
 				var battlesSearch = document.getElementById("battlesSearch");
 				battlesSearchSplitter.collapsed = !battlesSearchSplitter.collapsed;
 				battlesSearch.collapsed = !battlesSearch.collapsed;
-				if(!battlesSearch.collapsed)
-				{
-					GFT.Battles.defaultSearch();
-					document.getElementById("search-name").focus();
+				if(!battlesSearch.collapsed) {
+					document.getElementById("search-by-name").focus();
 				}
 				break;
 			case "about":
 				window.openDialog("chrome://gft/content/about.xul",
-								  "gftAbout", "chrome,dialogger.log,centerscreen");
+								  "gftAbout", "chrome,dialogger.log,centerscreen,resizable=no");
 				break;
 		}
 	},

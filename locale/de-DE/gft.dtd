@@ -29,8 +29,8 @@
 <!-- GFT Options Battles Table Tab -->
 <!ENTITY gft.options.tabs.battlesTable.title "Kampfstatistik">
 <!ENTITY gft.options.tabs.battlesTable.desc "Markiere die Zeilen, die standardmäßig in der Kampfstatistik angezeigt werden müssen, wenn die Seite geladen hat.">
-<!ENTITY gft.options.tabs.battlesTable.captionOpage "Gladiator">
-<!ENTITY gft.options.tabs.battlesTable.captionPpage "Gegner">
+<!ENTITY gft.options.tabs.battlesTable.captionOpage "Gegnerprofilseite">
+<!ENTITY gft.options.tabs.battlesTable.captionPpage "Meine Gladiatorseite">
 <!ENTITY gft.options.tabs.battlesTable.todayBattles "Kämpfe heute">
 <!ENTITY gft.options.tabs.battlesTable.battlesInAttacksCount "Angriffsanzahl">
 <!ENTITY gft.options.tabs.battlesTable.battlesInDefenceCount "Abwehrsanzahl">
@@ -59,6 +59,7 @@
 <!ENTITY gft.battles.table.maxGoldRaised "Max Gold gewonnen">
 <!ENTITY gft.battles.table.maxGoldLost "Max Gold verloren">
 <!ENTITY gft.battles.table.expRaised "Erfahrung gewonnen">
+<!ENTITY gft.battles.table.nextpossiblefight "Nächster möglicher Kampf">
 <!ENTITY gft.battles.searchby.name "Gegner">
 <!ENTITY gft.battles.searchby.level "ab Stufe">
 <!ENTITY gft.battles.searchby.period "Zeitraum">
@@ -71,6 +72,13 @@
 <!ENTITY gft.battles.searchby.period.oneweek "Eine Woche">
 <!ENTITY gft.battles.searchby.period.onemonth "Einen Monat">
 <!ENTITY gft.battles.buttons.search "anzeigen">
+<!ENTITY gft.battles.buttons.fightOnArena "An der Arena angreifen">
+<!ENTITY gft.battles.buttons.fightOnCirkusTurma "An Cirkus Turma angreifen">
+<!ENTITY gft.battles.buttons.showPlayerProfile "Profil anzeigen">
+<!ENTITY gft.battles.buttons.firstPage.tooltip "Erste Seite">
+<!ENTITY gft.battles.buttons.previousPage.tooltip "Vorherige Seite">
+<!ENTITY gft.battles.buttons.nextPage.tooltip "Nächste Seite">
+<!ENTITY gft.battles.buttons.lastPage.tooltip "Letzte Seite">
 
 <!-- GFT Statusbar XUL -->
 <!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Benutze die linke Maustaste, um das Kämpfe-GUI zu öffnen.">

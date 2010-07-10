@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) <2009> <Rusi Rusev>
  *
   * Permission is hereby granted, free of charge, to any person
@@ -28,8 +28,7 @@ if (typeof(GFT) == "undefined") {
 };
 
 GFT.Inject = (function(){
-	function createAndInjectBattleInfo()
-	{
+	function createAndInjectBattleInfo() {
 		var xPath = "//td[@id='content']/table";
 		var xResult = document.evaluate(xPath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 		var descriptionDiv = xResult.snapshotItem(0);
@@ -42,35 +41,38 @@ GFT.Inject = (function(){
 		var hidden = true; //TODO should be an option
 		var content = "";
 		
-		if(isPlayerProfilePage())
-			content = getBattleStatsTable(GM_getString("battleStatsTitle"), (hidden ? "" : GM_getContent(document, "none")), "hidden", "oneday");
-		else
-			content = getBattleStatsTable(GM_getString("myBattleStatsTitle"), (hidden ? "" : GM_getMyStats(document, "none")), "hidden", "oneday");
+		if(isPlayerProfilePage()) {
+			content = getBattleStatsTable(GM_getString("battleStatsTitle"), GM_getContent(document, "oneday", false), "visible", "oneday");
+		}
+		else {
+			content = getBattleStatsTable(GM_getString("myBattleStatsTitle"), GM_getMyStats(document, "oneday", false), "visible", "oneday");
+		}
 		msgDiv.innerHTML = content;
 	}
 	
-	function getBattleStatsTable(title, content, visibility, hightlightId)
-	{
-		return 	'<div class="title_box"><div style="text-align:center;" class="title_inner"><a style="text-decoration: none;" href="#" id="gfBattleStatsTitle">' + title +  '</a></div></div>\n' + 
+	function getBattleStatsTable(title, content, visibility, hightlightId) {
+		if(content == '') {
+			visibility = 'hidden';
+		}
+		
+		return 	'<div class="title_box"><div style="text-align:center;" class="title_inner"><a style="text-decoration: none;" href="#" id="gfBattleStatsTitle" title="Click to expand or collapse the battle table.">' + title +  '</a></div></div>\n' + 
 				'<div id="gfBattleStatsBody" style="visibility:' + visibility + ';" class="title2_box">\n' +
 				getBattleStatsTableContent(content, visibility,  hightlightId) + '</div>';			
 	}
 	
-	function getBattleStatsTableContent(content, visibility, hightlightId)
-	{
-		if(visibility == "visible")
+	function getBattleStatsTableContent(content, visibility, hightlightId) {
+		if(visibility == "visible" && content != '') {
 			return '<div class="title2_inner">\n<table class="table1" cellpadding="0" cellspacing="3">\n<tbody>\n' + createNavigationEntry(hightlightId) + content + '\n</tbody></table></div>';
+		}
 		return '';
 	}
 	
-	function createTDEntry(value, id, width, hightlightId)
-	{
+	function createTDEntry(value, id, width, hightlightId) {
 		var style = (id == hightlightId) ? 'style="font-weight:bold; border-bottom: 1px solid #b28b60; background-color:#FDC733;"' : '';
 		return '\t<td style="white-space: nowrap; width:' + width + '%;"><a id="' + id + '" href="#" ' + style + '>' + value + '</a></td>\n';
 	}
 	
-	function createNavigationEntry(hightlightId)
-	{
+	function createNavigationEntry(hightlightId) {
 		var navigation = '<tr>\n';
 		navigation += createTDEntry(GM_getString("all"), "none", 16, hightlightId);
 		navigation += createTDEntry(GM_getString("oneDay"), "oneday", 16, hightlightId);
@@ -82,41 +84,38 @@ GFT.Inject = (function(){
 		return navigation;
 	}
 	
-	function isPlayerProfilePage()
-	{
+	function isPlayerProfilePage() {
 		var xRet = document.evaluate("//input[@onclick='startFightWithName();']", document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 		var fightButton = xRet.snapshotItem(0);
 		
 		return fightButton ? true : false;
 	}
 	
-	function handleButtonClick(event)
-	{
+	function handleButtonClick(event) {
 	    if(event.button == 0) {
 			var period = "oneday";
 			var div = document.getElementById("gfBattleStatsBody");
 			var visibility = div.style.visibility;
 			var handleClick = false;
 			
-			switch(event.target.id)
-			{
+			switch(event.target.id) {
 				case "none": ;
 				case "oneday": ;
 				case "threedays": ;
 				case "fivedays": ;
 				case "oneweek": ;
-				case "onemonth": 
-				{ 
+				case "onemonth": { 
 					period = event.target.id +""; 
 					displayTableContent(div, visibility, period); 
 					break; 
 				}
-				case "gfBattleStatsTitle":
-				{
-					if(!div || visibility == "hidden")
+				case "gfBattleStatsTitle": {
+					if(!div || visibility == "hidden") {
 						visibility = "visible";
-					else 
+					
+					} else {
 						visibility = "hidden";
+					}
 					displayTableContent(div, visibility, "oneday");
 					break;
 				}
@@ -128,15 +127,15 @@ GFT.Inject = (function(){
 	function displayTableContent(div, visibility, period)
 	{
 		div.style.visibility = visibility;
-		if(visibility == "hidden")
+		if(visibility == "hidden") {
 			div.innerHTML = "";
-		else
-		{
+		} else {
 			var content = "";
-			if(isPlayerProfilePage())
-				content = GM_getContent(document, period);
-			else
-				content = GM_getMyStats(document, period);
+			if(isPlayerProfilePage()) {
+				content = GM_getContent(document, period, true);
+			} else {
+				content = GM_getMyStats(document, period, true);
+			}
 			div.innerHTML = getBattleStatsTableContent(content, visibility, period);		
 		} 	
 	}

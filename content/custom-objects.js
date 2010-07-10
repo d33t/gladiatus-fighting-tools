@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) <2009> <Rusi Rusev>
  *
   * Permission is hereby granted, free of charge, to any person
@@ -23,7 +23,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-GFT.DBPlayerData = function(name, guild, level, server, attacks, defenses, goldRaised, goldLost, maxGoldRaised, maxGoldLost, expRaised) {
+GFT.DBPlayerData = function(pid, name, guild, level, server, attacks, defenses, goldRaised, goldLost, maxGoldRaised, maxGoldLost, expRaised, lastAttackTime) {
+	this.pid = pid;
 	this.name = name;
 	this.guild = guild;
 	this.level = level;
@@ -35,6 +36,7 @@ GFT.DBPlayerData = function(name, guild, level, server, attacks, defenses, goldR
 	this.maxGoldRaised = maxGoldRaised;
 	this.maxGoldLost = maxGoldLost;
 	this.expRaised = expRaised;
+	this.lastAttackTime = lastAttackTime;
 };
 
 GFT.HttpPlayerData = function(pname, pguild, plevel, hp) {
