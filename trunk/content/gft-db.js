@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) <2009> <Rusi Rusev>
  *
   * Permission is hereby granted, free of charge, to any person
@@ -25,7 +25,20 @@
 
 GFT.DB = {
 	dbConn: null,
+	prefMan: null,
 	console: GFT.Utils.console,
+	utils: GFT.Utils,
+	// Constants
+	ZERO: 0,
+	ONE_DAY_IN_SEC: 86400,
+	ONE_DAY: 1,
+	TWO_DAYS: 2,
+	THREE_DAYS: 3,
+	FOUR_DAYS: 4,
+	FIVE_DAYS: 5,
+	SIX_DAYS: 6,
+	ONE_WEEK: 7,
+	ONE_MONTH: 30,
 	
 	init: function() 
 	{
@@ -36,7 +49,7 @@ GFT.DB = {
 			var oStorageService = Components.classes["@mozilla.org/storage/service;1"].getService(Components.interfaces.mozIStorageService);
 			this.dbConn = oStorageService.openDatabase(oFile);
 			this.createDB();
-
+			this.prefMan = new GFT.PrefManager();
 		}
 	},
 	
@@ -121,7 +134,7 @@ GFT.DB = {
 		catch (e) {alert("Could not create the database\n" + e);}
 	},
 	
-	insertBattle: function(identifier, server, by, atype) 
+	insertBattle: function(identifier, server, by, atype, battleTime) 
 	{
 		this.console.log("Debug[insertBattle()]: Identifier: " + identifier + ", server: " + server + ", by: " + by + ", atype: " + atype);
 		if (this.dbConn)
@@ -130,11 +143,12 @@ GFT.DB = {
 			var myid = this.getMyId(server);
 			try 
 			{
-				var oStatement = this.dbConn.createStatement("INSERT INTO battles (myid, oid, atype) " + 
-																"VALUES (:my_id , :o_id, :a_type)");
+				var oStatement = this.dbConn.createStatement("INSERT INTO battles (myid, oid, atype, atime) " + 
+																"VALUES (:my_id , :o_id, :a_type, :a_time)");
 				oStatement.params.my_id = myid;
 				oStatement.params.o_id = oid;
 				oStatement.params.a_type = atype;
+				oStatement.params.a_time = battleTime;
 				oStatement.execute();
 				oStatement.reset();
 				return this.getLastBattleId();
@@ -356,6 +370,26 @@ GFT.DB = {
 		return false;		
 	},
 	
+	getAllActiveServers: function() {
+		var servers = new Array();
+		
+		if (this.dbConn) {
+			try {
+				var oStatement = this.dbConn.createStatement("SELECT distinct(server) as activeServer FROM myinfo INNER JOIN player ON myinfo.myid=player.apid where myinfo.activated = 1");
+				
+				var step = 0;
+				while (oStatement.executeStep()) {
+					servers[step++] = oStatement.row.activeServer;
+				}
+				oStatement.reset();
+				
+			}
+			catch (e) {alert("DB query failed. Could not select active servers.\n" + e);}
+		}	
+		this.console.log("Active servers count: " + servers.length);
+		return servers;		
+	},
+	
 	/**
 	* returns the intern  db player id
 	* @param identifier  - pid or name
@@ -517,7 +551,7 @@ GFT.DB = {
 				oStatement.params.my_id = myid;
 				oStatement.params.o_id = oid;
 				oStatement.params.a_type = atype;
-				oStatement.params.b_time = this.getTimePeriod(period);
+				oStatement.params.b_time = this.getPeriodRespectingStrategy(period);
 				
 				while (oStatement.executeStep())
 				{
@@ -559,7 +593,7 @@ GFT.DB = {
 				var oStatement = this.dbConn.createStatement("SELECT min(atime) as FirstBattle FROM battles where myid=:my_id AND oid=:o_id AND atype=1 AND atime >= :b_time");
 				oStatement.params.my_id = myid;
 				oStatement.params.o_id = oid;
-				oStatement.params.b_time = this.getTimePeriod("oneday");
+				oStatement.params.b_time = this.getPeriodRespectingStrategy("oneday");
 				while (oStatement.executeStep())
 				{
 					firstBattleInLastDay = oStatement.row.FirstBattle;
@@ -582,7 +616,7 @@ GFT.DB = {
 	*/			
 	getLastBattleInLastDay: function(identifier, server, by) 
 	{
-		this.console.log("Debug[getLastBattleForPidInLastDay()]: identifier: " + identifier + ", server: " + server + ", by: " + by);
+		this.console.log("Debug[getLastBattleInLastDay()]: identifier: " + identifier + ", server: " + server + ", by: " + by);
 		if (this.dbConn)
 		{
 			var oid = this.getPlayerId(identifier, server, by);
@@ -591,7 +625,7 @@ GFT.DB = {
 			var lastBattleInLastDay = -1;
 			if(oid < 0)
 			{
-				this.console.log("Debug[getLastBattleForPidInLastDay()]: Opponent doesn't exists in the DB.");
+				this.console.log("Debug[getLastBattleInLastDay()]: Opponent doesn't exists in the DB.");
 				return lastBattleInLastDay;
 			}
 			try 
@@ -600,7 +634,7 @@ GFT.DB = {
 				var oStatement = this.dbConn.createStatement("SELECT max(atime) as LastBattle FROM battles where myid=:my_id AND oid = :o_id AND atype=1 AND atime >= :b_time");
 				oStatement.params.my_id = myid;
 				oStatement.params.o_id = oid;
-				oStatement.params.b_time = this.getTimePeriod("oneday");
+				oStatement.params.b_time = this.getPeriodRespectingStrategy("oneday");
 				while (oStatement.executeStep())
 				{
 					lastBattleInLastDay = oStatement.row.LastBattle;
@@ -759,44 +793,35 @@ GFT.DB = {
 		return "none";
 	},
 	
-	//TODO !!!
 	getOpponentsWithCriteria: function(period, orderBy, orderDirection, name, level, server)
 	{
 		this.console.log("Debug[getOpponentsWithCriteria()]: period: " + period + ", orderBy: " + orderBy + ", orderDirection: " + orderDirection + ", level: " + level + ", player: " + name + ", server: " + server);
-		// create query
-//		var query = "select a.name, a.guild, a.level, a.server, a.attacks, d.defenses, a.goldRaised, d.goldLost, a.maxGoldRaised, d.maxGoldLost, a.expRaised"
-//		+ " from"
-//		+ " (select p.apid, p.name, p.guild, p.level, p.server, b.atime as aTime, count(b.battleid) as attacks, sum(r.gold) as goldRaised, sum(r.exp) as expRaised, max(r.gold) as maxGoldRaised"
-//		+ " from player p inner join battles b on p.apid=b.oid inner join reports r on b.battleid = r.battleid where b.atype=1 group by b.oid) a"
-//		+ " left join"
-//		+ " (select p.apid, p.name, p.guild, p.level, p.server, b.atime as aTime, count(b.battleid) as defenses, sum(r.gold) as goldLost, max(r.gold) as maxGoldLost"
-//		+ " from player p inner join battles b on p.apid=b.oid inner join reports r on b.battleid = r.battleid where b.atype=0 group by b.oid) d"
-//		+ " on d.apid = a.apid"
-//		+ " where a.aTime > " + this.getTimePeriod(period);
-
-		var select = "select name as rName, guild as rGuild, level as rLevel, server as rServer, a.attacks as rAttacks, d.defenses as rDefenses, a.goldRaised as rGoldRaised, d.goldLost as rGoldLost, a.maxGoldRaised as rMaxGoldRaised, d.maxGoldLost as rMaxGoldLost, a.expRaised as rExpRaised"
-		+ " from";
-		var attacksTable = " (select p.apid, p.name, p.guild, p.level, p.server, b.atime as aTime, count(b.battleid) as attacks, sum(r.gold) as goldRaised, sum(r.exp) as expRaised, max(r.gold) as maxGoldRaised"
-		+ " from player p inner join battles b on p.apid=b.oid inner join reports r on b.battleid = r.battleid where b.atype=1 group by b.oid) a";
-		var leftJoin = " left join";
-		var defensesTable = " (select p.apid, p.name, p.guild, p.level, p.server, b.atime as aTime, count(b.battleid) as defenses, sum(r.gold) as goldLost, max(r.gold) as maxGoldLost"
-		+ " from player p inner join battles b on p.apid=b.oid inner join reports r on b.battleid = r.battleid where b.atype=0 group by b.oid) d";
-		var joinOn =  " on d.apid = a.apid";
-		var whereClause = " where aTime > " + this.getTimePeriod(period);
 		
-		var query1 = select.replace("name", "a.name").
+		var unixTime = this.getPeriodRespectingStrategy(period);
+		var select = "select pid as rPid, name as rName, guild as rGuild, level as rLevel, server as rServer, a.attacks as rAttacks, d.defenses as rDefenses, a.goldRaised as rGoldRaised, d.goldLost as rGoldLost, a.maxGoldRaised as rMaxGoldRaised, d.maxGoldLost as rMaxGoldLost, a.expRaised as rExpRaised, a.lastAttackTime as rLastAttackTime"
+		+ " from";
+		var attacksTable = " (select p.pid, p.apid, p.name, p.guild, p.level, p.server, b.atime as aTime, count(b.battleid) as attacks, sum(r.gold) as goldRaised, sum(r.exp) as expRaised, max(r.gold) as maxGoldRaised, max(b.aTime) as lastAttackTime"
+		+ " from player p inner join battles b on p.apid=b.oid inner join reports r on b.battleid = r.battleid where b.atype=1 and b.atime > " + unixTime + " group by b.oid) a";
+		var leftJoin = " left join";
+		var defensesTable = " (select p.pid, p.apid, p.name, p.guild, p.level, p.server, b.atime as aTime, count(b.battleid) as defenses, sum(r.gold) as goldLost, max(r.gold) as maxGoldLost"
+		+ " from player p inner join battles b on p.apid=b.oid inner join reports r on b.battleid = r.battleid where b.atype=0 and b.atime > " + unixTime + " group by b.oid) d";
+		var joinOn =  " on d.apid = a.apid";
+		var whereClause = " where aTime > " + unixTime;
+		
+		var query1 = select.replace("pid", "a.pid").
+							replace("name", "a.name").
 							replace("guild", "a.guild").
 							replace("level", "a.level").
 							replace("server", "a.server")
 							+ attacksTable + leftJoin + defensesTable + joinOn
 							+ whereClause.replace("aTime", "a.aTime");
-		var query2 = select.replace("name", "d.name").
+		var query2 = select.replace("pid", "d.pid").
+							replace("name", "d.name").
 							replace("guild", "d.guild").
 							replace("level", "d.level").
 							replace("server", "d.server") 
 							+ defensesTable + leftJoin + attacksTable + joinOn 
 							+ whereClause.replace("aTime", "d.aTime");
-		
 		if(!this.isEmpty(level))
 		{
 			query1 +=  " and a.level > " + level;
@@ -810,7 +835,7 @@ GFT.DB = {
 			
 		}
 		
-		if(!this.isEmpty(server))
+		if(!this.isEmpty(server) && server != "allServers")
 		{
 			query1 += " and a.server = '" + server + "'";
 			query2 += " and d.server = '" + server + "'";
@@ -829,7 +854,8 @@ GFT.DB = {
 				var step = 0;
 				while (oStatement.executeStep())
 				{
-					result[step] = new GFT.DBPlayerData(oStatement.row.rName,
+					result[step] = new GFT.DBPlayerData(oStatement.row.rPid,
+													oStatement.row.rName,
 													oStatement.row.rGuild,
 													oStatement.row.rLevel,
 													oStatement.row.rServer,
@@ -839,7 +865,8 @@ GFT.DB = {
 													oStatement.row.rGoldLost,
 													oStatement.row.rMaxGoldRaised,
 													oStatement.row.rMaxGoldLost,
-													oStatement.row.rExpRaised);
+													oStatement.row.rExpRaised,
+													oStatement.row.rLastAttackTime);
 					step++;
 				}
 				oStatement.reset();
@@ -856,9 +883,9 @@ GFT.DB = {
 	* @param server - server played on
 	* @param atype - 1 if attacks, 0 if defenses
 	*/
-	getNumberOfBattlesSinceCustomTime: function(time, server, atype)
+	getNumberOfBattlesSinceCustomTime: function(period, server, atype)
 	{
-		this.console.log("Debug[getNumberOfBattlesSinceCustomTime()]: time: " + time + ", server: " + server + ", atype: " + atype);
+		this.console.log("Debug[getNumberOfBattlesSinceCustomTime()]: time: " + period + ", server: " + server + ", atype: " + atype);
 		if (this.dbConn)
 		{
 			var myid = this.getMyId(server);
@@ -869,7 +896,7 @@ GFT.DB = {
 																"WHERE myid=:my_id AND atype=:a_type AND atime >= :b_time");
 				oStatement.params.my_id = myid;
 				oStatement.params.a_type = atype;
-				oStatement.params.b_time = this.getTimePeriod(time);
+				oStatement.params.b_time = this.getPeriodRespectingStrategy(period);
 				while (oStatement.executeStep())
 				{
 					n_battles = oStatement.row.nBattles;
@@ -933,7 +960,7 @@ GFT.DB = {
 																	"from reports r inner join battles b on r.battleid=b.battleid " + 
 																	"WHERE r.winnerid=:my_id AND b.atime > :a_time" + (atype ? (" AND b.atype=" + atype) : ""));
 				oStatement.params.my_id = myid;
-				oStatement.params.a_time = this.getTimePeriod(period);
+				oStatement.params.a_time = this.getPeriodRespectingStrategy(period);
 				while (oStatement.executeStep())
 				{
 					battlesWon = oStatement.row.battlesWon;
@@ -963,7 +990,7 @@ GFT.DB = {
 																	"WHERE b.atype=:a_type AND b.oid=:o_id AND atime >= :period");
 				oStatement.params.o_id = oid;
 				oStatement.params.a_type = atype;
-				oStatement.params.period = this.getTimePeriod(period);
+				oStatement.params.period = this.getPeriodRespectingStrategy(period);
 				while (oStatement.executeStep())
 				{
 					gold = oStatement.row.RaisedGold;
@@ -992,7 +1019,7 @@ GFT.DB = {
 																	"WHERE b.myid=:my_id AND b.atype=:a_type AND atime >= :period");
 				oStatement.params.my_id = myid;
 				oStatement.params.a_type = atype;
-				oStatement.params.period = this.getTimePeriod(period);
+				oStatement.params.period = this.getPeriodRespectingStrategy(period);
 				
 				while (oStatement.executeStep())
 				{
@@ -1023,7 +1050,7 @@ GFT.DB = {
 																	"WHERE b.atype=:a_type AND b.oid=:o_id AND atime >= :period");
 				oStatement.params.o_id = oid;
 				oStatement.params.a_type = atype;
-				oStatement.params.period = this.getTimePeriod(period);
+				oStatement.params.period = this.getPeriodRespectingStrategy(period);
 				while (oStatement.executeStep())
 				{
 					gold = oStatement.row.RaisedGold;
@@ -1125,7 +1152,7 @@ GFT.DB = {
 					oStatement.params.o_id = oid;
 				}
 				oStatement.params.my_id = myid;
-				oStatement.params.period = this.getTimePeriod(period);
+				oStatement.params.period = this.getPeriodRespectingStrategy(period);
 				while (oStatement.executeStep())
 				{
 					exp = oStatement.row.RaisedExp;
@@ -1151,26 +1178,76 @@ GFT.DB = {
 		return !str || str == "";
 	},
 	
-	getTimePeriod: function(period)
-	{
-		this.console.log("Debug[getTimePeriod()]: period: " + period);
-		var now = Math.round((new Date().getTime()/1000));
-		
-		switch (period)
-		{
-			case "oneday":    return now - this.getDayPeriodInSec(1);
-			case "twodays":   return now - this.getDayPeriodInSec(2);
-			case "threedays": return now - this.getDayPeriodInSec(3);
-			case "fivedays": return now - this.getDayPeriodInSec(5);
-			case "oneweek":   return now - this.getDayPeriodInSec(7);
-			case "onemonth":  return now - this.getDayPeriodInSec(30);
-			case "none": return 0;
-			default: return Math.round((parseInt(period)/1000));
+	periodToNumber: function(period) {
+		switch (period) {
+			case "oneday":		return this.ONE_DAY;
+			case "twodays":		return this.TWO_DAYS;
+			case "threedays":	return this.THREE_DAYS;
+			case "fourdays":	return this.FOUR_DAYS;
+			case "fivedays":	return this.FIVE_DAYS;
+			case "sixdays":		return this.SIX_DAYS;
+			case "oneweek":		return this.ONE_WEEK;
+			case "onemonth":	return this.ONE_MONTH;
+			default: return period;
 		}
 	},
 	
-	getDayPeriodInSec: function(amount)
-	{
-		return amount*86400;
+	getDayPeriodInSec: function(amount) {
+		return amount * this.ONE_DAY_IN_SEC;
+	},
+	
+	getTimePeriod: function(period) {
+		this.console.log("Debug[getTimePeriod()]: period: " + period);
+		if(period == "none") {
+			return this.ZERO;
+		}
+		
+		var now = this.utils.getGMTTime();
+		return now - this.getDayPeriodInSec(this.periodToNumber(period));
+	},
+	
+	getStartOfDay: function()  {
+		if (this.dbConn) {
+			var startOfDay;
+			try {
+				var oStatement = this.dbConn.createStatement("SELECT strftime('%s', date('now', 'start of day')) as StartOfDay");
+				while (oStatement.executeStep()) {
+					startOfDay = oStatement.row.StartOfDay;
+				}
+				oStatement.reset();
+				
+				return startOfDay;
+			}
+			catch (e) {alert("DB query failed. Could not get start of the day\n" + e);}
+		}
+	},
+	
+	getDiffStartOfDayToNow: function() {
+		var now = Math.round((new Date().getTime()/1000)) - this.utils.getTimeZoneOffset(true);
+		return now - this.getStartOfDay();
+	},
+	
+	/**
+	 * Returns difference in seconds within custom period of time using start of day strategy
+	 */
+	getStartOfDayToCustom: function(period) {
+		if(period == "none") {
+			return this.ZERO;
+		}
+		var now = Math.round((new Date().getTime()/1000)) - this.utils.getTimeZoneOffset(true);
+		
+		return now - (this.getDayPeriodInSec(this.periodToNumber(period)-1) + this.getDiffStartOfDayToNow());
+	},
+	
+	getPeriodRespectingStrategy: function(period) {
+		var strategy = this.prefMan.getValue("options.tabs.main.bashing.strategy", "startOfDay");
+		var period;
+		if(strategy == "startOfDay") {
+			period =  this.getStartOfDayToCustom(period); 
+		} else {
+			period =  this.getTimePeriod(period);
+		}
+		this.console.log("Search period is: " + period);
+		return period;
 	}
 };

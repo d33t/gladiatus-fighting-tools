@@ -1,4 +1,4 @@
-GFT.xmlhttpRequester = function(unsafeContentWin, chromeWindow) {
+﻿GFT.xmlhttpRequester = function(unsafeContentWin, chromeWindow) {
 	this.unsafeContentWin = unsafeContentWin;
 	this.chromeWindow = chromeWindow;
 };
@@ -37,7 +37,7 @@ GFT.xmlhttpRequester.prototype.contentStartRequest = function(details) {
 		case "https":
 		case "ftp":
 			this.chromeWindow.setTimeout(
-				injectplayerpage_gmCompiler.hitch(this, "chromeStartRequest", url, details), 0);
+				GFT.gmCompiler.hitch(this, "chromeStartRequest", url, details), 0);
 			break;
 		default:
 			throw new Error("Invalid url: " + url);

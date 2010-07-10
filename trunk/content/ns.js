@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) <2009> <Rusi Rusev>
  *
   * Permission is hereby granted, free of charge, to any person
@@ -27,6 +27,21 @@
  * namespace utilities
  */
 
-if (typeof(GFT) == "undefined") {
+if (typeof(GFT) == "undefined" || !GFT) {
 	var GFT = {};
+}
+
+GFT.ns = function() {
+    var a=arguments, o=null, i, j, d;
+    for (i=0; i<a.length; i=i+1) {
+        d=a[i].split(".");
+        o=GFT;
+
+        for (j=(d[0] == "GFT") ? 1 : 0; j<d.length; j=j+1) {
+            o[d[j]]=o[d[j]] || {};
+            o=o[d[j]];
+        }
+    }
+
+    return o;
 };

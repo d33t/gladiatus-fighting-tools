@@ -29,8 +29,8 @@
 <!-- GFT Options Battles Table Tab -->
 <!ENTITY gft.options.tabs.battlesTable.title "Бойна статистика">
 <!ENTITY gft.options.tabs.battlesTable.desc "Отбележете редовете, които искате да се показват в бойната статистика при зареждането на страницата">
-<!ENTITY gft.options.tabs.battlesTable.captionOpage "Гладиатор">
-<!ENTITY gft.options.tabs.battlesTable.captionPpage "Опонент">
+<!ENTITY gft.options.tabs.battlesTable.captionOpage "Страницата на моите опоненти">
+<!ENTITY gft.options.tabs.battlesTable.captionPpage "Страницата на моят гладиатор">
 <!ENTITY gft.options.tabs.battlesTable.todayBattles "Битки днес">
 <!ENTITY gft.options.tabs.battlesTable.battlesInAttacksCount "Брой битки в атака">
 <!ENTITY gft.options.tabs.battlesTable.battlesInDefenceCount "Брой битки в защита">
@@ -59,6 +59,7 @@
 <!ENTITY gft.battles.table.maxGoldRaised "Макс. спечелено злато">
 <!ENTITY gft.battles.table.maxGoldLost "Макс. загубено злато">
 <!ENTITY gft.battles.table.expRaised "Събран опит">
+<!ENTITY gft.battles.table.nextpossiblefight "Следваща възможна атака">
 <!ENTITY gft.battles.searchby.name "Опонент">
 <!ENTITY gft.battles.searchby.level "Над ниво">
 <!ENTITY gft.battles.searchby.period "Времеви период">
@@ -71,6 +72,13 @@
 <!ENTITY gft.battles.searchby.period.oneweek "Една седмица">
 <!ENTITY gft.battles.searchby.period.onemonth "Един Месец">
 <!ENTITY gft.battles.buttons.search "Покажи двубоите">
+<!ENTITY gft.battles.buttons.fightOnArena "Започни битка на арената">
+<!ENTITY gft.battles.buttons.fightOnCirkusTurma "Започни битка на циркус турма">
+<!ENTITY gft.battles.buttons.showPlayerProfile "Покажи профила">
+<!ENTITY gft.battles.buttons.firstPage.tooltip "Първа страница">
+<!ENTITY gft.battles.buttons.previousPage.tooltip "Предишна страница">
+<!ENTITY gft.battles.buttons.nextPage.tooltip "Следваща страница">
+<!ENTITY gft.battles.buttons.lastPage.tooltip "Последна страница">
 
 <!-- GFT Statusbar XUL -->
 <!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Кликни с ляв бутон за да отвориш двубоите">

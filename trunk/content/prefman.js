@@ -1,4 +1,4 @@
-GFT.PrefManager = function() {
+﻿GFT.PrefManager = function() {
 	var startPoint="extensions.gft.";
 
 	var pref=Components.classes["@mozilla.org/preferences-service;1"].

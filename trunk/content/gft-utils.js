@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) <2009> <Rusi Rusev>
  *
   * Permission is hereby granted, free of charge, to any person
@@ -74,201 +74,126 @@ GFT.Utils = {
 		}
 	},
 	
+	//TODO merge
 	trimmer: {
-		trim: function(str, chars) 
-		{
+		trim: function(str, chars) {
 			return this.ltrim(this.rtrim(str, chars), chars);
 		},
 		 
-		ltrim: function(str, chars) 
-		{
+		ltrim: function(str, chars) {
 			chars = chars || "\\s";
 			return str.replace(new RegExp("^[" + chars + "]+", "g"), "");
 		},
 		 
-		rtrim: function(str, chars) 
-		{
+		rtrim: function(str, chars) {
 			chars = chars || "\\s";
 			return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
 		}
 	},
 	
-	parser: {
-			parsePlayerName: function(http_request)
-			{
-				var pNameRegEx = /playername_achievement\"\>/i;
-				var html = http_request.responseText;
-				var pos = html.search(pNameRegEx);	
-				var namehtml = html.substring(pos, pos + 80);
-				var nameRegExp = />\s+[\w\;\:\?\)\(\*\-\.\@\-\!\`]+\s+</i; //TODO
-				var pName = nameRegExp.exec(namehtml) + "";
-				if(pos != -1)
-					return trimmer.trim(pName.substring(1, pName.length-1));
-				else
-				{
-					document.getElementById("gft-battles-errors").value += "cannot parse playername \'" + pName + "\'\n";
-					return "wrong playername";
-				}
-			},
-			
-			parsePlayerLevel: function(http_request)
-			{
-				var pLvlRegExp = /charstats_value22\"\>/i;
-				var html = http_request.responseText;
-				var pos = html.search(pLvlRegExp);	
-				html.substring(pos + 19, pos + 22).match(/(\d+)/);
-				if(pos != -1)
-					return RegExp.$1;
-				else
-				{
-					document.getElementById("gft-battles-errors").value += "cannot parse player level \n";
-					return "wrong player level";
-				}	
-			},
-			
-			parsePlayerGuild: function(http_request)
-			{
-				var pGuildRegExp = /mod=guild&i=\d+&sh=\w+/i;
-				var html = http_request.responseText;
-				var pos = html.search(pGuildRegExp);
-				if(pos != -1)
-				{
-					var guildhtml = html.substring(pos, pos + 100);
-					var guildRegExp = /\w+\s\[[\w\`\'\*\.\^\!\[\]\-\@\`\=\$]+\]/i; //TODO
-					if(pos != -1)
-						return trimmer.trim(guildRegExp.exec(guildhtml)+"");
-					else
-					{
-						document.getElementById("gft-battles-errors").value += "cannot parse player guild \'" + guildhtml + "\'\n";
-						return "wrong player guild";
-					}
-				}
-				else
-					return "none";
-			},
-			
-			parsePlayerLifePointsInfo: function(http_request)
-			{
-				var pLifePointRegExp = />\d{1,4}\s\/\s\d{4}</;
-				var html = http_request.responseText;
-				var lifepoints = pLifePointRegExp.exec(html) + "";	
-				return lifepoints.substring(1, lifepoints.length-1);
-			},
-			
-			getPlayerCurrentLifePoint: function(http_request)
-			{
-				var lifepoints = this.parsePlayerLifePointsInfo(http_request);
-				var currLifePointsRegExp = /\d{1,4}\s/i;
-				return trimmer.trim(currLifePointsRegExp.exec(lifepoints)+"");
-			},
-			
-			parseTime: function()
-			{ 
-				return "unsupported function";
-				// var doc = http_request.responseXML;
-				// var xPath = "//span[@id='bx0']";
-				// var nodesSnapshot = doc.evaluate(xPath, doc, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-				// var timeUntilBattleNode = nodesSnapshot.snapshotItem(0);
-				// if(timeUntilBattleNode)
-				// {
-					// var timeUntilBattle = trimmer.trim(timeUntilBattleNode.textContent);
-					// var tt = timeUntilBattle.split(":").reverse(); 
-					// return (tt[0] * 1000)+(tt[1] * 60000);
-				// }
-				// else
-					// return new Date().getTime();
-			}
-	},
-	
-	getStrings: function() // not used recently
-	{
+	getStrings: function() { // not used recently
 		return document.getElementById("gft-strings");
 	},
 	
-	getString: function(string)
-	{
+	getString: function(string) {
 		return this.getStrings().getString(string);
 	},
 	
-	getPidFromUrl: function(url)
-	{
+	getPidFromUrl: function(url) {
 		var pidRegEx = /mod=player&p=(\d+).*&sh=.*/;
 		url.match(pidRegEx);
 		var pid = RegExp.$1;
-		if(pid)
+		if(pid) {
 			return pid;
-		else
-		{
+		}
+		else {
 			this.console.log("Error[getRepIdFromUrl()]: Cannot parse pid from url:\n " +  url);
 			return -1;
 		}
 	},
 	
-	getRepIdFromUrl: function(url)
-	{
+	getRepIdFromUrl: function(url) {
 		var repidRegEx = /mod=report&beid=(\d+).*&sh=.*/;
 		url.match(repidRegEx);
 		var repid = RegExp.$1;
-		if(repid)
+		if(repid) {
 			return repid;
-		else
-		{
+		}
+		else {
 			this.console.log("Error[getRepIdFromUrl()]: Cannot parse repId from url:\n " +  url);
 			return -1;
 		}
 	},
 	
-	getTime: function()
-	{
+	getTime: function() {
 		return new Date().getTime();
 	},
-
-	getBrowser: function()
-	{
+	
+	getGMTTime: function() {
+		var currDate = new Date(); //in utc format
+		var offsetToGMT = (currDate.getTimezoneOffset()*60*(-1)) - this.getTimeZoneOffset(true);
+		return Math.round((currDate.getTime()/1000)) + offsetToGMT;
+	},
+	
+	getBrowser: function() {
 		return gBrowser.selectedBrowser.contentDocument;
 	},
 
-	getServer: function()
-	{
+	getServer: function() {
 		return gBrowser.selectedBrowser.contentDocument.domain;
 	},
 	
-	millisToHumanReadable: function(millis, log)
-	{
+	dateToGMTUnixTime: function(stringDate) {
+		var dateFormatRegEx = /\d{2}\.\d{2}.\d{4}\s{1}\d{2}:\d{2}:\d{2}/;
+		if(!dateFormatRegEx.test(stringDate)) {
+			return Math.round(this.getTime()/1000.0);
+		}
+		
+		stringDate = stringDate.match(dateFormatRegEx) + "";
+		stringDate = stringDate.split(" ");
+		var datePart = stringDate[0].split(".");
+		var timePart = stringDate[1].split(":");
+		var humDate = new Date(Date.UTC(datePart[2], (datePart[1]-1), datePart[0],
+				timePart[0], timePart[1], timePart[2]));
+		
+		var germanTimeOffset = 60*60;
+		return (humDate.getTime()/1000.0) - germanTimeOffset;
+	},	
+	
+	millisToHumanReadable: function(millis, log) {
 		var date = new Date(parseInt(millis));
 		
 		var time = "";
 		
 		time = this.to2digits(date.getMinutes()) + ":";	
 		time += this.to2digits(date.getSeconds());		
-		if(log)
-		{
+		if(log) {
 			time = this.to2digits(date.getHours()) + ":" + time;
 			time += "." + date.getMilliseconds();
 		}
 		return time;
 	},
 
-	to2digits: function(n)
-	{
+	to2digits: function(n) {
 		if (n > 9) return n;
 		return "0" + n;
 	},
   
-	unixtimeToHumanReadable: function(unixtime) 
-	{
-		var theDate = new Date(unixtime * 1000);
-		return this.to2digits(theDate.getDate()) + "." + 
-				this.to2digits(theDate.getMonth()+1) + "." + 
-				theDate.getFullYear() + " - " + 
-				this.to2digits(theDate.getHours()) + ":" +
-				this.to2digits(theDate.getMinutes()) + ":" +
-				this.to2digits(theDate.getSeconds());
-		// return	theDate.toLocaleString();
+	unixtimeToHumanReadable: function(unixtime) {
+		var localTimeOffset = this.getTimeZoneOffset(true);
+		this.console.log("TZO: " + localTimeOffset);
+		var theDate = new Date((unixtime + localTimeOffset) * 1000);
+		
+		return this.to2digits(theDate.getUTCDate()) + "." + 
+				this.to2digits(theDate.getUTCMonth()+1) + "." + 
+				theDate.getUTCFullYear() + " - " + 
+				this.to2digits(theDate.getUTCHours()) + ":" +
+				this.to2digits(theDate.getUTCMinutes()) + ":" +
+				this.to2digits(theDate.getUTCSeconds());
+		
 	},
 	
-	reverse: function(string)
-	{
+	reverse: function(string) {
 		splitext = string.split("");
 		revertext = splitext.reverse();
 		reversed = revertext.join("");
@@ -278,12 +203,10 @@ GFT.Utils = {
 	/**
 	* Partitionate number of form x.xxx.xxx
 	*/
-	partitionateNumber: function(number)
-	{
+	partitionateNumber: function(number) {
 		number = this.reverse(number+"");
 		var ret = "";
-		for(var i = 0; i < number.length; i++)
-		{
+		for(var i = 0; i < number.length; i++) {
 			if(i > 0 && i%3 == 0)
 				ret += ".";
 			ret += number.charAt(i);
@@ -295,5 +218,98 @@ GFT.Utils = {
 		
 	createTableEntry: function(name, value) {
 		return '<tr><th colspan="4">' + name + ':</th> <td colspan="2" style="padding-left: 3px; white-space: nowrap;" class="stats_value">' + value + '</td></tr>\n';
+	},
+	
+	doHttpRequest: function(details) {
+		var unsafeWin=this.getBrowser().defaultView;
+		if (unsafeWin.wrappedJSObject) unsafeWin=unsafeWin.wrappedJSObject;
+		var xmlhttpRequester=new GFT.xmlhttpRequester(
+				unsafeWin, window
+		);
+		xmlhttpRequester.contentStartRequest(details);
+	},
+	
+	reportError: function(message, exception) {
+		if(!message && !exception) {
+			this.reportError("Unknown error. Bad error handling", null);
+		}
+		var msg = "";
+		if(message) {
+			msg += "Message: " + message;
+		}
+		if(exception) {
+			if(msg != "") {
+				msg += "\n";
+			}
+			msg += "Exception: " + exception;
+		}
+		
+        try {
+            const prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
+                                      .getService(Components.interfaces.nsIPromptService);
+            const flags = prompts.BUTTON_POS_0 * prompts.BUTTON_TITLE_OK +
+                          prompts.BUTTON_POS_1 * prompts.BUTTON_TITLE_IS_STRING +
+                          prompts.BUTTON_POS_0_DEFAULT;
+            var button = prompts.confirmEx( null, "Info", message, flags, "", "Report", "", null, {} );
+
+            if (button == 1) { // "Report" button
+        		this.loadUrl("http://code.google.com/p/gladiatus-fighting-tools/issues/list");
+            }
+        }
+        catch (e) { this.console.log("Failed to handle info prompt\n" + e); }		
+	},
+	
+	loadUrl: function(url, newTab) {
+		if(newTab) {
+            const currentBrowser = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                                                      .getService(Components.interfaces.nsIWindowMediator)
+                                                      .getMostRecentWindow("navigator:browser")
+                                                      .getBrowser();
+            currentBrowser.selectedTab = currentBrowser.addTab(url,null,null);		
+		} else {
+			this.getBrowser().location.href = url;
+		}
+	},
+
+	/**
+	 * Returns the timezone offset in hours or in seconds.
+	 * 
+	 * The original function Date.getTimezoneOffset is too buggy!
+	 * The function was originally written by Josh Fraser (http://www.onlineaspect.com/2007/06/08/auto-detect-a-time-zone-with-javascript/)
+	 * 
+	 * @param inSeconds - if true returns TZO in seconds, otherwise in hours
+	 * @returns TZO in hours or seconds depending on parameter inSeconds
+	 */
+	getTimeZoneOffset: function(inSeconds) {
+		var rightNow = new Date();
+		var jan1 = new Date(rightNow.getFullYear(), 0, 1, 0, 0, 0, 0);  // jan 1st
+		var june1 = new Date(rightNow.getFullYear(), 6, 1, 0, 0, 0, 0); // june 1st
+		var temp = jan1.toGMTString();
+		var jan2 = new Date(temp.substring(0, temp.lastIndexOf(" ")-1));
+		temp = june1.toGMTString();
+		var june2 = new Date(temp.substring(0, temp.lastIndexOf(" ")-1));
+		var std_time_offset = (jan1 - jan2) / (1000 * 60 * 60);
+		var daylight_time_offset = (june1 - june2) / (1000 * 60 * 60);
+		var dst;
+		if (std_time_offset == daylight_time_offset) {
+			dst = "0"; // daylight savings time is NOT observed
+		} else {
+			// positive is southern, negative is northern hemisphere
+			var hemisphere = std_time_offset - daylight_time_offset;
+			if (hemisphere >= 0)
+				std_time_offset = daylight_time_offset;
+			dst = "1"; // daylight savings time is observed
+		}
+		
+		if(inSeconds) {
+			var value = std_time_offset;
+			var hours = parseInt(value);
+		   	value -= parseInt(value);
+			value *= 60;
+			var mins = parseInt(value);
+			return (hours*60 + mins)*60;			
+		} else {
+			return std_time_offset;
+		}
 	}
 };

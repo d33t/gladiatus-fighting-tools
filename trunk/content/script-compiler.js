@@ -1,4 +1,4 @@
-GFT.gmCompiler={
+﻿GFT.gmCompiler={
 
 // getUrlContents adapted from Greasemonkey Compiler
 // http://www.letitblog.com/code/python/greasemonkey.py.txt
@@ -19,13 +19,18 @@ getUrlContents: function(aUrl){
 		.classes["@mozilla.org/intl/scriptableunicodeconverter"]
 		.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 	unicodeConverter.charset="UTF-8";
-
-	var	channel=ioService.newChannel(aUrl, null, null);
-	var	input=channel.open();
-	scriptableStream.init(input);
-	var	str=scriptableStream.read(input.available());
-	scriptableStream.close();
-	input.close();
+	
+	var	input, str;
+	try {
+		input=ioService.newChannel(aUrl, null, null).open();
+		scriptableStream.init(input);
+		str=scriptableStream.read(input.available());
+		scriptableStream.close();
+		input.close();
+	} catch (e) {
+		this.console.log("[ERROR] Cannot load script at " +  aUrl + "\n" + e);
+		return false;
+	}
 
 	try {
 		return unicodeConverter.ConvertToUnicode(str);
@@ -58,10 +63,12 @@ contentLoad: function(e) {
 		&& true
 	) {
 		var script=GFT.gmCompiler.getUrlContents(
-			'chrome://gft/content/inject_gft.js'
+			'chrome://gft/content/gft-injected.js'
 		);
 		
-		GFT.gmCompiler.injectScript(script, href, unsafeWin);
+		if(script) {
+			GFT.gmCompiler.injectScript(script, href, unsafeWin);
+		}
 	}
 },
 
@@ -220,8 +227,8 @@ addStyle:function(doc, css) {
 
 onLoad: function(e) {
 	var	appcontent=window.document.getElementById("appcontent");
-	if (appcontent && !appcontent.greased_injectplayerpage_gmCompiler) {
-		appcontent.greased_injectplayerpage_gmCompiler=true;
+	if (appcontent && !appcontent.greased_gft_gmCompiler) {
+		appcontent.greased_gft_gmCompiler=true;
 		appcontent.addEventListener("DOMContentLoaded", GFT.gmCompiler.contentLoad, false);
 	}
 },
@@ -234,20 +241,7 @@ onUnLoad: function() {
 		.removeEventListener("DOMContentLoaded", GFT.gmCompiler.contentLoad, false);
 }
 
-}; //object injectplayerpage_gmCompiler
-
-/*
-GFT.ScriptStorage = function() {
-	this.prefMan=new GFT.PrefManager();
-};
-
-GFT.ScriptStorage.prototype.setValue = function(name, val) {
-	this.prefMan.setValue(name, val);
-};
-GFT.ScriptStorage.prototype.getValue = function(name, defVal) {
-	return this.prefMan.getValue(name, defVal);
-};
-*/
+}; //object gmCompiler
 
 window.addEventListener('load', GFT.gmCompiler.onLoad, false);
 window.addEventListener('unload', GFT.gmCompiler.onUnLoad, false);

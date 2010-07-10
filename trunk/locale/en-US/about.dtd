@@ -1,5 +1,5 @@
-<!ENTITY gft.about.about "About">
+<!ENTITY gft.about.title "About">
 <!ENTITY gft.about.version "Version">
 <!ENTITY gft.about.createdBy "Created By">
-<!ENTITY gft.about.homepage "Home Page">
+<!ENTITY gft.about.homepage "Project home page">
 <!ENTITY gft.about.translators "Translators">
