@@ -1,10 +1,10 @@
 ﻿<!-- Common -->
 <!ENTITY gft.common.close "Fermer">
-<!ENTITY gft.common.detach "open in new window">
+<!ENTITY gft.common.detach "Ouvrir dans une nouvelle fenêtre">
 
 <!-- GFT Options XUL - Windows -->
 <!ENTITY gft.windows.options.title "Options">
-<!ENTITY gft.windows.battles.title "Combats">
+<!ENTITY gft.windows.battles.title "Console">
 
 <!-- GFT Options Main Tab -->
 <!ENTITY gft.options.tabs.main.title "Principal">
@@ -28,7 +28,7 @@
 
 <!-- GFT Options Battles Table Tab -->
 <!ENTITY gft.options.tabs.battlesTable.title "Statistiques de combat">
-<!ENTITY gft.options.tabs.battlesTable.desc "Cochez ce que vous ne souhaitez pas voir apparaitre dans les statistiques.">
+<!ENTITY gft.options.tabs.battlesTable.desc "Cochez ce que vous souhaitez voir apparaitre par défaut dans les statistiques quand la page se charge.">
 <!ENTITY gft.options.tabs.battlesTable.captionOpage "Mes adversaires">
 <!ENTITY gft.options.tabs.battlesTable.captionPpage "Mon gladiateur">
 <!ENTITY gft.options.tabs.battlesTable.todayBattles "Combats du jour">
@@ -59,12 +59,12 @@
 <!ENTITY gft.battles.table.maxGoldRaised "Plus gros gain">
 <!ENTITY gft.battles.table.maxGoldLost "Plus grosse perte">
 <!ENTITY gft.battles.table.expRaised "Expérience prise">
-<!ENTITY gft.battles.table.nextpossiblefight "Next possible fight">
+<!ENTITY gft.battles.table.nextpossiblefight "Prochain combat possible">
 <!ENTITY gft.battles.searchby.name "Adversaire">
 <!ENTITY gft.battles.searchby.level "Niveau plancher">
 <!ENTITY gft.battles.searchby.period "Période">
 <!ENTITY gft.battles.searchby.server "Serveur">
-<!ENTITY gft.battles.searchby.period.all "De tout temps">
+<!ENTITY gft.battles.searchby.period.all "Tout">
 <!ENTITY gft.battles.searchby.period.oneday "Sur un jour">
 <!ENTITY gft.battles.searchby.period.twodays "Sur deux jours">
 <!ENTITY gft.battles.searchby.period.threedays "Sur trois jours">
@@ -72,22 +72,22 @@
 <!ENTITY gft.battles.searchby.period.oneweek "Sur une semaine">
 <!ENTITY gft.battles.searchby.period.onemonth "Sur un mois">
 <!ENTITY gft.battles.buttons.search "Chercher">
-<!ENTITY gft.battles.buttons.fightOnArena "Fight on arena">
-<!ENTITY gft.battles.buttons.fightOnCirkusTurma "Fight on cirkus turma">
-<!ENTITY gft.battles.buttons.showPlayerProfile "Show profile">
-<!ENTITY gft.battles.buttons.firstPage.tooltip "First page">
-<!ENTITY gft.battles.buttons.previousPage.tooltip "Previous page">
-<!ENTITY gft.battles.buttons.nextPage.tooltip "Next page">
-<!ENTITY gft.battles.buttons.lastPage.tooltip "Last page">
+<!ENTITY gft.battles.buttons.fightOnArena "Combattre dans l'arène">
+<!ENTITY gft.battles.buttons.fightOnCirkusTurma "Combattre au Circus Turma">
+<!ENTITY gft.battles.buttons.showPlayerProfile "Afficher le profil">
+<!ENTITY gft.battles.buttons.firstPage.tooltip "Première page">
+<!ENTITY gft.battles.buttons.previousPage.tooltip "Page précédente">
+<!ENTITY gft.battles.buttons.nextPage.tooltip "Page suivante">
+<!ENTITY gft.battles.buttons.lastPage.tooltip "Dernière page">
 
 <!-- GFT Statusbar XUL -->
-<!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Clic gauche pour ouvrir the battles GUI.">
+<!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Clic gauche pour ouvrir la console.">
 <!ENTITY gft.statusbar.tooltip.menu.desc.row2 "Clic droit pour ouvrir le menu.">
-<!ENTITY gft.statusbar.tooltip.atacks.sessionstart "Attacks count since session start">
-<!ENTITY gft.statusbar.tooltip.atacks.startoftheday "Attacks count since start of the day">
+<!ENTITY gft.statusbar.tooltip.atacks.sessionstart "Combats depuis l'ouverture de la session">
+<!ENTITY gft.statusbar.tooltip.atacks.startoftheday "Combats depuis le début de la journée">
 <!ENTITY gft.statusbar.tooltip.lastopponent "Dernier adversaire">
-<!ENTITY gft.statusbar.tooltip.lastdaybattles "Attacks within last day">
-<!ENTITY gft.statusbar.tooltip.nextpossiblebattletime "Next possible attack time">
+<!ENTITY gft.statusbar.tooltip.lastdaybattles "Combats depuis le dernier jour">
+<!ENTITY gft.statusbar.tooltip.nextpossiblebattletime "Prochaine période de combat">
 <!ENTITY gft.statusbar.menu.options "Options">
-<!ENTITY gft.statusbar.menu.battles "Combats">
+<!ENTITY gft.statusbar.menu.battles "Console">
 <!ENTITY gft.statusbar.menu.about "A propos">

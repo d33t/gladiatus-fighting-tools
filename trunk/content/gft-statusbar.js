@@ -65,7 +65,7 @@ GFT.Statusbar = {
 		{
 			case "options":
 				window.openDialog("chrome://gft/content/options.xul",
-								  "gftOptions", "chrome,dialogger.log,centerscreen,resizable=no");
+								  "gftOptions", "chrome,dialogger.log,centerscreen,resizable=yes");
 				break;
 			case "battles":
 				var battlesSearchSplitter = document.getElementById("battlesSearchSplitter");

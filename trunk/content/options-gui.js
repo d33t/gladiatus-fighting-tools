@@ -95,6 +95,9 @@ GFTOptions = (function()
 		var version = $('versionsmenu').selectedItem.value;
 		var textarea = $('versionsarea');
 		
+		var v141 = "FIXED: The addon was adjusted for gladiatus version 0.8.0\n"
+			+ "CHANGED: Options dialog is resizable now.\n"
+			+ "CHANGED: french translation is now fully completed.";
 		var v14 = "FIXED: The values displayed in the battle overlay were completly wrong.\n"
 			+ "ADDED: Ability to fight on the arena or cirkus turma directly from the battle overlay(double click or right click use the context menu).\n"
 			+ "ADDED: Almost all visual elements could be managed now through the options.\n"
@@ -128,10 +131,11 @@ GFTOptions = (function()
 				+ "ADD: Bulgarian and german languages ";
 		var v10 = "Initial version";
 		
-		var all = v14 + "\n" + v13 + "\n" + v122  + "\n" + v121 + "\n" + v12 + "\n" + v11 + "\n" + v101 + "\n" + v10;
+		var all = v141 + "\n" + v14 + "\n" + v13 + "\n" + v122  + "\n" + v121 + "\n" + v12 + "\n" + v11 + "\n" + v101 + "\n" + v10;
 		
 		switch(version) {
 			case "all": {textarea.innerHTML = getVersion(all); break;}
+			case "v141": {textarea.innerHTML =  getVersion(v141); break;}
 			case "v14": {textarea.innerHTML =  getVersion(v14); break;}
 			case "v13": {textarea.innerHTML =  getVersion(v13); break;}
 			case "v122": {textarea.innerHTML =  getVersion(v122); break;}
