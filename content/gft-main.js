@@ -156,7 +156,7 @@ GFT.Main = (function(){
 		var attackForXDays = db.getNumberOfBattlesWithin(identifier, server, by, 1, customDays);
 		
 		if(attackForLastDay >= allowedAttacksInOneDay || attackForXDays >= allowedAttacksInXDays) {
-			if(attackForLastDay > allowedAttacksInOneDay) {
+			if(attackForLastDay > allowedAttacksInOneDay) { //TODO warn if next attack could be bashing! 
 				return getBashingMessage(1, attackForLastDay, plainText);
 			} else if(attackForXDays > allowedAttacksInXDays) {
 				return getBashingMessage(customDays, attackForXDays, plainText);
@@ -200,7 +200,7 @@ GFT.Main = (function(){
 			var opponentNode = nodesSnapshot.snapshotItem(1);
 			
 			if(opponentNode) {
-				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[2]/div[1]/div");
+				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[3]/div[1]/div");
 				var battleDateTime = nodesSnapshot.snapshotItem(0).textContent;
 				var battleUnixTime = utils.dateToGMTUnixTime(battleDateTime);
 				console.log("Battle time: " + battleUnixTime + " : " + utils.unixtimeToHumanReadable(battleUnixTime));
@@ -208,13 +208,13 @@ GFT.Main = (function(){
 				var atacker = trimmer.trim(myPlayerNode.textContent);
 				var defender = trimmer.trim(opponentNode.textContent);
 				
-				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[2]/div[2]/div/table/tbody/tr[2]/td[1]/a");
+				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[3]/div[2]/div/table/tbody/tr[2]/td[1]/a");
 				if(!nodesSnapshot.snapshotItem(0))
 					return;
 				var atackerID = utils.getPidFromUrl(nodesSnapshot.snapshotItem(0).getAttribute('href'));
 				//console.log("Atacker: " + atacker + "[" + atackerID + "]");
 				
-				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[2]/div[2]/div/table/tbody/tr[3]/td[1]/a");
+				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[3]/div[2]/div/table/tbody/tr[3]/td[1]/a");
 				var defenderID = utils.getPidFromUrl(nodesSnapshot.snapshotItem(0).getAttribute('href'));
 				//console.log("Defender: " + defender + "[" + defenderID + "]");
 				
@@ -230,13 +230,13 @@ GFT.Main = (function(){
 				var defenderLevel = trimmer.trim(nodesSnapshot.snapshotItem(0).textContent);
 				
 				// parse opponent guild
-				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a");
+				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[3]/div[2]/div/table/tbody/tr[2]/td[2]/a");
 				var atackerGuild = (nodesSnapshot.snapshotItem(0)) ? trimmer.trim(nodesSnapshot.snapshotItem(0).textContent) : "none";				
-				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[2]/div[2]/div/table/tbody/tr[3]/td[2]/a");
+				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[3]/div[2]/div/table/tbody/tr[3]/td[2]/a");
 				var defenderGuild = (nodesSnapshot.snapshotItem(0)) ? trimmer.trim(nodesSnapshot.snapshotItem(0).textContent) : "none";
 				
 				// experience and gold raised or lost
-				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[2]/div[4]/div/table/tbody/tr/td/p");
+				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[2]/div[2]/div/table/tbody/tr/td/p");
 				var raisedGold = 0;
 				var raisedExp = 0;
 				if(nodesSnapshot.snapshotLength > 1) {
@@ -252,7 +252,7 @@ GFT.Main = (function(){
 				}
 				
 				// who is the winner ? 
-				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[2]/div[3]/div/span[2]/a");
+				nodesSnapshot = evaluateXPath("//div[@id='battlerep']/div[3]/div[3]/div/span[2]/a");
 				var winner = ""; 
 				if(nodesSnapshot.snapshotItem(0)) {
 					winner = trimmer.trim(nodesSnapshot.snapshotItem(0).textContent);
