@@ -6,9 +6,7 @@
 		xmlns:html="http://www.w3.org/1999/xhtml"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         orient="vertical"
-        autostretch="never"
-        width="480px"
-        height="370px"
+        autostretch="always"
         persist="width height"
         onload="GFTOptions.init();"
         title="&gft.windows.options.title;">
@@ -126,7 +124,8 @@
 									<menuitem label="v1.2.1" value="v121"/>
 									<menuitem label="v1.2.2" value="v122"/>
 									<menuitem label="v1.3" value="v13"/>
-									<menuitem label="v1.4" value="v14" selected="true"/>
+									<menuitem label="v1.4" value="v14"/>
+									<menuitem label="v1.4.1" value="v141" selected="true"/>
 								</menupopup>
 							</menulist>
 						</hbox>
