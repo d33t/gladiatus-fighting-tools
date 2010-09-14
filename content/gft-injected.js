@@ -135,7 +135,7 @@ GFT.Inject = (function(){
 			visibility = 'hidden';
 		}
 		
-		return 	'<div class="title_box"><div style="text-align:center;" class="title_inner"><a style="text-decoration: none;" href="#" id="gfBattleStatsTitle" title="' + GM_getString("clickToExpand") + '">' + title +  '</a></div></div>\n' + 
+		return 	'<div class="title_box"><div style="text-align:center;" class="title_inner"><a style="text-decoration: none;" href="#" onclick="javascript:return false;" id="gfBattleStatsTitle" title="' + GM_getString("clickToExpand") + '">' + title +  '</a></div></div>\n' + 
 				'<div id="gfBattleStatsBody" style="visibility:' + visibility + ';" class="title2_box">\n' +
 				getBattleStatsTableContent(content, visibility,  hightlightId, selectedItem) + '</div>';			
 	}
