@@ -1,4 +1,4 @@
-<!-- Common -->
+﻿<!-- Common -->
 <!ENTITY gft.common.close "close">
 <!ENTITY gft.common.detach "open in new window">
 
@@ -25,6 +25,14 @@
 <!ENTITY gft.options.tabs.main.bashing.wordday "day">
 <!ENTITY gft.options.tabs.main.bashing.worddays "days">
 <!ENTITY gft.options.tabs.main.bashing.attacks "attacks">
+<!ENTITY gft.options.tabs.main.bashing.showBashingWarning "Show bashing notification warning if next attack will be bashing">
+<!ENTITY gft.options.tabs.main.battlesOverview.title "Battles overview">
+<!ENTITY gft.options.tabs.main.battlesOverview.showBattlePopupMenu "Switch on the ability to fight directly from the battles overview">
+<!ENTITY gft.options.tabs.main.battlesOverview.defaultDoubleClickActionLabel "Double click on some row will start fight on">
+<!ENTITY gft.options.tabs.main.battlesOverview.collapseBattleOverlayAfterBattle "Collapse battles overview after successful battle">
+<!ENTITY gft.options.tabs.main.bashing.showLevelBashingWarning "Enable level-bashing notification">
+<!ENTITY gft.options.tabs.main.bashing.levelBashingRemoveButtons "Remove fight buttons on gladiator profile page">
+<!ENTITY gft.options.tabs.main.bashing.levelBashingLimit "Level allowance limit">
 
 <!-- GFT Options Battles Table Tab -->
 <!ENTITY gft.options.tabs.battlesTable.title "Battle statistic">
@@ -42,6 +50,23 @@
 <!ENTITY gft.options.tabs.battlesTable.maxGoldRaised "Max gold raised">
 <!ENTITY gft.options.tabs.battlesTable.maxGoldLost "Max gold lost">
 <!ENTITY gft.options.tabs.battlesTable.realChanceForWin "Real chance for win">
+
+<!-- GFT Options Others Tab -->
+<!ENTITY gft.options.tabs.others.title "Others">
+<!ENTITY gft.options.tabs.others.profilepage.title "Opponent profile page">
+<!ENTITY gft.options.tabs.others.profilepage.showCircusTurmaButton "Show circus turma fight button">
+<!ENTITY gft.options.tabs.others.profilepage.markMyAllies "Color my allies in green">
+<!ENTITY gft.options.tabs.others.battleoverlay.title "Battles overview default options">
+<!ENTITY gft.options.tabs.others.battleoverlay.advancedOptionsExpandedDefault "Expand advanced filters">
+<!ENTITY gft.options.tabs.others.battleoverlay.excludeMyAlliesDefault "Exclude my allies">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortColumn.title "Sort column">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.title "Sort direction">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.asc "Ascending">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.desc "Descending">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.label "Set battles table position on gladiator page">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.hide "don't show">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.before "before profile">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.after "after profile">
 
 <!-- GFT Options Versions Tab -->
 <!ENTITY gft.options.tabs.versions.title "Versions">
@@ -61,7 +86,6 @@
 <!ENTITY gft.battles.table.expRaised "Experience raised">
 <!ENTITY gft.battles.table.nextpossiblefight "Next possible fight">
 <!ENTITY gft.battles.searchby.name "Opponent">
-<!ENTITY gft.battles.searchby.level "above level">
 <!ENTITY gft.battles.searchby.period "Time period">
 <!ENTITY gft.battles.searchby.server "Server">
 <!ENTITY gft.battles.searchby.period.all "All">
@@ -79,6 +103,17 @@
 <!ENTITY gft.battles.buttons.previousPage.tooltip "Previous page">
 <!ENTITY gft.battles.buttons.nextPage.tooltip "Next page">
 <!ENTITY gft.battles.buttons.lastPage.tooltip "Last page">
+<!ENTITY gft.battles.checkbox.advancedOptions "Advanced filters">
+<!ENTITY gft.battles.checkbox.excludeAllies "Exclude allies">
+<!ENTITY gft.battles.searchby.level.between "Between">
+<!ENTITY gft.battles.searchby.level.and "and">
+<!ENTITY gft.battles.searchby.level "level">
+<!ENTITY gft.battles.searchby.location.title "Location">
+<!ENTITY gft.battles.searchby.location.arena "Arena">
+<!ENTITY gft.battles.searchby.location.circusTurma "Circus Turma">
+<!ENTITY gft.battles.searchby.attackType.title "Attack type">
+<!ENTITY gft.battles.searchby.attackType.offense "Offense">
+<!ENTITY gft.battles.searchby.attackType.defense "Defense">
 
 <!-- GFT Statusbar XUL -->
 <!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Use the left mouse button to open the battles gui">

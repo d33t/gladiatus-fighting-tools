@@ -23,18 +23,45 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 */
 GFT.Utils = {
-	console: {
-		log: function(msg) {
-			var prefMan = new GFT.PrefManager();
-			if(!prefMan.getValue("debug", false)) {
-				return;
-			}
-			var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
+	console: (function(){
+		var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
 										 .getService(Components.interfaces.nsIConsoleService);
+		var prefMan = new GFT.PrefManager();
+		
+		function printMessage(msg) {
 			var currMillis = GFT.Utils.getTime();
-			consoleService.logStringMessage("[" + GFT.Utils.millisToHumanReadable(currMillis, true) + "] " + msg);
+			consoleService.logStringMessage("[" + GFT.Utils.millisToHumanReadable(currMillis, true) + "] " + msg);		
 		}
-	},
+		
+		function logMessage(msg, level) {
+			var logLevel = prefMan.getValue("loglevel", "debug");
+			if(logLevel == "error") {
+				if(level.toLowerCase() == "error") {
+					printMessage(level + " " + msg);
+				}
+			} else if(logLevel == "info") {
+				if(level.toLowerCase() == "error" || level.toLowerCase() == "info") {
+					printMessage(level + " " + msg);
+				}
+			} else {
+				printMessage(level + " " + msg);
+			}		
+		}
+		
+		return {
+			log: function(msg) {
+				logMessage(msg, "INFO");
+			},
+			
+			error: function(msg) {
+				logMessage(msg, "ERROR");
+			},
+			
+			debug: function(msg) {
+				logMessage(msg, "DEBUG");
+			}
+		};
+	})(),
 	
 	validator: {
 		isValidHtmlDocument: function(event) {
@@ -55,6 +82,10 @@ GFT.Utils = {
 			} catch(e) { this.console.log(e); return false; }
 		},
 		
+		isPlayerProfilePage: function(url) {
+			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=player&p=\d+&sh=.*/.test(url);
+		},
+		
 		isPlayerOverviewPage: function(url) {
 			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=overview&sh=.*/.test(url);
 		},
@@ -69,29 +100,18 @@ GFT.Utils = {
 		},
 		
 		isCombatReportPage: function(url) {
-			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&submod=combatReport&sh=.*/.test(url)
+			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&t=3&submod=combatReport&sh=.*/.test(url)
 						|| /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&t=3&sh=.*/.test(url);
 		}
 	},
 	
-	//TODO merge
-	trimmer: {
-		trim: function(str, chars) {
-			return this.ltrim(this.rtrim(str, chars), chars);
-		},
-		 
-		ltrim: function(str, chars) {
-			chars = chars || "\\s";
-			return str.replace(new RegExp("^[" + chars + "]+", "g"), "");
-		},
-		 
-		rtrim: function(str, chars) {
-			chars = chars || "\\s";
-			return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
-		}
+	trim: function(str, chars) {
+		chars = chars || "\\s";
+		str = str.replace(new RegExp("[" + chars + "]+$", "g"), "");
+		return str.replace(new RegExp("^[" + chars + "]+", "g"), "");
 	},
 	
-	getStrings: function() { // not used recently
+	getStrings: function() {
 		return document.getElementById("gft-strings");
 	},
 	
@@ -103,26 +123,30 @@ GFT.Utils = {
 		var pidRegEx = /mod=player&p=(\d+).*&sh=.*/;
 		url.match(pidRegEx);
 		var pid = RegExp.$1;
-		if(pid) {
-			return pid;
+		if(!pid) {
+			throw "Error[getRepIdFromUrl()]: Cannot parse pid from url:\n " +  url;
 		}
-		else {
-			this.console.log("Error[getRepIdFromUrl()]: Cannot parse pid from url:\n " +  url);
-			return -1;
-		}
+		
+		return pid;
 	},
 	
 	getRepIdFromUrl: function(url) {
 		var repidRegEx = /mod=report&beid=(\d+).*&sh=.*/;
 		url.match(repidRegEx);
 		var repid = RegExp.$1;
-		if(repid) {
-			return repid;
+		if(!repid) {
+			throw "Error[getRepIdFromUrl()]: Cannot parse repId from url:\n " +  url;
 		}
-		else {
-			this.console.log("Error[getRepIdFromUrl()]: Cannot parse repId from url:\n " +  url);
-			return -1;
-		}
+		
+		return repid;
+	},
+	
+	getSecureHash: function() {
+		var shRegEx = /&sh=([a-zA-Z0-9]+)/;
+		var url = this.getBrowser().location + "";
+		url.match(shRegEx);
+		
+		return RegExp.$1;
 	},
 	
 	getTime: function() {
@@ -135,21 +159,21 @@ GFT.Utils = {
 		return Math.round((currDate.getTime()/1000)) + offsetToGMT;
 	},
 	
-	getBrowser: function() {
+	getBrowser: function() { //FIXME returns wrong document on startup if multiple tabs are opened!!!
 		return gBrowser.selectedBrowser.contentDocument;
 	},
 
-	getServer: function() {
-		return gBrowser.selectedBrowser.contentDocument.domain;
+	getServer: function() { //FIXME returns wrong domain on startup!!!
+		return this.getBrowser().domain;
 	},
 	
 	dateToGMTUnixTime: function(stringDate) {
 		var dateFormatRegEx = /\d{2}\.\d{2}.\d{4}\s{1}\d{2}:\d{2}:\d{2}/;
-		if(!dateFormatRegEx.test(stringDate)) {
+		stringDate = stringDate.match(dateFormatRegEx);
+		if(stringDate == null) {
 			return Math.round(this.getTime()/1000.0);
 		}
-		
-		stringDate = stringDate.match(dateFormatRegEx) + "";
+		stringDate += "";
 		stringDate = stringDate.split(" ");
 		var datePart = stringDate[0].split(".");
 		var timePart = stringDate[1].split(":");
@@ -181,7 +205,7 @@ GFT.Utils = {
   
 	unixtimeToHumanReadable: function(unixtime) {
 		var localTimeOffset = this.getTimeZoneOffset(true);
-		this.console.log("TZO: " + localTimeOffset);
+		this.console.debug("TZO: " + localTimeOffset);
 		var theDate = new Date((unixtime + localTimeOffset) * 1000);
 		
 		return this.to2digits(theDate.getUTCDate()) + "." + 
@@ -198,6 +222,26 @@ GFT.Utils = {
 		revertext = splitext.reverse();
 		reversed = revertext.join("");
 		return reversed;
+	},
+
+	getMenuItemIndexById: function (menuListId, itemId) {
+		var menuList = document.getElementById(menuListId);
+		var childItemsCount = menuList.itemCount;
+		for(var i = 0; i < childItemsCount; i++) {
+			if(menuList.getItemAtIndex(i).id == itemId) {
+				return i;
+			}
+		}
+		return 0;
+	},
+
+	appendToDD: function(ddId, value) {
+		this.console.debug("Creating item: " + value);
+		var ddMenu = document.getElementById(ddId);
+		var menuItem = document.createElementNS(GFT.Constants.XUL_NS, "menuitem");
+		menuItem.setAttribute("id", value);
+		menuItem.setAttribute("label", value);
+		ddMenu.appendChild(menuItem);	
 	},
 	
 	/**
@@ -229,19 +273,75 @@ GFT.Utils = {
 		xmlhttpRequester.contentStartRequest(details);
 	},
 	
-	reportError: function(message, exception) {
+	getFightResponseResult: function(responseDetails) {
+		var response = responseDetails.responseText;
+		var errorPage = /errorText/i.test(response);
+		var workPageRedirect = /document\.location\.href=\"index\.php\?mod=work&sh.*/.test(response);
+		var foundBashText = /bashtext/i.test(response);
+		var notLoggedIn = /document\.location\.href=document\.location\.href;/i.test(response);
+		var ret = {success: false, msg: ""};
+		
+		if(notLoggedIn) { //not logged in	
+			ret.msg = this.getString("notLoggedInOrNoSuchNameWarning");
+		} 
+		else if(workPageRedirect) { // the gladiator is working
+			ret.msg = this.getString("workingInTheStableWarning");
+		} else if(response == "") { // cooldown not finished
+			ret.msg = this.getString("cooldownWarning");
+		} else if(errorPage){ // the opponent has fight recently
+			ret.msg = this.getString("restingOrNotEnoughGoldWarning");
+		}
+		else if(foundBashText) { // the gladiator is about to bash the opponent
+			ret.msg = this.getString("aboutToBashWarning");
+		} else { // battle was successful
+			ret.success = true;
+			ret.msg = this.getString("fightSuccessful");
+		}
+		
+		return ret;
+	},
+	
+	showWarning: function(msg, append) {
+		var nb = gBrowser.getNotificationBox();
+		var n = nb.getNotificationWithValue('gft-warning');
+		if(n) {
+			if(append) {
+				n.label += "\n" + msg;
+			} else {
+				n.label = msg;
+			}
+		} else {
+			var buttons = [{
+				label: this.getString("menu.options"),
+				accessKey: null,
+				popup: null,
+				callback: function(){
+					window.openDialog("chrome://gft/content/options.xul",
+									"gftOptions", "chrome,dialogger.log,centerscreen,resizable=no");
+				}
+			}];
+
+			const priority = nb.PRIORITY_WARNING_MEDIUM;
+			nb.appendNotification(msg, 'gft-warning', null, priority, buttons);
+		}
+	},
+	
+	reportError: function(message, exception, log) {
 		if(!message && !exception) {
 			this.reportError("Unknown error. Bad error handling", null);
 		}
 		var msg = "";
 		if(message) {
-			msg += "Message: " + message;
+			msg += this.getString("exceptionMessage") + ": " + message;
 		}
 		if(exception) {
 			if(msg != "") {
 				msg += "\n";
 			}
 			msg += "Exception: " + exception;
+		}
+		if(log) {
+			this.console.error(msg);
 		}
 		
         try {
@@ -250,13 +350,12 @@ GFT.Utils = {
             const flags = prompts.BUTTON_POS_0 * prompts.BUTTON_TITLE_OK +
                           prompts.BUTTON_POS_1 * prompts.BUTTON_TITLE_IS_STRING +
                           prompts.BUTTON_POS_0_DEFAULT;
-            var button = prompts.confirmEx( null, "Info", message, flags, "", "Report", "", null, {} );
+            var button = prompts.confirmEx( null, this.getString("errorDialog.title"), msg, flags, "", this.getString("errorDialog.reportButton"), "", null, {} );
 
             if (button == 1) { // "Report" button
-        		this.loadUrl("http://code.google.com/p/gladiatus-fighting-tools/issues/list");
+        		this.loadUrl("http://code.google.com/p/gladiatus-fighting-tools/issues/list", true);
             }
-        }
-        catch (e) { this.console.log("Failed to handle info prompt\n" + e); }		
+        } catch (e) { this.console.error("Failed to handle info prompt\n" + e); }		
 	},
 	
 	loadUrl: function(url, newTab) {

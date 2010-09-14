@@ -4,8 +4,8 @@
 <overlay id="battles-overlay"
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-
 	<vbox id="battlesSearch">
+		<separator class="thin" />
 		<hbox id="gftWindowButtons" align="right">
 			<!-- <toolbarbutton id="gftDetachButton" class="toolbarbutton-iconic"
 				tooltiptext="&gft.common.detach;" onclick="GFT.Statusbar.handleClick(event);" /> -->
@@ -15,20 +15,7 @@
 		<hbox>
 			<label control="search-by-name" value="&gft.battles.searchby.name;" />
 			<textbox id="search-by-name" oninput="GFT.Battles.defaultSearch();"
-				class="search-box" flex="" size="50" value="" />
-
-			<label control="search-by-level" value="&gft.battles.searchby.level;" />
-			<textbox id="search-by-level" oninput="GFT.Battles.defaultSearch();"
-				class="search-box" flex="" size="3" value="" />
-
-			<label constrol="search-by-server" value="&gft.battles.searchby.server;" />
-			<menulist id="search-by-server" class="search-box"
-				oncommand="GFT.Battles.defaultSearch();">
-				<menupopup id="serversMenu">
-					<menuitem id="allServers" label="&gft.battles.searchby.period.all;"
-						selected="true" />				
-				</menupopup>
-			</menulist>
+				class="search-box" flex="" size="25" value="" />
 			<label constrol="search-by-period" value="&gft.battles.searchby.period;" />
 			<menulist id="search-by-period" class="search-box"
 				oncommand="GFT.Battles.defaultSearch();">
@@ -42,18 +29,56 @@
 					<menuitem id="onemonth" label="&gft.battles.searchby.period.onemonth;" />
 				</menupopup>
 			</menulist>
-			<label id="load-info" value="" hidden="true" />
+			<checkbox id="advanced-options" label="&gft.battles.checkbox.advancedOptions;" oncommand="GFT.Battles.advancedOptions();"/>
+			<box id="gft-info-messages">
+				<label id="load-info" value="" />
+				<description id="battleLog" value=""></description>
+			</box>		
 		</hbox>
-		<hbox>
-			<description id="battleLog" value=""></description>
-		</hbox>
-
 		<separator class="thin" />
+		<hbox>
+			<label control="search-by-level-low" value="&gft.battles.searchby.level.between;" />
+			<textbox id="search-by-level-low" oninput="GFT.Battles.defaultSearch();"
+				class="search-box" flex="" size="3" value="" />
+			<label control="search-by-level-high" value="&gft.battles.searchby.level.and;" />
+			<textbox id="search-by-level-high" oninput="GFT.Battles.defaultSearch();"
+				class="search-box" flex="" size="3" value="" />
+			<label value="&gft.battles.searchby.level;" />
+			<label constrol="search-by-server" value="&gft.battles.searchby.server;" />
+			<menulist id="search-by-server" class="search-box"
+				oncommand="GFT.Battles.defaultSearch();">
+				<menupopup id="serversMenu">
+					<menuitem id="allServers" label="&gft.battles.searchby.period.all;"
+						selected="true" />				
+				</menupopup>
+			</menulist>
+			<label constrol="search-by-location" value="&gft.battles.searchby.location.title;" />
+			<menulist id="search-by-location" class="search-box"
+				oncommand="GFT.Battles.defaultSearch();">
+				<menupopup>
+					<menuitem id="location-all" label="&gft.battles.searchby.period.all;"/>
+					<menuitem id="location-arena" label="&gft.battles.searchby.location.arena;" selected="true" />
+					<menuitem id="location-circus-turma" label="&gft.battles.searchby.location.circusTurma;" />
+				</menupopup>
+			</menulist>
+			<label constrol="search-by-attack-type" value="&gft.battles.searchby.attackType.title;" />
+			<menulist id="search-by-attack-type" class="search-box"
+				oncommand="GFT.Battles.defaultSearch();">
+				<menupopup>
+					<menuitem id="atype-all" label="&gft.battles.searchby.period.all;" selected="true"/>
+					<menuitem id="atype-offense" label="&gft.battles.searchby.attackType.offense;" />
+					<menuitem id="atype-defense" label="&gft.battles.searchby.attackType.defense;" />
+				</menupopup>
+			</menulist>
+			<checkbox id="exclude-allies" label="&gft.battles.checkbox.excludeAllies;" oncommand="GFT.Battles.defaultSearch();"/>
+		</hbox>
+		<splitter collapse="before" state="collapsed"> <grippy id="advanced-options-splitter"/> </splitter>
+
 		<popupset>
 		   <popup id="gft-tree-menu" oncommand="GFT.Battles.handleRowMenu(event);">
+			  <menuitem id="showProfile" label="&gft.battles.buttons.showPlayerProfile;"/>
 		      <menuitem id="fightArena" label="&gft.battles.buttons.fightOnArena;"/>
 		      <menuitem id="fightCirkus" label="&gft.battles.buttons.fightOnCirkusTurma;"/>
-		      <!-- <menuitem id="showProfile" label="&gft.battles.buttons.showPlayerProfile;"/>-->
 		   </popup>
 		</popupset>
 
@@ -96,7 +121,7 @@
 						onclick="GFT.Battles.sort('expRaised')" flex="1" style="text-align:center;" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.nextpossiblefight;" persist="width"
-						onclick="return false;" flex="5" style="text-align:center;" />
+						onclick="GFT.Battles.sort('lastAttackTime')" flex="5" style="text-align:center;" />
 					<splitter class="tree-splitter" />
 				</treecols>
 				<treechildren id="battles-rows" context="gft-tree-menu">

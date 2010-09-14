@@ -29,14 +29,11 @@ GFT.Statusbar = {
 	tick: 1000,
 	utils: GFT.Utils,
 	
-	handleClick: function(event)
-	{
-		switch (event.button)
-		{
+	handleClick: function(event) {
+		switch (event.button) {
 			case 0:
 				if(event.target.id == "gftCloseButton"
-					|| event.target.id == "gft-status-icon")
-				{
+					|| event.target.id == "gft-status-icon") {
 					this.handleAction("battles");
 				}
 				//this.handleAction("battles");
@@ -47,25 +44,21 @@ GFT.Statusbar = {
 		}
 	},
 
-	handleCursor: function(imagenode)  // Changes mouseover cursor to a hand when there is a click action
-	{
+	handleCursor: function(imagenode) {  // Changes mouseover cursor to a hand when there is a click action
 		imagenode.style.cursor = "pointer";
 	},
 
-	handleMenu: function(menupopup)  // Decides which menu items to grey out
-	{
+	handleMenu: function(menupopup) {  // Decides which menu items to grey out
 		var menuItems = menupopup.getElementsByTagName("menuitem");
 		for (var i=0; i < menuItems.length; i++)
 			menuItems[i].setAttribute( "disabled", false );
 	},
 
-	handleAction: function(action)
-	{
-		switch (action)
-		{
+	handleAction: function(action) {
+		switch (action) {
 			case "options":
 				window.openDialog("chrome://gft/content/options.xul",
-								  "gftOptions", "chrome,dialogger.log,centerscreen,resizable=yes");
+								  "gftOptions", "chrome,dialogger.log,centerscreen,resizable=no");
 				break;
 			case "battles":
 				var battlesSearchSplitter = document.getElementById("battlesSearchSplitter");
@@ -83,37 +76,34 @@ GFT.Statusbar = {
 		}
 	},
 	
-	getTimerElement: function()
-	{
+	getTimerElement: function() {
 		return document.getElementById("gft-timer");
 	},
 	
-	showReverseCounter: function(timeoutmillis)
-	{
+	showReverseCounter: function(timeoutmillis) {
 		this.endtime = this.utils.getTime() + timeoutmillis; 
 		this.getTimerElement().setAttribute("hidden", "false");
 		this.reverseCounter();
 	},
 	
-	hideReverseCounter: function()
-	{
+	hideReverseCounter: function() {
 		this.endtime = -1;
 		this.getTimerElement().setAttribute("hidden", "true");
-		if(this.timeout != -1)
+		if(this.timeout != -1) {
 			window.clearTimeout(this.timeout);
+		}
 	},
 	
-	reverseCounter: function()
-	{
+	reverseCounter: function() {
 		var currtime = this.utils.getTime();
 		
-		if(currtime < this.endtime)
-		{
+		if(currtime < this.endtime) {
 			var timeleft = this.endtime - currtime;
 			this.getTimerElement().setAttribute( "label", this.utils.millisToHumanReadable(timeleft));
 			this.timeout = window.setTimeout("GFT.Statusbar.reverseCounter()", this.tick);
 		}
-		else
+		else {
 			this.hideReverseCounter();
+		}
 	}
 };

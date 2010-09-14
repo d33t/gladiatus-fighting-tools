@@ -25,6 +25,14 @@
 <!ENTITY gft.options.tabs.main.bashing.wordday "jour">
 <!ENTITY gft.options.tabs.main.bashing.worddays "jours">
 <!ENTITY gft.options.tabs.main.bashing.attacks "attaques">
+<!ENTITY gft.options.tabs.main.bashing.showBashingWarning "Afficher un avertissement si la prochaine attaque entraîne un bash">
+<!ENTITY gft.options.tabs.main.battlesOverview.title "Console">
+<!ENTITY gft.options.tabs.main.battlesOverview.showBattlePopupMenu "Activer la possibilité de se battre via la console">
+<!ENTITY gft.options.tabs.main.battlesOverview.defaultDoubleClickActionLabel "Lancer un combat par un double-clic sur une rangée">
+<!ENTITY gft.options.tabs.main.battlesOverview.collapseBattleOverlayAfterBattle "Fermer la console après une victoire">
+<!ENTITY gft.options.tabs.main.bashing.showLevelBashingWarning "Activer la notification de bash par level">
+<!ENTITY gft.options.tabs.main.bashing.levelBashingRemoveButtons "Supprimer les boutons de combat sur le profil des joueurs">
+<!ENTITY gft.options.tabs.main.bashing.levelBashingLimit "Niveau limite">
 
 <!-- GFT Options Battles Table Tab -->
 <!ENTITY gft.options.tabs.battlesTable.title "Statistiques de combat">
@@ -42,6 +50,23 @@
 <!ENTITY gft.options.tabs.battlesTable.maxGoldRaised "Plus gros gain">
 <!ENTITY gft.options.tabs.battlesTable.maxGoldLost "Plus grosse perte">
 <!ENTITY gft.options.tabs.battlesTable.realChanceForWin "Réelle part des victoires">
+
+<!-- GFT Options Others Tab -->
+<!ENTITY gft.options.tabs.others.title "Autres">
+<!ENTITY gft.options.tabs.others.profilepage.title "Page du profil de l'adversaire">
+<!ENTITY gft.options.tabs.others.profilepage.showCircusTurmaButton "Afficher le bouton Go! Circus Turma">
+<!ENTITY gft.options.tabs.others.profilepage.markMyAllies "Afficher mes alliés en vert">
+<!ENTITY gft.options.tabs.others.battleoverlay.title "Options par défaut de la console">
+<!ENTITY gft.options.tabs.others.battleoverlay.advancedOptionsExpandedDefault "Afficher les filtres avancés">
+<!ENTITY gft.options.tabs.others.battleoverlay.excludeMyAlliesDefault "Exclure mes alliés">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortColumn.title "Trier la colonne">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.title "Trier le sens">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.asc "Ascendant">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.desc "Descendant">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.label "Positionner la table des statistiques du profil">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.hide "Ne pas afficher">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.before "Avant le profil">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.after "Après le profil">
 
 <!-- GFT Options Versions Tab -->
 <!ENTITY gft.options.tabs.versions.title "Versions">
@@ -61,7 +86,6 @@
 <!ENTITY gft.battles.table.expRaised "Expérience prise">
 <!ENTITY gft.battles.table.nextpossiblefight "Prochain combat possible">
 <!ENTITY gft.battles.searchby.name "Adversaire">
-<!ENTITY gft.battles.searchby.level "Niveau plancher">
 <!ENTITY gft.battles.searchby.period "Période">
 <!ENTITY gft.battles.searchby.server "Serveur">
 <!ENTITY gft.battles.searchby.period.all "Tout">
@@ -79,6 +103,17 @@
 <!ENTITY gft.battles.buttons.previousPage.tooltip "Page précédente">
 <!ENTITY gft.battles.buttons.nextPage.tooltip "Page suivante">
 <!ENTITY gft.battles.buttons.lastPage.tooltip "Dernière page">
+<!ENTITY gft.battles.checkbox.advancedOptions "Filtres avancés">
+<!ENTITY gft.battles.checkbox.excludeAllies "Exclure les alliés">
+<!ENTITY gft.battles.searchby.level.between "Entre">
+<!ENTITY gft.battles.searchby.level.and "et">
+<!ENTITY gft.battles.searchby.level "niveau">
+<!ENTITY gft.battles.searchby.location.title "Lieu">
+<!ENTITY gft.battles.searchby.location.arena "Arène">
+<!ENTITY gft.battles.searchby.location.circusTurma "Circus Turma">
+<!ENTITY gft.battles.searchby.attackType.title "Type d'attaque">
+<!ENTITY gft.battles.searchby.attackType.offense "Attaque">
+<!ENTITY gft.battles.searchby.attackType.defense "Défense">
 
 <!-- GFT Statusbar XUL -->
 <!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Clic gauche pour ouvrir la console.">

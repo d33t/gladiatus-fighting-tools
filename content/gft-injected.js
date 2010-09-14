@@ -28,41 +28,121 @@ if (typeof(GFT) == "undefined") {
 };
 
 GFT.Inject = (function(){
-	function createAndInjectBattleInfo() {
+	function setVariousSettings(doc) {
+		var xResult;
+		if(GM_getValue("options.tabs.others.markMyAllies", true)) {
+			xResult = doc.evaluate("//td[@id='content']/table/tbody/tr/td[2]/div[2]/b/a", doc, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+			if(!gladiatorExists(xResult)) { return; } // gladiator doesn't exists
+			var guildNode = xResult.snapshotItem(0);
+			if(guildNode) {
+				var guild = guildNode.textContent.split(" ")[0];
+				if(GM_isMyAlly(guild, doc)) {
+					guildNode.style.color = "green";
+				}
+			}
+		}
+	}
+
+	function getLocationCode(location) {
+		switch(location) {
+			case "location-all": return -1;
+			case "location-arena": return 0;
+			case "location-circus-turma": return 1; 
+			default: return -1;			
+		}
+	}
+	
+	function insertAfter(parent, node, referenceNode) {
+		parent.insertBefore(node, referenceNode.nextSibling);
+	}
+	
+	function gladiatorExists(xResult) {
+		return xResult.snapshotLength > 0;
+	}
+	
+	function createAndInjectBattleInfo(doc) {
+		var insertPosition = GM_getValue("options.tabs.others.battlesTablePosition", "before");
+		if(insertPosition == "hide") {
+			return;
+		}
 		var xPath = "//td[@id='content']/table";
-		var xResult = document.evaluate(xPath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+		var xResult = doc.evaluate(xPath, doc, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+		if(!gladiatorExists(xResult)) { return; } // gladiator doesn't exists
 		var descriptionDiv = xResult.snapshotItem(0);
-		var msgDiv = document.createElement('div');
+		var msgDiv = doc.createElement('div');
 		msgDiv.id = "gfBattleStats";
 		msgDiv.style.marginLeft = "17px";
 		msgDiv.style.marginRight = "26px";
-		descriptionDiv.parentNode.insertBefore(msgDiv, descriptionDiv);
-		
-		var hidden = true; //TODO should be an option
-		var content = "";
-		
-		if(isPlayerProfilePage()) {
-			content = getBattleStatsTable(GM_getString("battleStatsTitle"), GM_getContent(document, "oneday", false), "visible", "oneday");
+		if(insertPosition == "before") {
+			descriptionDiv.parentNode.insertBefore(msgDiv, descriptionDiv);
+		} else {
+			insertAfter(descriptionDiv.parentNode, msgDiv, descriptionDiv);
 		}
-		else {
-			content = getBattleStatsTable(GM_getString("myBattleStatsTitle"), GM_getMyStats(document, "oneday", false), "visible", "oneday");
+		
+		var defaultSearchPeriod = GM_getValue("options.tabs.battlesTable.btDefaultSearchPeriod", "oneday");
+		var defaultSearchLocation = GM_getValue("options.tabs.battlesTable.btDefaultSearchLocation", "location-arena");
+		
+		var searchPeriodDiv = doc.createElement('div');
+		searchPeriodDiv.id = "selected-search-period";
+		searchPeriodDiv.style.display = "none";
+		descriptionDiv.parentNode.insertBefore(searchPeriodDiv, descriptionDiv);
+		searchPeriodDiv.innerHTML = defaultSearchPeriod;
+		
+		var locationPeriodDiv = doc.createElement('div');
+		locationPeriodDiv.id = "selected-search-location";
+		locationPeriodDiv.style.display = "none";
+		descriptionDiv.parentNode.insertBefore(locationPeriodDiv, descriptionDiv);
+		locationPeriodDiv.innerHTML = defaultSearchLocation;		
+		
+		var content = "";
+		var locCode = getLocationCode(defaultSearchLocation);
+		if(GM_isMyProfilePage(doc)) {
+			content = getBattleStatsTable(GM_getString("myBattleStatsTitle"), GM_getMyStats(doc, defaultSearchPeriod, false, locCode), "visible", defaultSearchPeriod, defaultSearchLocation);
+		} else {
+			content = getBattleStatsTable(GM_getString("battleStatsTitle"), GM_getEnemyStats(doc, defaultSearchPeriod, false, locCode), "visible", defaultSearchPeriod, defaultSearchLocation);
 		}
 		msgDiv.innerHTML = content;
 	}
 	
-	function getBattleStatsTable(title, content, visibility, hightlightId) {
+	function getArenaFightButton(doc) {
+		var xResult = doc.evaluate("//input[contains(@onclick, 'startFightWithName')]", doc, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+		if(!gladiatorExists(xResult)) { return null; } // gladiator doesn't exists
+		return xResult.snapshotItem(0);
+	}
+	
+	function createAndInjectCircusTurmaButton(doc) {
+		var fightButton = getArenaFightButton(doc);
+		if(fightButton) {
+			var insertButton = doc.createElement('input');
+			insertButton.value = GM_getString("location.circusTurma");
+			insertButton.className = "button2";
+			insertButton.type = "button";
+			insertButton.style.marginLeft = "5px";
+			insertButton.id = "start-circus-turma-fight";
+			fightButton.parentNode.insertBefore(insertButton, fightButton.nextSibling);
+		}	
+	}
+	
+	function removeArenaFightButton(doc) {
+		var fightButton = getArenaFightButton(doc);
+		if(fightButton) {
+			fightButton.parentNode.removeChild(fightButton);
+		}
+	}
+	
+	function getBattleStatsTable(title, content, visibility, hightlightId, selectedItem) {
 		if(content == '') {
 			visibility = 'hidden';
 		}
 		
-		return 	'<div class="title_box"><div style="text-align:center;" class="title_inner"><a style="text-decoration: none;" href="#" id="gfBattleStatsTitle" title="Click to expand or collapse the battle table.">' + title +  '</a></div></div>\n' + 
+		return 	'<div class="title_box"><div style="text-align:center;" class="title_inner"><a style="text-decoration: none;" href="#" id="gfBattleStatsTitle" title="' + GM_getString("clickToExpand") + '">' + title +  '</a></div></div>\n' + 
 				'<div id="gfBattleStatsBody" style="visibility:' + visibility + ';" class="title2_box">\n' +
-				getBattleStatsTableContent(content, visibility,  hightlightId) + '</div>';			
+				getBattleStatsTableContent(content, visibility,  hightlightId, selectedItem) + '</div>';			
 	}
 	
-	function getBattleStatsTableContent(content, visibility, hightlightId) {
+	function getBattleStatsTableContent(content, visibility, hightlightId, selectedItem) {
 		if(visibility == "visible" && content != '') {
-			return '<div class="title2_inner">\n<table class="table1" cellpadding="0" cellspacing="3">\n<tbody>\n' + createNavigationEntry(hightlightId) + content + '\n</tbody></table></div>';
+			return '<div class="title2_inner">\n<table class="table1" cellpadding="0" cellspacing="3">\n<tbody>\n' + createNavigationEntry(hightlightId) + createLocationDD(selectedItem) + content + '\n</tbody></table></div>';
 		}
 		return '';
 	}
@@ -70,6 +150,20 @@ GFT.Inject = (function(){
 	function createTDEntry(value, id, width, hightlightId) {
 		var style = (id == hightlightId) ? 'style="font-weight:bold; border-bottom: 1px solid #b28b60; background-color:#FDC733;"' : '';
 		return '\t<td style="white-space: nowrap; width:' + width + '%;"><a id="' + id + '" href="#" ' + style + '>' + value + '</a></td>\n';
+	}
+	
+	function createOptionItem(value, id, selectedItem) {
+		var selected = (id == selectedItem) ? ' selected' : '';
+		return '<option id="' + id + '"' + selected + '>' + value + '</option>\n';
+	}
+	
+	function createLocationDD(selectedItem) {
+		var ddLocMenu = '\n<select id="search-by-location">\n'
+						+ createOptionItem(GM_getString("location.all"), "location-all", selectedItem)
+						+ createOptionItem(GM_getString("location.arena"), "location-arena", selectedItem)
+						+ createOptionItem(GM_getString("location.circusTurma"), "location-circus-turma", selectedItem)
+						+ '</select>\n';
+		return '<tr><th colspan="4">' + GM_getString("location.title") + ':</th> <td colspan="2" style="padding-left: 3px; white-space: nowrap;" class="stats_value">' + ddLocMenu + '</td></tr>\n';	
 	}
 	
 	function createNavigationEntry(hightlightId) {
@@ -84,30 +178,53 @@ GFT.Inject = (function(){
 		return navigation;
 	}
 	
-	function isPlayerProfilePage() {
-		var xRet = document.evaluate("//input[@onclick='startFightWithName();']", document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-		var fightButton = xRet.snapshotItem(0);
-		
-		return fightButton ? true : false;
+	function getPlayerPid(doc) {
+		var pidRegEx = /mod=player&p=(\d+).*&sh=.*/;
+		var url = doc.location + "";
+		url.match(pidRegEx);
+		return RegExp.$1;
 	}
 	
-	function handleButtonClick(event) {
-	    if(event.button == 0) {
-			var period = "oneday";
-			var div = document.getElementById("gfBattleStatsBody");
+	function evaluateResponse(doc, responseDetails) {
+		var result = GM_getFightResponseResult(responseDetails);
+		if(!result.success) {
+			doc.getElementById("errorRow").style.visibility = "visible";
+			doc.getElementById("errorText").innerHTML = result.msg;
+		} else {
+			eval(responseDetails.responseText);
+		}
+	}
+	
+	function handleButtonClick(aEvent) {
+	    if(aEvent.button == 0) {
+			var doc = document;
+			var periodDiv = doc.getElementById("selected-search-period");
+			var locationDiv = doc.getElementById("selected-search-location");
+			var period = periodDiv.innerHTML;
+			var div = doc.getElementById("gfBattleStatsBody");
 			var visibility = div.style.visibility;
 			var handleClick = false;
 			
-			switch(event.target.id) {
+			switch(aEvent.target.id) {
 				case "none": ;
 				case "oneday": ;
 				case "threedays": ;
 				case "fivedays": ;
 				case "oneweek": ;
 				case "onemonth": { 
-					period = event.target.id +""; 
-					displayTableContent(div, visibility, period); 
+					period = aEvent.target.id +""; 
+					periodDiv.innerHTML = aEvent.target.id;
+					var locDD = doc.getElementById("search-by-location");
+					var location = locDD.options[locDD.selectedIndex].id;
+					displayTableContent(doc, visibility, period, location); 
 					break; 
+				}
+				case "location-all": ;
+				case "location-arena": ;
+				case "location-circus-turma": {
+					locationDiv.innerHTML = aEvent.target.id;
+					displayTableContent(doc, visibility, period, aEvent.target.id);
+					break;
 				}
 				case "gfBattleStatsTitle": {
 					if(!div || visibility == "hidden") {
@@ -116,33 +233,63 @@ GFT.Inject = (function(){
 					} else {
 						visibility = "hidden";
 					}
-					displayTableContent(div, visibility, "oneday");
+					displayTableContent(doc, visibility, period, locationDiv.innerHTML);
 					break;
+				}
+				case "start-circus-turma-fight": {
+					GM_xmlhttpRequest({
+						method: "GET",
+						url: "http://" + doc.domain + "/game/ajax/doGroupFight.php?did=" + getPlayerPid(doc) + "&a=" + new Date().getTime(),
+						onload: function(responseDetails) {
+							evaluateResponse(doc, responseDetails);
+						}
+					});
 				}
 				default: break;
 			}
 		}
 	}
 	
-	function displayTableContent(div, visibility, period)
+	function displayTableContent(doc, visibility, period, location)
 	{
+		var div = doc.getElementById("gfBattleStatsBody");
 		div.style.visibility = visibility;
 		if(visibility == "hidden") {
 			div.innerHTML = "";
 		} else {
 			var content = "";
-			if(isPlayerProfilePage()) {
-				content = GM_getContent(document, period, true);
+			var locCode = getLocationCode(location);
+			if(GM_isMyProfilePage(doc)) {
+				content = GM_getMyStats(doc, period, true, locCode);
 			} else {
-				content = GM_getMyStats(document, period, true);
+				content = GM_getEnemyStats(doc, period, true, locCode);
 			}
-			div.innerHTML = getBattleStatsTableContent(content, visibility, period);		
+			div.innerHTML = getBattleStatsTableContent(content, visibility, period, location);		
 		} 	
+	}
+	function getGladiatorLevel(doc) {
+		var xResult = doc.evaluate("//span[@id='char_level']", doc, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+		if(!gladiatorExists(xResult)) { return 200; } // gladiator doesn't exists
+		return parseInt(xResult.snapshotItem(0).textContent);	
 	}
 	
 	return {
 		injectContent : function(e) {
-			createAndInjectBattleInfo(e);
+			var doc = e.target;
+			setVariousSettings(doc);
+			var removeFightButtons = GM_getValue("options.tabs.main.levelBashingRemoveButtons", false);
+			var isLevelBashed = GM_isLevelBashed(getGladiatorLevel(doc), doc.domain);
+			if(GM_getValue("options.tabs.others.showCircusTurmaButton", true)) {
+				if(!isLevelBashed || (isLevelBashed && !removeFightButtons)) {
+					createAndInjectCircusTurmaButton(doc);
+				}
+			}
+			
+			if(isLevelBashed && removeFightButtons) {
+				removeArenaFightButton(doc);
+			}
+			
+			createAndInjectBattleInfo(doc);
 		},
 		handleClick : function(e) {
 			handleButtonClick(e);
@@ -151,4 +298,4 @@ GFT.Inject = (function(){
 })();
 
 window.addEventListener('load', function(e){ GFT.Inject.injectContent(e);}, false);
-window.addEventListener('click', function(e){ GFT.Inject.handleClick(e);}, true);
+document.addEventListener('click', function(e){ GFT.Inject.handleClick(e);}, true);

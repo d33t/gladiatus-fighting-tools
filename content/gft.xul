@@ -5,12 +5,14 @@
 <overlay id="gft-overlay"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<script type="application/x-javascript" src="chrome://gft/content/ns.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-constants.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/xmlhttprequester.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/prefman.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/custom-objects.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/gft-utils.js"/>
-	<script type="application/x-javascript" src="chrome://gft/content/gft-statusbar.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/gft-db.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-globals.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-statusbar.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/battles-gui.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/gft-ppc.js"/>		
 	<script type="application/x-javascript" src="chrome://gft/content/gft-main.js"/>		

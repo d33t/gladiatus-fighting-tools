@@ -66,6 +66,10 @@
 	color:#43CD80;
 }
 
+.error-label {
+	color: red;
+}
+
 .battlelog-success {
 	font-size:10px;
 	color:#43CD80;
@@ -74,4 +78,36 @@
 .battlelog-failure {
 	font-size:10px;
 	color:#FF0000;
+}
+
+.about-window {
+	background-color: #000000;
+	color:#513F2C;
+	background-image: url(chrome://gft/skin/about-background.jpg) !important;
+	background-repeat: repeat-y;
+}
+
+.about-content {
+    background-image: url(chrome://gft/skin/papierus.jpg) !important;
+}
+
+.about-header {
+	background-image: url(chrome://gft/skin/header-background.jpg) !important;
+	height: 96px;
+	margin-top: 10px;
+}
+
+.about-logo {
+	background-image: url(chrome://gft/skin/header-logo.jpg) !important;
+	background-position:right top;
+	background-repeat:no-repeat;
+	height: 96px;
+}
+
+.about-project-name {
+	color: #BFAE54;
+	font-weight: bold;
+	font-size: 20px;
+	text-align: center;
+	padding-top: 35px;
 }
