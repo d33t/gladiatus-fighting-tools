@@ -149,7 +149,7 @@ GFT.Inject = (function(){
 	
 	function createTDEntry(value, id, width, hightlightId) {
 		var style = (id == hightlightId) ? 'style="font-weight:bold; border-bottom: 1px solid #b28b60; background-color:#FDC733;"' : '';
-		return '\t<td style="white-space: nowrap; width:' + width + '%;"><a id="' + id + '" href="#" ' + style + '>' + value + '</a></td>\n';
+		return '\t<td style="white-space: nowrap; width:' + width + '%;"><a id="' + id + '" href="#" onclick="javascript:return false;"' + style + '>' + value + '</a></td>\n';
 	}
 	
 	function createOptionItem(value, id, selectedItem) {
