@@ -1,0 +1,80 @@
+#Version 1.5
+CHANGED: The addon supports gladiatus version 0.8.* and 0.9
+ADDED: Circus turma battles are stored and evaluated also.
+ADDED: Fight through circus turma button on gladiator profile page.
+ADDED: Level-Bashing notification when you attack someone out of your range. Could be switched on/off, because in some countries is no such rule.
+FIXED: All functions related to the internal database have been rewritten, refactored and all known bugs were fixed
+FIXED: Database queries are adjusted, verified and fixed
+CHANGED: Better design for the about window
+ADDED: New filters for the battles overview: min/max level, server, location, attack type, exlude allies
+CHANGED: next possible attack column in battles overview is now sortable also
+ADDED: Exception handling with ability to report errors directly to project page
+FIXED: Battles parsing was adjusted to the new source. No wrong data is saved anymore.
+CHANGED: Parsing of data is now more secure, faster and reliable
+FIXED: If you are attacked by someone and loose the battle experience raised is now 0
+ADDED: Filter location on gladiator profile and your own gladiator page
+CHANGED: Formula for real chance for win has been changed
+CHANGED: Battles overview navigation is made now now throug entries not pages
+CHANGED: Fighting through battles overview is now disabled by default(see T&amp;C of Gameforge for more info). To enabled it use the options.
+ADDED: New action on battles overlay context menu: show gladiator profile
+CHANGED: Option for collapsing the battles overview after successful battle
+ADDED: Color my allies in green option on gladiator profile page
+ADDED: Option to choose the position of the battles table on gladiator/your own profile page
+FIXED: Some hard coded translations are now locale depended as well
+ADDED: Remove fight buttons options related to level-bashing
+ADDED: You can choose now the default double click action on battles overview
+ADDED: Default values options for battles overview
+FIXED: Some bugs related to tabs browser
+CHANGED: Options dialog is no longer resizeable, layout was fixed
+ADDED: Warning is showed if you are going to bash someone with the next attack
+
+#Version 1.4.1
+FIXED: The addon was adjusted for gladiatus version 0.8.0
+CHANGED: Options dialog is resizable now.
+CHANGED: french translation is now fully completed.
+
+#Version 1.4
+FIXED: The values displayed in the battle overlay were completly wrong.
+ADDED: Ability to fight on the arena or cirkus turma directly from the battle overlay(double click or right click use the context menu).
+ADDED: Almost all visual elements could be managed now through the options.
+ADDED: Two different fight strategies can be choosen according to the specific rules of your server.
+ADDED: The bashing rules can be manually adjusted.
+ADDED: The whole addon is placed under single global namespace (GFT) avoiding possible conflicts with other addons.
+FIXED: Battle time is now parsed from the reports. Different timezones are also respected.
+ADDED: French translation. Thanks to Sebastien BAILLY!
+FIXED: Various visual and logical bugs.
+
+#Version 1.3
+ADDED: Battle GUI added. It allows you to search battles
+UPDATE: Some visual changes
+UPDATE: The addon was adjusted for gladiatus v0.6.0
+
+#Version 1.2.2
+CHANGED: wrong locale string caused bug in displaying of the battle table
+
+#Version 1.2.1
+FIXED: various database function, returning incorrect data for multiple servers
+
+#Version 1.2
+CHANGED: Design of the battle statistic table has changed (opponent and own player pages)
+ADDED: One more period column in the battle statistics menu (opponent and own player pages)
+CHANGED: Battles for last 24h was removed and replaced by attacks count for the chosen time period (opponent page)
+ADDED: Defenses attack count (opponent page)
+ADDED: The chosen time period is now highlighted, default is always one day (later should be an option)
+ADDED: Attacks count and defenses count for the chosen time period (own player page)
+ADDED: Gold raised and lost for the chosen time period (own player page)
+ADDED: Chance for win depending on the battles for the chosen time period (own player page)
+REMOVED: The options link in the addons view, because options are still not available
+
+#Version 1.1
+FIXED: fixed display bug of the battle table on the player page which caused the values to be showed next to the headers
+ADDED: now can be chosen the time period for the battle table statistics
+ADDED: real chance change. it shows if your real chance for win compared with the previous day chance for win become better or worser
+FIXED: the statistics on your own gladiator page are now corrected 
+
+#Version 1.0.1
+ADD: Multiple server support
+ADD: Bulgarian and german languages 
+
+#Version 1.0
+Initial version

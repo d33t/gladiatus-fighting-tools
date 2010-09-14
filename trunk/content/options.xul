@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://gft/skin/gft.css" type="text/css"?>
 <!DOCTYPE window SYSTEM "chrome://gft/locale/gft.dtd">
 
 <window class="dialog"
@@ -11,136 +12,266 @@
         onload="GFTOptions.init();"
         title="&gft.windows.options.title;">
 	<script type="application/x-javascript" src="chrome://gft/content/ns.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-constants.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/prefman.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/custom-objects.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-utils.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-db.js"/>
+	<script type="application/x-javascript" src="chrome://gft/content/gft-globals.js"/>
 	<script type="application/x-javascript" src="chrome://gft/content/options-gui.js"/>
+
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="gft-strings" src="chrome://gft/locale/gft.properties"/>
+	</stringbundleset>
 	
     <keyset>
         <key keycode="VK_ESCAPE" oncommand="window.close();"/>
     </keyset>
 
 	<vbox flex="1">
-		<hbox minwidth="440px" style="margin-right: 10px;">
-			<tabbox autostretch="never">
-				<tabs>
-					<tab label="&gft.options.tabs.main.title;" />
-					<tab label="&gft.options.tabs.battlesTable.title;" />
-					<tab label="&gft.options.tabs.versions.title;" />
-				</tabs>
-				<tabpanels>
-					<tabpanel id="main">
+		<tabbox autostretch="never">
+			<tabs>
+				<tab label="&gft.options.tabs.main.title;" />
+				<tab label="&gft.options.tabs.battlesTable.title;" />
+				<tab label="&gft.options.tabs.others.title;" />
+			</tabs>
+			<tabpanels>
+				<tabpanel id="main">
+					<vbox>
+					<groupbox>
+						<caption label="&gft.options.tabs.main.appearance.caption;"/>
+						<hbox>
+							<label value="&gft.options.tabs.main.icon.label;"/>
+							<radiogroup id="gftIconPositionRadiogroup" orient="horizontal" oncommand="GFTOptions.apply('main');">
+								<radio id="iconPosL" label="&gft.options.tabs.main.icon.leftPosition;"/>
+								<radio id="iconPosR" label="&gft.options.tabs.main.icon.rightPosition;"/>
+								<radio id="iconPosRM" label="&gft.options.tabs.main.icon.mostRightPosition;"/>
+								<radio id="iconPosHide" label="&gft.options.tabs.main.icon.hide;"/>
+							</radiogroup>
+						</hbox>
+					</groupbox>
+					<separator class="thin"/>
+					<groupbox>
+						<caption label="&gft.options.tabs.main.bashing.caption;" />
+						<hbox>
+							<label value="&gft.options.tabs.main.bashing.cycle;"/>
+							<radiogroup id="gftBashingRadiogroup" orient="horizontal" oncommand="GFTOptions.apply('main');">
+								<radio id="firstToLast" label="&gft.options.tabs.main.bashing.firstToLast;"/>
+								<radio id="startOfDay" label="&gft.options.tabs.main.bashing.startOfDay;"/>
+							</radiogroup>
+						</hbox>
+						<separator class="thin"/>
 						<vbox>
-					    <groupbox>
-					        <caption label="&gft.options.tabs.main.appearance.caption;"/>
-					        <hbox>
-					            <label value="&gft.options.tabs.main.icon.label;"/>
-					            <radiogroup id="gftIconPositionRadiogroup" orient="horizontal" oncommand="GFTOptions.apply('main');">
-					                <radio id="iconPosL" label="&gft.options.tabs.main.icon.leftPosition;"/>
-					                <radio id="iconPosR" label="&gft.options.tabs.main.icon.rightPosition;"/>
-					                <radio id="iconPosRM" label="&gft.options.tabs.main.icon.mostRightPosition;"/>
-					                <radio id="iconPosHide" label="&gft.options.tabs.main.icon.hide;"/>
-					            </radiogroup>
-					        </hbox>
-					    </groupbox>
-					    <separator class="thin"/>
-					    <groupbox>
-					    	<caption label="&gft.options.tabs.main.bashing.caption;" />
-					    	<hbox>
-					            <label value="&gft.options.tabs.main.bashing.cycle;"/>
-					            <radiogroup id="gftBashingRadiogroup" orient="horizontal" oncommand="GFTOptions.apply('main');">
-					                <radio id="firstToLast" label="&gft.options.tabs.main.bashing.firstToLast;"/>
-					                <radio id="startOfDay" label="&gft.options.tabs.main.bashing.startOfDay;"/>
-				                </radiogroup>
-					    	</hbox>
-					    	<separator class="thin"/>
-					    	<vbox>
-					    		<label value="&gft.options.tabs.main.bashing.desc;"/>
-					    		<separator class="thin"/>
-						    	<hbox>
-						    		<label value="&gft.options.tabs.main.bashing.wordfor;"/>
-						    		<textbox flex="" size="2" id="bashingOneDay" readonly="true" value="1"/>
-				    				<label control="bashingOneDayAttacks" value="&gft.options.tabs.main.bashing.wordday;"/>
-									<textbox flex="" size="2" id="bashingOneDayAttacks" value="" tooltiptext="&gft.options.tabs.main.bashing.tooltip;" onchange="GFTOptions.apply('main');"/>
-									<label control="bashingOneDayAttacks" value="&gft.options.tabs.main.bashing.attacks;"/>
-									<label id="errBashingOneDay" value=""/>	
-						    	</hbox>
-						    	<separator class="thin"/>
-						    	<hbox>
-				    				<label control="bashingCustomDays" value="&gft.options.tabs.main.bashing.wordfor;"/>
-									<textbox flex="" size="2" id="bashingCustomDays" value="" onchange="GFTOptions.apply('main');"/>
-									<label control="bashingCustomDays" value="&gft.options.tabs.main.bashing.worddays;"/>
-									<textbox flex="" size="2" id="bashingCustomDaysAttacks" value="" tooltiptext="&gft.options.tabs.main.bashing.tooltip;" onchange="GFTOptions.apply('main');"/>
-									<label control="bashingCustomDays" value="&gft.options.tabs.main.bashing.attacks;"/>
-									<label id="errBashingCustomDays" value=""/>	
-						    	</hbox>
-					    	</vbox>
-					    </groupbox>
-					    </vbox>
-			    	</tabpanel>
-			    	<tabpanel id="battleTable">
-			    		<vbox style="width: 400px; word-wrap:break-word;">
-			    			<description>&gft.options.tabs.battlesTable.desc;</description>
-			    			<separator class="groove"/>
-				    		<hbox>
-					    		<groupbox style="margin-left: 10px;">
-							    	<caption label="&gft.options.tabs.battlesTable.captionPpage;" />
-						    		<vbox>
-						    			<checkbox id="pTodayBattles" label="&gft.options.tabs.battlesTable.todayBattles;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="pBattlesInAttacksCount" label="&gft.options.tabs.battlesTable.battlesInAttacksCount;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="pBattlesInDefenceCount" label="&gft.options.tabs.battlesTable.battlesInDefenceCount;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="pGoldRaised" label="&gft.options.tabs.battlesTable.goldRaised;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="pGoldLost" label="&gft.options.tabs.battlesTable.goldLost;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="pExperienceRaised" label="&gft.options.tabs.battlesTable.experienceRaised;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="pChanceForWin" label="&gft.options.tabs.battlesTable.chanceForWin;" oncommand="GFTOptions.apply('battleTable');"/>
-						    		</vbox>
-					    		</groupbox>
-					    		<separator orient="vertical" class="groove-thin"/>
-					    		<groupbox style="margin-left: 25px; margin-right: 10px;">
-							    	<caption label="&gft.options.tabs.battlesTable.captionOpage;" />
-						    		<vbox>
-						    			<checkbox id="oNextPossibleAttack" label="&gft.options.tabs.battlesTable.nextPossibleAttack;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="oBattlesInAttacksCount" label="&gft.options.tabs.battlesTable.battlesInAttacksCount;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="oBattlesInDefenceCount" label="&gft.options.tabs.battlesTable.battlesInDefenceCount;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="oGoldRaised" label="&gft.options.tabs.battlesTable.goldRaised;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="oGoldLost" label="&gft.options.tabs.battlesTable.goldLost;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="oMaxGoldRaised" label="&gft.options.tabs.battlesTable.maxGoldRaised;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="oMaxGoldLost" label="&gft.options.tabs.battlesTable.maxGoldLost;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="oExperienceRaised" label="&gft.options.tabs.battlesTable.experienceRaised;" oncommand="GFTOptions.apply('battleTable');"/>
-						    			<checkbox id="oRealChanceForWin" label="&gft.options.tabs.battlesTable.realChanceForWin;" oncommand="GFTOptions.apply('battleTable');"/>
-						    		</vbox>	  
-					    		</groupbox>  
-				    		</hbox>
-			    		</vbox>
-			    	</tabpanel>
-			    	<tabpanel id="versions">
-			    	<vbox>
-			    		<hbox align="right">
-				    		<menulist id="versionsmenu" oncommand="GFTOptions.apply('versions');">
+							<label value="&gft.options.tabs.main.bashing.desc;"/>
+							<separator class="thin"/>
+							<hbox>
+								<label value="&gft.options.tabs.main.bashing.wordfor;"/>
+								<textbox flex="" size="2" id="bashingOneDay" readonly="true" value="1"/>
+								<label control="bashingOneDayAttacks" value="&gft.options.tabs.main.bashing.wordday;"/>
+								<textbox flex="" size="2" id="bashingOneDayAttacks" value="" tooltiptext="&gft.options.tabs.main.bashing.tooltip;" onchange="GFTOptions.apply('main');"/>
+								<label control="bashingOneDayAttacks" value="&gft.options.tabs.main.bashing.attacks;"/>
+								<label id="errBashingOneDay" class="error-label" value=""/>	
+							</hbox>
+							<separator class="thin"/>
+							<hbox>
+								<label control="bashingCustomDays" value="&gft.options.tabs.main.bashing.wordfor;"/>
+								<textbox flex="" size="2" id="bashingCustomDays" value="" onchange="GFTOptions.apply('main');"/>
+								<label control="bashingCustomDays" value="&gft.options.tabs.main.bashing.worddays;"/>
+								<textbox flex="" size="2" id="bashingCustomDaysAttacks" value="" tooltiptext="&gft.options.tabs.main.bashing.tooltip;" onchange="GFTOptions.apply('main');"/>
+								<label control="bashingCustomDays" value="&gft.options.tabs.main.bashing.attacks;"/>
+								<label id="errBashingCustomDays" class="error-label" value=""/>	
+							</hbox>
+							<checkbox id="showBashingWarning" label="&gft.options.tabs.main.bashing.showBashingWarning;" oncommand="GFTOptions.apply('main');"/>
+						</vbox>
+						<separator class="groove"/>
+						<vbox>
+							<checkbox id="showLevelBashingWarning" label="&gft.options.tabs.main.bashing.showLevelBashingWarning;" oncommand="GFTOptions.apply('main');"/>
+							<checkbox id="levelBashingRemoveButtons" label="&gft.options.tabs.main.bashing.levelBashingRemoveButtons;" oncommand="GFTOptions.apply('main');"/>
+							<hbox>	
+								<label control="levelBashingLimit" value="&gft.options.tabs.main.bashing.levelBashingLimit;:"/>
+								<textbox flex="" size="2" id="levelBashingLimit" value="" onchange="GFTOptions.apply('main');"/>
+								<label id="errLevelBashingLimit" class="error-label" value=""/>	
+							</hbox>
+						</vbox>
+					</groupbox>
+					<groupbox>
+						<caption label="&gft.options.tabs.main.battlesOverview.title;" />
+						<checkbox id="showBattlePopupMenu" label="&gft.options.tabs.main.battlesOverview.showBattlePopupMenu;" oncommand="GFTOptions.apply('main');"/>
+						<hbox>
+							<label id="defaultDoubleClickActionLabel" constrol="defaultDoubleClickAction" value="&gft.options.tabs.main.battlesOverview.defaultDoubleClickActionLabel;: " />
+							<menulist id="defaultDoubleClickAction" oncommand="GFTOptions.apply('main');">
 								<menupopup>
-									<menuitem label="all" value="all"/>
-									<menuitem label="v1.0" value="v10"/>
-									<menuitem label="v1.0.1" value="v101"/>
-									<menuitem label="v1.1" value="v11"/>
-									<menuitem label="v1.2" value="v12"/>
-									<menuitem label="v1.2.1" value="v121"/>
-									<menuitem label="v1.2.2" value="v122"/>
-									<menuitem label="v1.3" value="v13"/>
-									<menuitem label="v1.4" value="v14"/>
-									<menuitem label="v1.4.1" value="v141" selected="true"/>
+									<menuitem id="location-arena" label="&gft.battles.searchby.location.arena;"/>
+									<menuitem id="location-cirkus" label="&gft.battles.searchby.location.circusTurma;" />
 								</menupopup>
 							</menulist>
 						</hbox>
-						<hbox maxwidth="400px">
-							<groupbox>
-				    			<description style="width: 390px; height: 200px;">
-				    				<html:div id="versionsarea" style="height:200px;overflow-x: hidden;overflow-y: auto;"/>				    				
-				    			</description>
-			    			</groupbox>
-			    		</hbox>
-			    	</vbox>
-			    	</tabpanel>
-			    </tabpanels>
-		    </tabbox>
-	    </hbox>
+						<checkbox id="collapseBattleOverlayAfterBattle" label="&gft.options.tabs.main.battlesOverview.collapseBattleOverlayAfterBattle;" oncommand="GFTOptions.apply('main');"/>
+					</groupbox>
+					</vbox>
+				</tabpanel>
+				<tabpanel id="battleTable">
+					<vbox style="width: 400px; word-wrap:break-word;">
+						<description>&gft.options.tabs.battlesTable.desc;</description>
+						<separator class="groove"/>
+						<hbox>
+							<label constrol="btDefaultSearchPeriod" value="&gft.battles.searchby.period;" />
+							<menulist id="btDefaultSearchPeriod" oncommand="GFTOptions.apply('battleTable');">
+								<menupopup>
+									<menuitem id="none" label="&gft.battles.searchby.period.all;"/>
+									<menuitem id="oneday" label="&gft.battles.searchby.period.oneday;"/>
+									<menuitem id="threedays" label="&gft.battles.searchby.period.threedays;" />
+									<menuitem id="fivedays" label="&gft.battles.searchby.period.fivedays;" />
+									<menuitem id="oneweek" label="&gft.battles.searchby.period.oneweek;" />
+									<menuitem id="onemonth" label="&gft.battles.searchby.period.onemonth;" />
+								</menupopup>
+							</menulist>
+							<label constrol="btDefaultSearchLocation" value="&gft.battles.searchby.location.title;" />
+							<menulist id="btDefaultSearchLocation" oncommand="GFTOptions.apply('battleTable');">
+								<menupopup>
+									<menuitem id="location-all" label="&gft.battles.searchby.period.all;"/>
+									<menuitem id="location-arena" label="&gft.battles.searchby.location.arena;"/>
+									<menuitem id="location-circus-turma" label="&gft.battles.searchby.location.circusTurma;" />
+								</menupopup>
+							</menulist>
+						</hbox>
+						<separator class="groove"/>
+						<hbox>
+							<groupbox style="margin-left: 10px;">
+								<caption label="&gft.options.tabs.battlesTable.captionPpage;" />
+								<vbox>
+									<checkbox id="pTodayBattles" label="&gft.options.tabs.battlesTable.todayBattles;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="pBattlesInAttacksCount" label="&gft.options.tabs.battlesTable.battlesInAttacksCount;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="pBattlesInDefenceCount" label="&gft.options.tabs.battlesTable.battlesInDefenceCount;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="pGoldRaised" label="&gft.options.tabs.battlesTable.goldRaised;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="pGoldLost" label="&gft.options.tabs.battlesTable.goldLost;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="pExperienceRaised" label="&gft.options.tabs.battlesTable.experienceRaised;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="pChanceForWin" label="&gft.options.tabs.battlesTable.chanceForWin;" oncommand="GFTOptions.apply('battleTable');"/>
+								</vbox>
+							</groupbox>
+							<separator orient="vertical" class="groove-thin"/>
+							<groupbox style="margin-left: 25px; margin-right: 10px;">
+								<caption label="&gft.options.tabs.battlesTable.captionOpage;" />
+								<vbox>
+									<checkbox id="oNextPossibleAttack" label="&gft.options.tabs.battlesTable.nextPossibleAttack;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="oBattlesInAttacksCount" label="&gft.options.tabs.battlesTable.battlesInAttacksCount;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="oBattlesInDefenceCount" label="&gft.options.tabs.battlesTable.battlesInDefenceCount;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="oGoldRaised" label="&gft.options.tabs.battlesTable.goldRaised;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="oGoldLost" label="&gft.options.tabs.battlesTable.goldLost;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="oMaxGoldRaised" label="&gft.options.tabs.battlesTable.maxGoldRaised;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="oMaxGoldLost" label="&gft.options.tabs.battlesTable.maxGoldLost;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="oExperienceRaised" label="&gft.options.tabs.battlesTable.experienceRaised;" oncommand="GFTOptions.apply('battleTable');"/>
+									<checkbox id="oRealChanceForWin" label="&gft.options.tabs.battlesTable.realChanceForWin;" oncommand="GFTOptions.apply('battleTable');"/>
+								</vbox>	  
+							</groupbox>  
+						</hbox>
+					</vbox>
+				</tabpanel>
+				<tabpanel id="Others">
+				<vbox style="width:430px">
+					<groupbox>
+						<caption label="&gft.options.tabs.others.profilepage.title;" />
+						<vbox>
+							<checkbox id="showCircusTurmaButton" label="&gft.options.tabs.others.profilepage.showCircusTurmaButton;" oncommand="GFTOptions.apply('others');"/>
+							<checkbox id="markMyAllies" label="&gft.options.tabs.others.profilepage.markMyAllies;" oncommand="GFTOptions.apply('others');"/>
+							<label constrol="battlesTablePosition" value="&gft.options.tabs.others.battlesTablePosition.label;:" />
+							<menulist id="battlesTablePosition"	oncommand="GFTOptions.apply('others');">
+								<menupopup>
+									<menuitem id="hide" label="&gft.options.tabs.others.battlesTablePosition.hide;" />
+									<menuitem id="before" label="&gft.options.tabs.others.battlesTablePosition.before;" />
+									<menuitem id="after" label="&gft.options.tabs.others.battlesTablePosition.after;" />
+								</menupopup>
+							</menulist>		
+						</vbox>	  
+					</groupbox>
+					<groupbox>
+						<caption label="&gft.options.tabs.others.battleoverlay.title;" />
+						<vbox>
+							<checkbox id="advancedOptionsExpandedDefault" label="&gft.options.tabs.others.battleoverlay.advancedOptionsExpandedDefault;" oncommand="GFTOptions.apply('others');"/>
+							<checkbox id="excludeMyAlliesDefault" label="&gft.options.tabs.others.battleoverlay.excludeMyAlliesDefault;" oncommand="GFTOptions.apply('others');"/>
+							<separator class="groove"/>
+							<hbox>
+								<label control="searchByLowLevelDefault" value="&gft.battles.searchby.level.between;" />
+								<textbox id="searchByLowLevelDefault" onchange="GFTOptions.apply('others');" flex="" size="3" value="" />
+								<label control="searchByHighLevelDefault" value="&gft.battles.searchby.level.and;" />
+								<textbox id="searchByHighLevelDefault" onchange="GFTOptions.apply('others');" flex="" size="3" value="" />
+								<label value="&gft.battles.searchby.level;" />
+							</hbox>
+							<separator class="thin"/>
+							<hbox>
+								<label constrol="defaultSortDirection" value="&gft.options.tabs.others.battleoverlay.defaultSortDirection.title;" />
+								<menulist id="defaultSortDirection"	oncommand="GFTOptions.apply('others');">
+									<menupopup>
+										<menuitem id="asc" label="&gft.options.tabs.others.battleoverlay.defaultSortDirection.asc;" />
+										<menuitem id="desc" label="&gft.options.tabs.others.battleoverlay.defaultSortDirection.desc;" />
+									</menupopup>
+								</menulist>							
+							</hbox>							
+							<hbox>
+								<label constrol="defaultSortColumn" value="&gft.options.tabs.others.battleoverlay.defaultSortColumn.title;" />
+								<menulist id="defaultSortColumn" oncommand="GFTOptions.apply('others');">
+									<menupopup>
+										<menuitem id="name" label="&gft.battles.table.name;"/>
+										<menuitem id="guild" label="&gft.battles.table.guild;" />
+										<menuitem id="level" label="&gft.battles.table.level;" />
+										<menuitem id="server" label="&gft.battles.table.server;" />
+										<menuitem id="attacks" label="&gft.battles.table.attacks;" />
+										<menuitem id="defenses" label="&gft.battles.table.defenses;" />
+										<menuitem id="goldRaised" label="&gft.battles.table.goldRaised;" />
+										<menuitem id="goldLost" label="&gft.battles.table.goldLost;" />
+										<menuitem id="maxGoldRaised" label="&gft.battles.table.maxGoldRaised;" />
+										<menuitem id="maxGoldLost" label="&gft.battles.table.maxGoldLost;" />
+										<menuitem id="expRaised" label="&gft.battles.table.expRaised;" />
+										<menuitem id="lastAttackTime" label="&gft.battles.table.nextpossiblefight;" />
+									</menupopup>
+								</menulist>
+							</hbox>
+							<separator class="thin"/>
+							<hbox>
+								<label constrol="search-by-server" value="&gft.battles.searchby.server;" />
+								<menulist id="searchByServer" class="search-box" oncommand="GFTOptions.apply('others');">
+									<menupopup id="options-servers">
+										<menuitem id="allServers" label="&gft.battles.searchby.period.all;"/>				
+									</menupopup>
+								</menulist>
+								<label constrol="searchByPeriodDefault" value="&gft.battles.searchby.period;" />
+								<menulist id="searchByPeriodDefault" oncommand="GFTOptions.apply('others');">
+									<menupopup>
+										<menuitem id="none" label="&gft.battles.searchby.period.all;"/>
+										<menuitem id="oneday" label="&gft.battles.searchby.period.oneday;"/>
+										<menuitem id="twodays" label="&gft.battles.searchby.period.twodays;" />
+										<menuitem id="threedays" label="&gft.battles.searchby.period.threedays;" />
+										<menuitem id="fivedays" label="&gft.battles.searchby.period.fivedays;" />
+										<menuitem id="oneweek" label="&gft.battles.searchby.period.oneweek;" />
+										<menuitem id="onemonth" label="&gft.battles.searchby.period.onemonth;" />
+									</menupopup>
+								</menulist>
+							</hbox>
+							<separator class="thin"/>
+							<hbox>
+								<label constrol="searchByLocationDefault" value="&gft.battles.searchby.location.title;" />
+								<menulist id="searchByLocationDefault" oncommand="GFTOptions.apply('others');">
+									<menupopup>
+										<menuitem id="location-all" label="&gft.battles.searchby.period.all;"/>
+										<menuitem id="location-arena" label="&gft.battles.searchby.location.arena;"/>
+										<menuitem id="location-circus-turma" label="&gft.battles.searchby.location.circusTurma;" />
+									</menupopup>
+								</menulist>
+								<label constrol="searchByAttackTypeDefault" value="&gft.battles.searchby.attackType.title;" />
+								<menulist id="searchByAttackTypeDefault" oncommand="GFTOptions.apply('others');">
+									<menupopup>
+										<menuitem id="atype-all" label="&gft.battles.searchby.period.all;"/>
+										<menuitem id="atype-offense" label="&gft.battles.searchby.attackType.offense;" />
+										<menuitem id="atype-defense" label="&gft.battles.searchby.attackType.defense;" />
+									</menupopup>
+								</menulist>
+							</hbox>
+						</vbox>							
+					</groupbox>  						
+				</vbox>
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
 	    <hbox maxwidth="440px" align="right">
 	        <button label="&gft.common.close;" oncommand="window.close();" default="true"/>
 	    </hbox>

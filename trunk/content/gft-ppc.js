@@ -25,27 +25,9 @@
 
 GFT.PlayerPageContent = function() {
 	var utils = GFT.Utils;
-	var db = GFT.DB;
+	var db = GFT.Globals.Database;
 	var console = GFT.Utils.console;
 	var prefMan = new GFT.PrefManager();
-	
-	function splitNumberInGroups(value)
-	{
-		var tmp = "";
-		var separator = ".";
-		value = (value+"").split("").reverse();
-		
-		for(var i = 0; i < value.length; i++)
-		{
-			if(i > 0 && i % 3 == 0)
-				tmp += separator + value[i];
-			else
-				tmp += value[i];
-		}
-		
-		tmp = tmp.split("").reverse().join("");
-		return tmp;
-	}
 	
 	function getRowOrNothing(row, prefValue, expand) {
 		if(expand) {
@@ -61,31 +43,21 @@ GFT.PlayerPageContent = function() {
 	
 	function getGoldEntry(value, infoMsg) {
 		var gold = utils.getString("goldImg");
-		return utils.createTableEntry(utils.getString(infoMsg), splitNumberInGroups(value) +
+		if(value == null) {
+			value = 0;
+		}
+		return utils.createTableEntry(utils.getString(infoMsg), utils.partitionateNumber(value) +
 				' <img border="0" align="absmiddle" title="' + gold + '" alt="' + gold + '" src="img/res2.gif">');
 	}
 	
-	function getGold(pid, server, atype, period, infoMsg) {
-		return getGoldEntry(db.getGoldRaised(pid, server, atype, period), infoMsg);
-	}
-	
-	function getMaxGold(pid, server, atype, period, infoMsg) {
-		return getGoldEntry(db.getMaxGold(pid, server, atype, period), infoMsg);
-	}
-	
-	function getExpRaised(pid, server, period) {
-		return utils.createTableEntry(utils.getString("expRaised"), 
-				splitNumberInGroups(db.getExpRaised(pid, server, period)));
-	}
-	
-	function getAllExpRaised(server, period) {
+	function getAllExpRaised(attackStatsView, defenseStatsView) {
 		return utils.createTableEntry(utils.getString("allExpRaised"),
-				splitNumberInGroups(db.getAllExpRaised(server, period)));
+				utils.partitionateNumber(attackStatsView.expRaised + (defenseStatsView.battlesWon * 2)));
 	}
 	
-	function getWinChance(pid, server) {
-		var winChance = db.getWinChance(pid, server);
-		var lastDayWinChance = db.getLastDayWinChance(pid, server);
+	function getWinChance(pid, server, location) {
+		var winChance = db.getWinChance(pid, server, location);
+		var lastDayWinChance = db.getLastDayWinChance(pid, server, location);
 		
 		var diff = 0;
 		var diffSpan = '';
@@ -108,47 +80,54 @@ GFT.PlayerPageContent = function() {
 		return utils.createTableEntry(utils.getString("realWinChance"),  winChance);
 	}
 	
-	this.getContent = function(doc, period, expand) {
+	this.getEnemyStats = function(doc, period, expand, location) {
 		var server = doc.domain+"";
 		if(!db.isServerActive(server)) {
 			return '<tr><td colspan="6" style="padding-left: 3px; white-space: nowrap;" class="stats_value">' + utils.getString("serverNotActiveError") + '</td></tr>';
 		}
 		
 		var pid = utils.getPidFromUrl(doc.location+"");
-		console.log("[getContent]: Pid: " + pid + ", Server: " + server);
+		console.debug("[getEnemyStats]: Pid: " + pid + ", Server: " + server);
 		
-		var attacks = db.getNumberOfBattlesWithin(pid, server, "pid", 1, period);
-		var defenses = db.getNumberOfBattlesWithin(pid, server, "pid", 0, period);
-		var nextPossibleAttack = GFT.Main.getNextPossibleAtack(pid, server, "pid", false);
-
+		var attackStatsView = db.getEnemyStats(pid, server, "pid", period, 1, location);
+		var defenseStatsView = db.getEnemyStats(pid, server, "pid", period, 0, location);
+		var nextPossibleAttack = GFT.Main.getNextPossibleAtack(pid, server, "pid", false, true);
+		if(location == 1) {
+			attackStatsView.expRaised = 0;
+			defenseStatsView.expRaised = 0;
+		}
 		return	getRowOrNothing(utils.createTableEntry(utils.getString("nextpossiblefight"), nextPossibleAttack),"options.tabs.battlesTable.oNextPossibleAttack",expand) +
-				getRowOrNothing(utils.createTableEntry(utils.getString("attackssinceperiod"), attacks),"options.tabs.battlesTable.oBattlesInAttacksCount",expand) +
-				getRowOrNothing(utils.createTableEntry(utils.getString("defensessinceperiod"), defenses),"options.tabs.battlesTable.oBattlesInDefenceCount",expand) +
-				getRowOrNothing(getGold(pid, server, 1, period, "goldRaised"),"options.tabs.battlesTable.oGoldRaised",expand) +
-				getRowOrNothing(getGold(pid, server, 0, period, "goldLost"),"options.tabs.battlesTable.oGoldLost",expand) +
-				getRowOrNothing(getMaxGold(pid, server, 1, period, "maxGoldRaised"),"options.tabs.battlesTable.oMaxGoldRaised",expand) +
-				getRowOrNothing(getMaxGold(pid, server, 0, period, "maxGoldLost"),"options.tabs.battlesTable.oMaxGoldLost",expand) +
-				getRowOrNothing(getExpRaised(pid, server, period),"options.tabs.battlesTable.oExperienceRaised",expand) +
-				getRowOrNothing(getWinChance(pid, server),"options.tabs.battlesTable.oRealChanceForWin",expand);
+				getRowOrNothing(utils.createTableEntry(utils.getString("attackssinceperiod"), utils.partitionateNumber(attackStatsView.attacks) + " (" + utils.getString("battlesWon") + " " + utils.partitionateNumber(attackStatsView.battlesWon) + ")"),"options.tabs.battlesTable.oBattlesInAttacksCount",expand) +
+				getRowOrNothing(utils.createTableEntry(utils.getString("defensessinceperiod"), utils.partitionateNumber(defenseStatsView.attacks) + " (" + utils.getString("battlesWon") + " " + utils.partitionateNumber(defenseStatsView.battlesWon) + ")"),"options.tabs.battlesTable.oBattlesInDefenceCount",expand) +
+				getRowOrNothing(getGoldEntry(attackStatsView.goldRaised, "goldRaised"),"options.tabs.battlesTable.oGoldRaised",expand) +
+				getRowOrNothing(getGoldEntry(defenseStatsView.goldRaised, "goldLost"),"options.tabs.battlesTable.oGoldLost",expand) +
+				getRowOrNothing(getGoldEntry(attackStatsView.maxGoldRaised, "maxGoldRaised"),"options.tabs.battlesTable.oMaxGoldRaised",expand) +
+				getRowOrNothing(getGoldEntry(defenseStatsView.maxGoldRaised, "maxGoldLost"),"options.tabs.battlesTable.oMaxGoldLost",expand) +
+				getRowOrNothing(getAllExpRaised(attackStatsView, defenseStatsView),"options.tabs.battlesTable.oExperienceRaised",expand) +
+				getRowOrNothing(getWinChance(pid, server, location),"options.tabs.battlesTable.oRealChanceForWin",expand);
 	};
 	
-	this.getMyStats = function(doc, period, expand) {
+	this.getMyStats = function(doc, period, expand, location) {
 		var server = doc.domain+"";
-		console.log("[getMyStats]: Server" +  server);
+		console.debug("[getMyStats]: Server" +  server);
 		if(!db.isServerActive(server)) {
 			return '<tr><td colspan="6" style="padding: 5px 2px 0 2px; word-wrap:break-word;" class="stats_value">' + utils.getString("serverNotActiveError") + '</td></tr>';
 		}
-		
-		var todayattacks = db.getAllAtacksSinceTodayAndDefDaysBack(0, server);
-		var attacks = db.getNumberOfBattlesSinceCustomTime(period, server, 1);
-		var defenses = db.getNumberOfBattlesSinceCustomTime(period, server, 0);
-		var battlesWon = db.getBattlesWon(server, period);
-		var winRatio = (battlesWon/(attacks + defenses))*100;
+		var attackStatsView = db.getMyStats(server, period, 1, location);
+		var defenseStatsView = db.getMyStats(server, period, 0, location);
+		if(location == 1) {
+			attackStatsView.expRaised = 0;
+			defenseStatsView.expRaised = 0;
+		}
+		var todayattacks = db.getAllAtacksSinceTodayAndDefDaysBack(0, server, location);
+		var allBattles = attackStatsView.attacks + defenseStatsView.attacks;
+		allBattles = allBattles > 0 ? allBattles : 1;
+		var winRatio = ((attackStatsView.battlesWon + defenseStatsView.battlesWon)/allBattles)*100;
 		var winRatioSpan = utils.getString("noData");
-		if(winRatio && winRatio != "none") {
+		if(winRatio != "undefined") {
 			winRatioSpan = '<span style="color: ';
 			if(winRatio >= 50) {
-				winRatioSpan += 'green; font-weight: bold;">+';
+				winRatioSpan += 'green; font-weight: bold;">';
 			}
 			else {
 				winRatioSpan += 'red; font-weight: bold;">';
@@ -156,13 +135,36 @@ GFT.PlayerPageContent = function() {
 			winRatioSpan += winRatio.toFixed(1) + '%</span>';
 		}
 		return	getRowOrNothing(utils.createTableEntry(utils.getString("todayattacks"), todayattacks),"options.tabs.battlesTable.pTodayBattles",expand) +
-				getRowOrNothing(utils.createTableEntry(utils.getString("attackssinceperiod"), attacks),"options.tabs.battlesTable.pBattlesInAttacksCount",expand) +
-				getRowOrNothing(utils.createTableEntry(utils.getString("defensessinceperiod"), defenses),"options.tabs.battlesTable.pBattlesInDefenceCount",expand) +
-				getRowOrNothing(getGoldEntry(db.getAllGoldRaised(server, 1, period), "goldRaised"),"options.tabs.battlesTable.pGoldRaised",expand) +
-				getRowOrNothing(getGoldEntry(db.getAllGoldRaised(server, 0, period), "goldLost"),"options.tabs.battlesTable.pGoldLost",expand) +
-				getRowOrNothing(getAllExpRaised(server, period),"options.tabs.battlesTable.pExperienceRaised",expand) +
+				getRowOrNothing(utils.createTableEntry(utils.getString("attackssinceperiod"), utils.partitionateNumber(attackStatsView.attacks) + " (" + utils.getString("battlesWon") + " " + utils.partitionateNumber(attackStatsView.battlesWon) + ")"),"options.tabs.battlesTable.pBattlesInAttacksCount",expand) +
+				getRowOrNothing(utils.createTableEntry(utils.getString("defensessinceperiod"), utils.partitionateNumber(defenseStatsView.attacks) + " (" + utils.getString("battlesWon") + " " + utils.partitionateNumber(defenseStatsView.battlesWon) + ")"),"options.tabs.battlesTable.pBattlesInDefenceCount",expand) +
+				getRowOrNothing(getGoldEntry(attackStatsView.goldRaised, "goldRaised"),"options.tabs.battlesTable.pGoldRaised",expand) +
+				getRowOrNothing(getGoldEntry(defenseStatsView.goldRaised, "goldLost"),"options.tabs.battlesTable.pGoldLost",expand) +
+				getRowOrNothing(getAllExpRaised(attackStatsView, defenseStatsView),"options.tabs.battlesTable.pExperienceRaised",expand) +
 				getRowOrNothing(utils.createTableEntry(utils.getString("winratio"), winRatioSpan),"options.tabs.battlesTable.pChanceForWin",expand);	
 	};
 	
-	this.getString = function(string) { return utils.getString(string); };	
+	this.getString = function(string) { return utils.getString(string); };
+
+	this.getFightResponseResult = utils.getFightResponseResult;
+	
+	this.isMyAlly = function(guild, doc) {
+		var server = doc.domain +  "";
+		if(!db.isServerActive(server)) {
+			return false;
+		}
+		guild = utils.trim(guild);
+		return db.getMyGuild(server) == guild;
+	};
+	
+	this.isMyProfilePage = function(doc) {
+		var server = doc.domain +  "";
+		if(!db.isServerActive(server)) {
+			return false; // it doen't matter if you return true or false
+		}
+		var pid = utils.getPidFromUrl(doc.location+"");
+		var myPid = db.getMyPid(server);
+		return pid == myPid;
+	};
+	
+	this.isLevelBashed = GFT.Main.isLevelBashed;
 };

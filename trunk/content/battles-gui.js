@@ -35,18 +35,33 @@ GFT.Battles = (function() {
 	var orderByMaxGoldRaised = false;
 	var orderByMaxGoldLost = false;
 	var orderByExpRaised = false;
+	var orderByLastAttack = false;
 	var opponentsStore = null;
 	var lastOrderBy = "name";
 	var lastSortDirection = "asc";
 	const HTTP_PROTOCOL = "http://";
-	const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 	const ROWS_PER_PAGE = 20;
 	var currentPage = 0;
 	var infoTimeOut = -1;
 	var battleLogTimeOut = -1;
 	var utils = GFT.Utils;
 	var console = GFT.Utils.console;
-	var db = GFT.DB;
+	var db = GFT.Globals.Database;
+	var prefMan = new GFT.PrefManager();
+	
+	function initPreferences() {
+		var advancedOptionsChecked = prefMan.getValue("options.tabs.others.advancedOptionsExpandedDefault", false);
+		if(advancedOptionsChecked) {
+			toogleAdvancedOptions(false);
+		}
+		document.getElementById("exclude-allies").checked = prefMan.getValue("options.tabs.others.excludeMyAlliesDefault", true);
+		document.getElementById("search-by-period").selectedIndex = utils.getMenuItemIndexById("search-by-period", prefMan.getValue("options.tabs.others.searchByPeriodDefault", "oneday"));
+		document.getElementById("search-by-server").selectedIndex = utils.getMenuItemIndexById("search-by-server", prefMan.getValue("options.tabs.others.searchByServer", "allServers"));
+		document.getElementById("search-by-location").selectedIndex = utils.getMenuItemIndexById("search-by-location", prefMan.getValue("options.tabs.others.searchByLocationDefault", "location-arena"));
+		document.getElementById("search-by-attack-type").selectedIndex = utils.getMenuItemIndexById("search-by-attack-type", prefMan.getValue("options.tabs.others.searchByAttackTypeDefault", "atype-all"));
+		document.getElementById("search-by-level-high").value = prefMan.getValue("options.tabs.others.searchByHighLevelDefault", "");
+		document.getElementById("search-by-level-low").value = prefMan.getValue("options.tabs.others.searchByLowLevelDefault", "");
+	}
 	
 	function sortBy(type) {
 		var orderDirection = "asc";
@@ -118,13 +133,25 @@ GFT.Battles = (function() {
 				search("a.expRaised", orderDirection);
 				break;
 			}
+			case "lastAttackTime": { 
+				orderByLastAttack = !orderByLastAttack;
+				orderByLastAttack ? orderDirection = "asc" : orderDirection = "desc"; 
+				search("a.lastAttackTime", orderDirection);
+				break;
+			}
 			default: console.log("nothing clicked"); break;
 		}
 		lastOrderBy = type;
 		lastSortDirection = orderDirection;
 	}
 	
-	function togleNavigationButtons() {
+	function toogleAdvancedOptions(checked) {
+			// dummy check box
+			document.getElementById("advanced-options").checked = ((checked == false) ? checked : !document.getElementById("advanced-options").checked);
+			document.getElementById("advanced-options-splitter").click();
+	}
+	
+	function toogleNavigationButtons() {
 		var prevBtn = document.getElementById("prevPageBtn");
 		var nextBtn = document.getElementById("nextPageBtn");
 		var firstBtn = document.getElementById("firstPageBtn");
@@ -154,13 +181,12 @@ GFT.Battles = (function() {
 	
 	function showLastPage() {
 		currentPage = Math.floor(opponentsStore.length/ROWS_PER_PAGE);
-		console.log("Current page: " + currentPage);
 		showTable();	
 	}
 	
 	function showNextPage() {
 		currentPage++;
-		togleNavigationButtons();
+		toogleNavigationButtons();
 		showTable();
 	}
 	
@@ -169,7 +195,7 @@ GFT.Battles = (function() {
 		if(currentPage < 0) {
 			currentPage = 0;
 		}
-		togleNavigationButtons();
+		toogleNavigationButtons();
 		showTable();
 	}
 
@@ -199,10 +225,13 @@ GFT.Battles = (function() {
 			createTreeRow(playerData);
 		}
 		
-		togleNavigationButtons();
-		document.getElementById("pageInfo").value = utils.getString("from") + " " +  (Math.floor(startIndex/ROWS_PER_PAGE) + 1)  
+		toogleNavigationButtons();
+/* 		document.getElementById("pageInfo").value = utils.getString("from") + " " +  (Math.floor(startIndex/ROWS_PER_PAGE) + 1)  
 													+ " " + utils.getString("to") + " " + (Math.floor(endIndex/ROWS_PER_PAGE) + 1)
-													+ " " + utils.getString("total") + " " + Math.ceil(opponentsStore.length/ROWS_PER_PAGE); 
+													+ " " + utils.getString("total") + " " + Math.ceil(opponentsStore.length/ROWS_PER_PAGE);  */
+		document.getElementById("pageInfo").value = utils.getString("from") + " " +  startIndex  
+													+ " " + utils.getString("to") + " " + endIndex
+													+ " " + utils.getString("total") + " " + opponentsStore.length; 
 	}
 	
 	function search(orderBy, orderDirection) {
@@ -212,18 +241,28 @@ GFT.Battles = (function() {
 		}
 		
 		var name = document.getElementById("search-by-name").value;
-		var level = document.getElementById("search-by-level").value;
+		var lowLevel = document.getElementById("search-by-level-low").value;
+		var highLevel = document.getElementById("search-by-level-high").value;
+		var excludeAllies = document.getElementById("exclude-allies").checked;
 		var period = document.getElementById("search-by-period").selectedItem.id;
 		var server = document.getElementById("search-by-server").selectedItem.id;
+		var location = document.getElementById("search-by-location").selectedItem.id;
+		var attackType = document.getElementById("search-by-attack-type").selectedItem.id;
+		if(location == "location-arena") {
+			location = 0;
+		} else if(location == "location-circus-turma") {
+			location = 1;
+		}
 		
-		opponentsStore = db.getOpponentsWithCriteria(period, orderBy, orderDirection, name, level, server);
+		opponentsStore = db.getOpponentsWithCriteria(period, orderBy, orderDirection, name, lowLevel, highLevel, server, location, excludeAllies, attackType);
 		
+		var infoMsgNode = document.getElementById("gft-info-messages");
+		infoMsgNode.hidden = false;;
 		var info = document.getElementById("load-info");
-		info.hidden = false;
 		info.value = opponentsStore.length + " " + utils.getString("loadedEntries") + ".";
 		
 		showTable();
-		infoTimeOut = window.setTimeout(function(e) { info.hidden = true; }, 5000);
+		infoTimeOut = window.setTimeout(function(e) { infoMsgNode.hidden = true; info.value = ""; }, 5000);
 	}
 	
 	function createTreeCell(labelValue) {
@@ -235,23 +274,23 @@ GFT.Battles = (function() {
 	function createTreeRow(playerData) {
 		var treechildren = document.getElementById("battles-rows");
 		var treeitem = document.createElement("treeitem");
-		treeitem.setAttribute("id", playerData.server + "#" + playerData.pid + "#" + playerData.name);
+		treeitem.setAttribute("id", playerData.server + "#" + playerData.pid + "#" + playerData.name + "#" + playerData.level);
 		var treerow = document.createElement("treerow");
 		
 		var nameCell = createTreeCell(playerData.name);
 		var guildCell = createTreeCell(renderGuild(playerData.guild));
 		var levelCell = createTreeCell(playerData.level);
 		var serverCell = createTreeCell(playerData.server);
-		var attacksCell = createTreeCell(renderNumberValue(playerData.attacks));
-		var defensesCell = createTreeCell(renderNumberValue(playerData.defenses));
-		var goldRaisedCell = createTreeCell(renderNumberValue(playerData.goldRaised));
-		var goldLostCell = createTreeCell(renderNumberValue(playerData.goldLost));
-		var maxGoldRaisedCell = createTreeCell(renderNumberValue(playerData.maxGoldRaised));
-		var maxGoldLostCell = createTreeCell(renderNumberValue(playerData.maxGoldLost));
-		var expRaisedCell = createTreeCell(renderNumberValue(playerData.expRaised));
+		var attacksCell = createTreeCell(renderNumberValue(playerData.attacks, true));
+		var defensesCell = createTreeCell(renderNumberValue(playerData.defenses, true));
+		var goldRaisedCell = createTreeCell(renderNumberValue(playerData.goldRaised, true));
+		var goldLostCell = createTreeCell(renderNumberValue(playerData.goldLost, true));
+		var maxGoldRaisedCell = createTreeCell(renderNumberValue(playerData.maxGoldRaised, true));
+		var maxGoldLostCell = createTreeCell(renderNumberValue(playerData.maxGoldLost, true));
+		var expRaisedCell = createTreeCell(renderNumberValue(playerData.expRaised, true));
 		var nextPossibleAttackValue;
-		if(renderNumberValue(playerData.attacks) > 0) {
-			nextPossibleAttackValue = GFT.Main.getNextPossibleAtack(playerData.pid, playerData.server, "pid", true);
+		if(renderNumberValue(playerData.attacks, false) > 0) {
+			nextPossibleAttackValue = GFT.Main.getNextPossibleAtack(playerData.pid, playerData.server, "pid", true, false);
 		} else {
 			nextPossibleAttackValue = utils.getString("nextpossiblefightnow");
 		}
@@ -273,12 +312,12 @@ GFT.Battles = (function() {
 		treechildren.appendChild(treeitem);
 	}
 	
-	function renderNumberValue(value) {
-		return (value && value != "" ? value : 0);
+	function renderNumberValue(value, showInGroups) {
+		return (value && value != "" ? (showInGroups ? utils.partitionateNumber(value) : value) : 0);
 	}
 	
 	function renderGuild(value) {
-		return (value != "none" ? value : utils.getString("none"));
+		return (value != GFT.Constants.DEFAULT_GUILD ? value : utils.getString("none"));
 	}
 	
 	function removeAllTreeChildren() {
@@ -296,127 +335,210 @@ GFT.Battles = (function() {
 		return false;
 	}
 	
-	function getFightUrl(id, isArena) {
-		id = id.split("#");
-		server = id[0];
-		pid = id[1];
-		if(isArena) {
-			return HTTP_PROTOCOL + server + "/game/ajax/doArenaFight.php?did=" + pid + "&a=" + utils.getTime();
+	function getFightUrl(pid, name, server, isArena) {
+		if(pid > 0) {
+			if(isArena) {
+				return HTTP_PROTOCOL + server + "/game/ajax/doArenaFight.php?did=" + pid + "&a=" + utils.getTime();
+			} else {
+				return HTTP_PROTOCOL + server + "/game/ajax/doGroupFight.php?did=" + pid + "&a=" + utils.getTime();
+			}
 		} else {
-			return HTTP_PROTOCOL + server + "/game/ajax/doGroupFight.php?did=" + pid + "&a=" + utils.getTime();
+			if(isArena) {
+				return HTTP_PROTOCOL + server + "/game/ajax/doArenaFight.php?dname=" + encodeURIComponent(name) + "&a=" + utils.getTime();
+			} else {
+				return HTTP_PROTOCOL + server + "/game/ajax/doGroupFight.php?dname=" + encodeURIComponent(name) + "&a=" + utils.getTime();
+			}
 		}
 	}
 	
-	function evaluateResponse(responseDetails, server, isArena) {//TODO translate
+	function showTCAlertMessage() {
+		var msg = utils.getString("tcAlertMessage.row1") + "."
+				+ "\n" + utils.getString("tcAlertMessage.row2") + ":"
+				+ "\n" + utils.getString("tcAlertMessage.row3") + "."
+				+ "\n" + utils.getString("tcAlertMessage.row4") + ".";
+		if(confirm(msg)) {
+			GFT.Statusbar.handleAction("options");
+		}
+	}
+	
+	function evaluateResponse(responseDetails, server, isArena) {
 		if(battleLogTimeOut != -1) {
 			window.clearTimeout(battleLogTimeOut);
 		}
-		var response = responseDetails.responseText;
-		var errorPage = /errorText/i.test(response);
-		var workPageRedirect = /document\.location\.href=\"index\.php\?mod=work&sh.*/.test(response);
-		var foundBashText = /bashtext/i.test(response);
-		var notLoggedIn = /document\.location\.href=document\.location\.href;/i.test(response);
-		var msg = "";
+		var result = utils.getFightResponseResult(responseDetails);
 		var battleLog = document.getElementById("battleLog");
-		battleLog.setAttribute("class", "battlelog-failure");
-		if(notLoggedIn) { //not logged in	
-			msg = utils.getString("notLoggedInOrNoSuchNameWarning");
-		} 
-		else if(workPageRedirect) { // the gladiator is working
-			msg = utils.getString("workingInTheStableWarning");
-		} else if(response == "") { // cooldown not finished
-			msg = utils.getString("cooldownWarning");
-		} else if(errorPage){ // the opponent has fight recently
-			msg = utils.getString("restingOrNotEnoughGoldWarning");
-		}
-		else if(foundBashText) { // the gladiator is about to bash the opponent
-			msg = utils.getString("aboutToBashWarning");
-		} else { // battle was successful
+		
+		if(result.success) { //success
 			battleLog.setAttribute("class", "battlelog-success");
-			msg = utils.getString("fightSuccessful");
+			var response = responseDetails.responseText;
 			response = response.split("'");
-			var url = HTTP_PROTOCOL + server + "/game/" + utils.trimmer.trim(response[1]);
+			var url = HTTP_PROTOCOL + server + "/game/" + utils.trim(response[1]);
 			if(server != utils.getServer()) {
 				utils.loadUrl(url, true);
 			} else {
 				utils.loadUrl(url, false);
 			}
+			if(prefMan.getValue("options.tabs.main.collapseBattleOverlayAfterBattle", true)) {
+				GFT.Statusbar.handleAction("battles");
+			}
+		} else { //failure
+			battleLog.setAttribute("class", "battlelog-failure");
 		}
 		
-		battleLog.value = msg;
-		battleLogTimeOut = window.setTimeout(function(e) { battleLog.value = ""; }, 10000);
+		var infoMsgNode = document.getElementById("gft-info-messages");
+		infoMsgNode.hidden = false;
+		battleLog.value = result.msg;
+		battleLogTimeOut = window.setTimeout(function(e) { infoMsgNode.hidden = true; battleLog.value = ""; }, 10000);
+	}
+	
+	function tryToFight(item, isArena) {
+		if(!prefMan.getValue("options.tabs.main.showBattlePopupMenu", false)) {							
+			showTCAlertMessage();
+			return;
+		}
+		item = item.split("#");
+		var server = item[0];
+		var pid = parseInt(item[1]);
+		var name = item[2];
+		var level = item[3];
+		var fightUrl = getFightUrl(pid, name, server, isArena);
+		var gladiator = new GFT.Gladiator();
+		gladiator.setId(pid);
+		gladiator.setName(name);		
+		gladiator.setLevel(level);
+		
+		if(GFT.Main.isLevelBashed(gladiator.getLevel(), server)) {
+			var info = db.isGladiatorInfoOutOfDate(server, gladiator, "oneday");
+			var message = utils.getString("notification.levelbashing.message");
+			if(info.needUpdate) {
+				message += "\n" + utils.getString("notification.levelbashing.outofdate")
+							+ "\n" + utils.getString("notification.levelbashing.lastupdate") + " " + utils.unixtimeToHumanReadable(info.lastUpdate) + ".";
+			}
+			message += "\n\n" + utils.getString("notification.levelbashing.question");
+			showLevelBashingDialog(message, pid, server, fightUrl, isArena);
+		} else {
+			startFight(fightUrl, server, isArena);
+		}
+	}
+	
+	function showLevelBashingDialog(message, pid, server, fightUrl, isArena) {
+		try {
+			const prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
+									  .getService(Components.interfaces.nsIPromptService);
+			var flags = prompts.BUTTON_POS_0 * prompts.BUTTON_TITLE_IS_STRING +  
+				prompts.BUTTON_POS_1 * prompts.BUTTON_TITLE_IS_STRING  +  
+				prompts.BUTTON_POS_2 * prompts.BUTTON_TITLE_CANCEL; 
+			var button = prompts.confirmEx(null,
+										utils.getString("notification.levelbashing.dialog.title"),
+										message,
+										flags,
+										utils.getString("notification.levelbashing.buttons.attack"),
+										utils.getString("notification.levelbashing.buttons.showprofile"),
+										"",
+										null,
+										{value: false});
+
+			if (button == 0) { // "Attack anyway" button
+				startFight(fightUrl, server, isArena);
+			} else if(button == 1) { // "Show profile" button
+				showProfile(pid, server);
+			}
+		} catch (e) { console.error("Failed to handle level-bashing prompt\n" + e); }	
+	}
+	
+	function startFight(fightUrl, server, isArena) {
+		utils.doHttpRequest({
+			method: "GET",
+			url: fightUrl,
+			onload: function(responseDetails) {
+				evaluateResponse(responseDetails, server, isArena);
+			}
+		});	
+	}
+	
+	function showProfile(pid, server) {
+		var url = HTTP_PROTOCOL + server + "/game/index.php?mod=player&p=" + pid + "&sh=" + prefMan.getValue("secureHash." + server, "");
+		if(server != utils.getServer()) {
+			utils.loadUrl(url, true);
+		} else {
+			utils.loadUrl(url, false);
+		}	
 	}
 	
 	return {
 		init: function() {
 			document.getElementById("battles-rows").addEventListener('dblclick',this.handleRowClick,true);
 			var activeServers = db.getAllActiveServers();
-			var serversDropDown = document.getElementById("serversMenu");
 			for(var i = 0; i < activeServers.length; i++) {
-				console.log("Creating item: " + activeServers[i]);
-				var menuItem = document.createElementNS(XUL_NS, "menuitem");
-				menuItem.setAttribute("id", activeServers[i]);
-				menuItem.setAttribute("label", activeServers[i]);
-				serversDropDown.appendChild(menuItem);
+				utils.appendToDD("serversMenu", activeServers[i]);
 			}
-			sortBy("name");
-			togleNavigationButtons();
+			
+			var advancedOptionsSplitter = document.getElementById("advanced-options-splitter");
+			advancedOptionsSplitter.addEventListener("click", function(event){
+				document.getElementById("advanced-options").checked = !document.getElementById("advanced-options").checked;
+			}, false);
+			document.getElementById("gft-info-messages").hidden = true;
+			initPreferences();
+			lastOrderBy = prefMan.getValue("options.tabs.others.defaultSortColumn", "name");
+			lastSortDirection = prefMan.getValue("options.tabs.others.defaultSortDirection", "asc");
+			search(lastOrderBy, lastSortDirection);
+			toogleNavigationButtons();
 		},
+		
+		nextPage: showNextPage,
+		
+		previousPage: showPreviousPage,
+		
+		firstPage: showFirstPage,
+		
+		lastPage: showLastPage,
+		
+		advancedOptions: toogleAdvancedOptions,
+
 		defaultSearch: function() {
 			search(lastOrderBy, lastSortDirection);
 		},
-		nextPage: showNextPage,
-		previousPage: showPreviousPage,
-		firstPage: showFirstPage,
-		lastPage: showLastPage,
+		
 		sort: function(type) {
-			var activeServers = db.getAllActiveServers();
 			sortBy(type);
 		},
+		
 		handleRowClick: function(event) {
 			var itemId = getSelectedItemId();
 			if(itemId) {
-				console.log("Fighting on arena with " + itemId.split("#")[2]);
-				utils.doHttpRequest({
-				    method: "GET",
-				    url: getFightUrl(itemId, true),
-				    onload: function(responseDetails) {
-						evaluateResponse(responseDetails, itemId.split("#")[0], true);
-					}
-			    });
+				var loc = prefMan.getValue("options.tabs.main.defaultDoubleClickAction", "location-arena");	
+				var isArena = ((loc == "location-arena") ? true : false);
+				console.log("Fighting on " + loc.split("-").join(" ") + " with " + itemId.split("#")[2]);
+				tryToFight(itemId, isArena);
 			}
 		},
+		
 		handleRowMenu: function(event) {
 			var action = event.target.id;
 			var itemId = getSelectedItemId();
 			if(itemId) {
 				var server = itemId.split("#")[0];
+				var pid = itemId.split("#")[1];
 				var opponent = itemId.split("#")[2];
+				
 				switch (action) {
 					case "fightArena": {
 						console.log("Fighting on " + action + " with " +  opponent);
-						utils.doHttpRequest({
-						    method: "GET",
-						    url: getFightUrl(itemId, true),
-						    onload: function(responseDetails) {
-								evaluateResponse(responseDetails, server, true);
-							}
-					    });
+						tryToFight(itemId, true);
 						break;
 					}
 					case "fightCirkus": {
-						console.log("Fighting on " + action + " with " +  itemId.split("#")[2]);
-						utils.doHttpRequest({
-						    method: "GET",
-						    url: getFightUrl(itemId, false),
-						    onload: function(responseDetails) {
-								evaluateResponse(responseDetails, server, false);
-							}
-					    });
+						console.log("Fighting on " + action + " with " +  opponent);
+						tryToFight(itemId, false);
 						break;
 					}
 					case "showProfile": {
-						console.log("Showing profile for id: " + itemId);
+						console.log("Showing profile for: " + opponent);
+						if(pid > 0) {
+							showProfile(pid, server);
+						} else {
+							alert(utils.getString("dataIncomplete"));
+						}
 					}
 				}
 			}

@@ -25,6 +25,14 @@
 <!ENTITY gft.options.tabs.main.bashing.wordday "ден">
 <!ENTITY gft.options.tabs.main.bashing.worddays "дни">
 <!ENTITY gft.options.tabs.main.bashing.attacks "атаки">
+<!ENTITY gft.options.tabs.main.bashing.showBashingWarning "Покажи съобщение ако със следващата атака ще направя башинг">
+<!ENTITY gft.options.tabs.main.battlesOverview.title "Преглед на битките">
+<!ENTITY gft.options.tabs.main.battlesOverview.showBattlePopupMenu "Включи способността за започване на битка от прегледа на битките">
+<!ENTITY gft.options.tabs.main.battlesOverview.defaultDoubleClickActionLabel "Двоен клик на някой ред ще започне битка на">
+<!ENTITY gft.options.tabs.main.battlesOverview.collapseBattleOverlayAfterBattle "Затвори прегледа на битките след успешна битка">
+<!ENTITY gft.options.tabs.main.bashing.showLevelBashingWarning "Включи нотификацията за level-bashing">
+<!ENTITY gft.options.tabs.main.bashing.levelBashingRemoveButtons "Премахни бутоните за битка на страницата на моя опонент">
+<!ENTITY gft.options.tabs.main.bashing.levelBashingLimit "Разрешени нива под моето">
 
 <!-- GFT Options Battles Table Tab -->
 <!ENTITY gft.options.tabs.battlesTable.title "Бойна статистика">
@@ -42,6 +50,23 @@
 <!ENTITY gft.options.tabs.battlesTable.maxGoldRaised "Макс. заграбено злато">
 <!ENTITY gft.options.tabs.battlesTable.maxGoldLost "Макс. загубено злато">
 <!ENTITY gft.options.tabs.battlesTable.realChanceForWin "Реален шанс за победа">
+
+<!-- GFT Options Others Tab -->
+<!ENTITY gft.options.tabs.others.title "Други">
+<!ENTITY gft.options.tabs.others.profilepage.title "Страницата на моя опонент">
+<!ENTITY gft.options.tabs.others.profilepage.showCircusTurmaButton "Покажи бутона за circus turma">
+<!ENTITY gft.options.tabs.others.profilepage.markMyAllies "Оцвети моите съюзници в зелено">
+<!ENTITY gft.options.tabs.others.battleoverlay.title "Преглед на битките">
+<!ENTITY gft.options.tabs.others.battleoverlay.advancedOptionsExpandedDefault "Покажи разширените филтри">
+<!ENTITY gft.options.tabs.others.battleoverlay.excludeMyAlliesDefault "Не показвай моите съюзници">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortColumn.title "Сортиране по колона">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.title "Посока на сортиране">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.asc "Възходящо">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.desc "Низходящо">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.label "Посочи позицията на бойната статистика на страницата на моя опонент">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.hide "не показвай">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.before "преди профила">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.after "след профила">
 
 <!-- GFT Options Versions Tab -->
 <!ENTITY gft.options.tabs.versions.title "Версии">
@@ -61,7 +86,6 @@
 <!ENTITY gft.battles.table.expRaised "Събран опит">
 <!ENTITY gft.battles.table.nextpossiblefight "Следваща възможна атака">
 <!ENTITY gft.battles.searchby.name "Опонент">
-<!ENTITY gft.battles.searchby.level "Над ниво">
 <!ENTITY gft.battles.searchby.period "Времеви период">
 <!ENTITY gft.battles.searchby.server "Сървър">
 <!ENTITY gft.battles.searchby.period.all "Всички">
@@ -79,6 +103,17 @@
 <!ENTITY gft.battles.buttons.previousPage.tooltip "Предишна страница">
 <!ENTITY gft.battles.buttons.nextPage.tooltip "Следваща страница">
 <!ENTITY gft.battles.buttons.lastPage.tooltip "Последна страница">
+<!ENTITY gft.battles.checkbox.advancedOptions "Разширени филтри">
+<!ENTITY gft.battles.checkbox.excludeAllies "Не показвай моите съюзниците">
+<!ENTITY gft.battles.searchby.level.between "Между">
+<!ENTITY gft.battles.searchby.level.and "и">
+<!ENTITY gft.battles.searchby.level "ниво">
+<!ENTITY gft.battles.searchby.location.title "Място">
+<!ENTITY gft.battles.searchby.location.arena "Арена">
+<!ENTITY gft.battles.searchby.location.circusTurma "Circus Turma">
+<!ENTITY gft.battles.searchby.attackType.title "Тип на атаките">
+<!ENTITY gft.battles.searchby.attackType.offense "Атака">
+<!ENTITY gft.battles.searchby.attackType.defense "Защита">
 
 <!-- GFT Statusbar XUL -->
 <!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Кликни с ляв бутон за да отвориш двубоите">

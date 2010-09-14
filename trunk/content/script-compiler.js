@@ -55,7 +55,6 @@ contentLoad: function(e) {
 
 	var unsafeLoc=new XPCNativeWrapper(unsafeWin, "location").location;
 	var href=new XPCNativeWrapper(unsafeLoc, "href").href;
-
 	if (
 		GFT.gmCompiler.isGreasemonkeyable(href)
 		&& (( /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=player&p=\d+&sh=.*/.test(href) )
@@ -95,16 +94,20 @@ injectScript: function(script, url, unsafeContentWin) {
 	sandbox.GM_setValue=GFT.gmCompiler.hitch(storage, "setValue");
 	sandbox.GM_getValue=GFT.gmCompiler.hitch(storage, "getValue");
 	var ppc = new GFT.PlayerPageContent();
-	sandbox.GM_getContent=GFT.gmCompiler.hitch(ppc, "getContent");
+	sandbox.GM_getEnemyStats=GFT.gmCompiler.hitch(ppc, "getEnemyStats");
 	sandbox.GM_getMyStats=GFT.gmCompiler.hitch(ppc, "getMyStats");
 	sandbox.GM_getString=GFT.gmCompiler.hitch(ppc, "getString");
+	sandbox.GM_getFightResponseResult=GFT.gmCompiler.hitch(ppc, "getFightResponseResult");
+	sandbox.GM_isMyAlly=GFT.gmCompiler.hitch(ppc, "isMyAlly");
+	sandbox.GM_isMyProfilePage=GFT.gmCompiler.hitch(ppc, "isMyProfilePage");
+	sandbox.GM_isLevelBashed=GFT.gmCompiler.hitch(ppc, "isLevelBashed");
 	sandbox.GM_openInTab=GFT.gmCompiler.hitch(this, "openInTab", unsafeContentWin);
 	sandbox.GM_xmlhttpRequest=GFT.gmCompiler.hitch(
 		xmlhttpRequester, "contentStartRequest"
 	);
 	//unsupported
 	sandbox.GM_registerMenuCommand=function(){};
-	sandbox.GM_log=function(){};
+	sandbox.GM_log=function(msg){GFT.Utils.console.log(msg);};
 	sandbox.GM_getResourceURL=function(){};
 	sandbox.GM_getResourceText=function(){};
 

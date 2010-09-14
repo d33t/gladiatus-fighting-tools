@@ -39,9 +39,197 @@ GFT.DBPlayerData = function(pid, name, guild, level, server, attacks, defenses, 
 	this.lastAttackTime = lastAttackTime;
 };
 
-GFT.HttpPlayerData = function(pname, pguild, plevel, hp) {
-	this.name = pname;
-	this.guild = pguild;
-	this.level = plevel;
-	this.lifepoints = hp;
+GFT.StatsView = function(attacks, goldRaised, maxGoldRaised, expRaised, battlesWon, lastAttackTime) {
+	this.attacks = attacks;
+	this.goldRaised = goldRaised;
+	this.maxGoldRaised = maxGoldRaised;
+	this.expRaised = expRaised;
+	this.battlesWon = battlesWon;
+	this.lastAttackTime = lastAttackTime;
+	this.toString = function() {
+		return "Attacks: " + this.attacks + " (won " + this.battleWon + ")"
+			+ "\nGold raised: " + this.goldRaised
+			+ "\nMax gold: " + this.maxGoldRaised
+			+ "\nExp raised: " + this.expRaised
+			+ "\nLast attack: " + (this.lastAttackTime ? GFT.Utils.unixtimeToHumanReadable(this.lastAttackTime) : "none");
+	};
+};
+
+GFT.ResultSet = function() {
+	var results = new Array();
+	
+	var getSafeResult = function(value, defaultValue) {
+		return ((typeof(value) == "undefined" || value == null) ? defaultValue : value);
+	};
+	
+	this.add = function(value, defaultValue) {
+		if(typeof(defaultValue) != "undefined") {
+			value = getSafeResult(value, defaultValue);
+		}
+		results.push(value);
+	};
+	
+	this.addById = function(id, value, defaultValue) {
+		if(typeof(defaultValue) != "undefined") {
+			value = getSafeResult(value, defaultValue);
+		}
+		results[id] = value;
+	};
+
+	this.get = function(index) {
+		if(index < 0 || index > results.length) {
+			throw "Wrong index. No object at index: " + index;
+		}
+		
+		return results[index];
+	};
+	
+	this.getById = function(id, defaultValue) {
+		if(typeof(results[id]) == "undefined" && typeof(defaultValue) != "undefined") {
+			return defaultValue;
+		}
+		if(typeof(results[id]) == "undefined") {
+			throw "Wrong identifier: " + id + ", data: " + results;
+		}
+		
+		return results[id];
+	};
+	
+	this.isEmpty = function() {
+		return results.length == 0;
+	};
+	
+	this.clear = function() {
+		results = new Array();
+	};
+	
+	this.getResults = function() {
+		return results;
+	};
+	
+	this.size = function() {
+		return results.length;
+	};
+	
+	this.uniqueResult = function() {
+		if(this.size() != 1) {
+			throw "Expected unique result but got " + this.size() + " results.";
+		}
+		return this.get(0);
+	};
+	
+	this.uniqueResultOrNull = function() {
+		if(this.size() > 1) {
+			throw "Expected unique result but got " + this.size() + " results.";
+		} else if(this.size() == 0) {
+			return null;
+		} else {
+			return this.get(0);
+		}
+	};	
+};
+
+GFT.ElementPath = function(elName, xpath, alternativeXPath, regExp) {
+	var name = elName; //used for better exception handling
+	var xpath1 = xpath;
+	var xpath2 = alternativeXPath || xpath;
+	var verifyRegExp = regExp || null;
+	
+	this.getName = function() {
+		return name;
+	};
+	
+	this.getXpath = function() {
+		return xpath1;
+	};
+	
+	this.getAlternativeXpath = function() {
+		return xpath2;
+	};
+	
+	this.getRegExp = function() {
+		return verifyRegExp;
+	};
+};
+
+GFT.Gladiator = function() {
+	var id = -1;	
+	var name;
+	var guild = GFT.Constants.DEFAULT_GUILD;
+	var level;
+
+	this.setName = function(gName) { name = gName; };
+	this.getName = function() { return name; };
+	
+	this.setId = function(gId) { id = parseInt(gId); };
+	this.getId = function() { return id; };
+		
+	this.setGuild = function(gGuild) { guild = gGuild; };
+	this.getGuild = function() { return guild; };
+		
+	this.setLevel = function(gLevel) { level = parseInt(gLevel); };
+	this.getLevel = function() { return level; };
+	
+	this.toString = function() {
+		return name + (id ? " [" + id + "]" : "")
+			+ (level ? ",Level: " + level : "")
+			+ (guild ? ",Guild: " + guild : "");	
+	};
+};
+
+GFT.BattleReport = function(reportType) {
+	var db = GFT.Globals.Database;
+	var arenaReport = reportType;
+	var server = GFT.Utils.getServer();
+	var myPid = db.getMyPid(server);
+	var myName = db.getMyName(server);
+	var repId;
+	var attacker;
+	var defender;
+	var battleTime;
+	var raisedGold = 0;
+	var raisedExp = 0;
+	/** winner could be id or name */
+	var winner;
+	
+	this.isArenaReport = function() { return arenaReport; };
+	
+	this.getServer = function() { return server; };
+	
+	this.getMyPid = function() { return myPid; };
+	
+	this.getMyName = function() { return myName; };
+	
+	this.setRepId = function(id) { repId = parseInt(id); };
+	this.getRepId = function() { return repId; };
+
+	this.setAttacker = function(gladiator) { attacker = gladiator; };
+	this.getAttacker = function() { return attacker; };
+	
+	this.setDefender = function(gladiator) { defender = gladiator; };
+	this.getDefender = function() {	return defender; };
+		
+	this.setBattleTime = function(unixtime) { battleTime = unixtime; };
+	this.getBattleTime = function() { return battleTime; };
+		
+	this.setRaisedGold = function(gold) { raisedGold = parseInt(gold); };
+	this.getRaisedGold = function() { return raisedGold; };
+		
+	this.setRaisedExp = function(exp) { raisedExp = parseInt(exp); };
+	this.getRaisedExp = function() { return raisedExp; };
+		
+	this.setWinner = function(value) { winner = value; };
+	this.getWinner = function() { return winner; };
+
+	this.toString = function() {
+		return (arenaReport ? "Arena" : "Circus Turma") + " report <" + repId + ">"
+				+ "\nAttacker: " + attacker.toString()
+				+ "\nDefender: " + defender.toString()
+				+ "\nGold: " + GFT.Utils.partitionateNumber(raisedGold)
+				+ "\nExp: " +  raisedExp
+				+ "\nWinner: " +  winner
+				+ "\nBattle time: " + battleTime + " : " + GFT.Utils.unixtimeToHumanReadable(battleTime)
+				+ "\nServer: " +  server
+				+ "\nMy pid: " +  myPid;
+	};
 };
