@@ -229,7 +229,7 @@
 							<separator class="thin"/>
 							<hbox>
 								<label constrol="search-by-server" value="&gft.battles.searchby.server;" />
-								<menulist id="searchByServer" class="search-box" oncommand="GFTOptions.apply('others');">
+								<menulist id="searchByServer" oncommand="GFTOptions.apply('others');">
 									<menupopup id="options-servers">
 										<menuitem id="allServers" label="&gft.battles.searchby.period.all;"/>				
 									</menupopup>
