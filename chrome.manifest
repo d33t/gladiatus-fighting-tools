@@ -5,6 +5,7 @@ locale gft en-US locale/en-US/
 locale gft bg-BG locale/bg-BG/
 locale gft de-DE locale/de-DE/
 locale gft fr-FR locale/fr-FR/
+locale gft es-ES locale/es-ES/
 
 skin gft classic/1.0 skin/
 style chrome://global/content/customizeToolbar.xul chrome://gft/skin/gft.css

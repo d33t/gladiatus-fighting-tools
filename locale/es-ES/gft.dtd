@@ -1,0 +1,128 @@
+﻿<!-- Common -->
+<!ENTITY gft.common.close "cerrar">
+<!ENTITY gft.common.detach "abrir en una nueva ventana">
+
+<!-- GFT Options XUL - Windows -->
+<!ENTITY gft.windows.options.title "Opciones">
+<!ENTITY gft.windows.battles.title "Batallas">
+
+<!-- GFT Options Main Tab -->
+<!ENTITY gft.options.tabs.main.title "Principal">
+<!ENTITY gft.options.tabs.main.appearance.caption "Interfaz">
+<!ENTITY gft.options.tabs.main.icon.label "Posición del icono">
+<!ENTITY gft.options.tabs.main.icon.leftPosition "izquierda">
+<!ENTITY gft.options.tabs.main.icon.rightPosition "derecha">
+<!ENTITY gft.options.tabs.main.icon.mostRightPosition "más a la derecha">
+<!ENTITY gft.options.tabs.main.icon.hide "ocultar">
+
+<!ENTITY gft.options.tabs.main.bashing.caption "Bashing">
+<!ENTITY gft.options.tabs.main.bashing.cycle "Estrategia de Bashing">
+<!ENTITY gft.options.tabs.main.bashing.firstToLast "Desde el 1er ataque al último">
+<!ENTITY gft.options.tabs.main.bashing.startOfDay "Desde el principio del día">
+<!ENTITY gft.options.tabs.main.bashing.desc "Ataques permitidos">
+<!ENTITY gft.options.tabs.main.bashing.tooltip "De acuerdo con las normas del servidor en el que juegas, introduce el nº de ataques permitidos para X días.">
+<!ENTITY gft.options.tabs.main.bashing.wordfor "Para">
+<!ENTITY gft.options.tabs.main.bashing.wordday "día">
+<!ENTITY gft.options.tabs.main.bashing.worddays "días">
+<!ENTITY gft.options.tabs.main.bashing.attacks "ataques">
+<!ENTITY gft.options.tabs.main.bashing.showBashingWarning "Mostrar advertenica de Bashing si el próximo ataque es bashing">
+<!ENTITY gft.options.tabs.main.battlesOverview.title "Vista previa de batallas">
+<!ENTITY gft.options.tabs.main.battlesOverview.showBattlePopupMenu "Activar la posibilidad de luchar directamente desde la vista previa de batallas">
+<!ENTITY gft.options.tabs.main.battlesOverview.defaultDoubleClickActionLabel "Doble click en una fila realizará el ataque">
+<!ENTITY gft.options.tabs.main.battlesOverview.collapseBattleOverlayAfterBattle "Contraer lista de batallas despues de una batalla con éxito">
+<!ENTITY gft.options.tabs.main.bashing.showLevelBashingWarning "Activar notificación de nivel-bashing">
+<!ENTITY gft.options.tabs.main.bashing.levelBashingRemoveButtons "Eliminar boton de lucha en el perfil del gladiador">
+<!ENTITY gft.options.tabs.main.bashing.levelBashingLimit "Diferencia de nivel límite permitido">
+
+<!-- GFT Options Battles Table Tab -->
+<!ENTITY gft.options.tabs.battlesTable.title "Estadísticas de batalla">
+<!ENTITY gft.options.tabs.battlesTable.desc "Marca las filas que deseas que sean mostradas por defecto en la tabla de batalla cuando la página se carga">
+<!ENTITY gft.options.tabs.battlesTable.captionOpage "Perfil del gladiador enemigo">
+<!ENTITY gft.options.tabs.battlesTable.captionPpage "Perfil de mi gladiador">
+<!ENTITY gft.options.tabs.battlesTable.todayBattles "Batallas hoy">
+<!ENTITY gft.options.tabs.battlesTable.battlesInAttacksCount "Contador de ataques">
+<!ENTITY gft.options.tabs.battlesTable.battlesInDefenceCount "Contador de defensas">
+<!ENTITY gft.options.tabs.battlesTable.goldRaised "Oro ganado">
+<!ENTITY gft.options.tabs.battlesTable.goldLost "Oro perdido">
+<!ENTITY gft.options.tabs.battlesTable.experienceRaised "Experiencia ganada">
+<!ENTITY gft.options.tabs.battlesTable.chanceForWin "Probabilidad de ganar">
+<!ENTITY gft.options.tabs.battlesTable.nextPossibleAttack "Próximo ataque posible">
+<!ENTITY gft.options.tabs.battlesTable.maxGoldRaised "Máximo oro ganado">
+<!ENTITY gft.options.tabs.battlesTable.maxGoldLost "Máximo oro perdido">
+<!ENTITY gft.options.tabs.battlesTable.realChanceForWin "Probabilidad real de ganar">
+
+<!-- GFT Options Others Tab -->
+<!ENTITY gft.options.tabs.others.title "Otros">
+<!ENTITY gft.options.tabs.others.profilepage.title "Pérfil del oponente">
+<!ENTITY gft.options.tabs.others.profilepage.showCircusTurmaButton "Mostrar bóton de batalla de circo Turma">
+<!ENTITY gft.options.tabs.others.profilepage.markMyAllies "Colorear mis aliados en verde">
+<!ENTITY gft.options.tabs.others.battleoverlay.title "Opciones por defecto en el visor de batallas">
+<!ENTITY gft.options.tabs.others.battleoverlay.advancedOptionsExpandedDefault "Expandir filtros avanzados">
+<!ENTITY gft.options.tabs.others.battleoverlay.excludeMyAlliesDefault "Excluir a mis aliados">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortColumn.title "Ordenar columnas">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.title "Ordenar dirección">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.asc "Ascentente">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.desc "Descendente">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.label "Posicionar tabla de batallas en el perfil del gladiador">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.hide "no mostrar">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.before "sobre el perfil">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.after "bajo el perfil">
+
+<!-- GFT Options Versions Tab -->
+<!ENTITY gft.options.tabs.versions.title "Versiones">
+
+<!-- BATTLES XUL -->
+<!ENTITY gft.battles.table.caption "Tabla de batallas">
+<!ENTITY gft.battles.table.name "Nombre">
+<!ENTITY gft.battles.table.guild "Alianza">
+<!ENTITY gft.battles.table.level "Nivel">
+<!ENTITY gft.battles.table.server "Servidor">
+<!ENTITY gft.battles.table.attacks "Ataques">
+<!ENTITY gft.battles.table.defenses "Defensas">
+<!ENTITY gft.battles.table.goldRaised "Oro ganado">
+<!ENTITY gft.battles.table.goldLost "Oro perdido">
+<!ENTITY gft.battles.table.maxGoldRaised "Máximo oro ganado">
+<!ENTITY gft.battles.table.maxGoldLost "Máximo oro perdido">
+<!ENTITY gft.battles.table.expRaised "Experiencia ganada">
+<!ENTITY gft.battles.table.nextpossiblefight "Próximo posible ataque">
+<!ENTITY gft.battles.searchby.name "Oponente">
+<!ENTITY gft.battles.searchby.period "Periodo de tiempo">
+<!ENTITY gft.battles.searchby.server "Servidor">
+<!ENTITY gft.battles.searchby.period.all "Todos">
+<!ENTITY gft.battles.searchby.period.oneday "Un día">
+<!ENTITY gft.battles.searchby.period.twodays "Dos días">
+<!ENTITY gft.battles.searchby.period.threedays "Tres días">
+<!ENTITY gft.battles.searchby.period.fivedays "Cinco días">
+<!ENTITY gft.battles.searchby.period.oneweek "Una semana">
+<!ENTITY gft.battles.searchby.period.onemonth "Un mes">
+<!ENTITY gft.battles.buttons.search "mostrar batallas">
+<!ENTITY gft.battles.buttons.fightOnArena "Luchar en la arena">
+<!ENTITY gft.battles.buttons.fightOnCirkusTurma "Luchar en Circo Turma">
+<!ENTITY gft.battles.buttons.showPlayerProfile "Mostrar perfil">
+<!ENTITY gft.battles.buttons.firstPage.tooltip "Primera página">
+<!ENTITY gft.battles.buttons.previousPage.tooltip "Página anterior">
+<!ENTITY gft.battles.buttons.nextPage.tooltip "Página siguiente">
+<!ENTITY gft.battles.buttons.lastPage.tooltip "Última página">
+<!ENTITY gft.battles.checkbox.advancedOptions "Filtros avanzados">
+<!ENTITY gft.battles.checkbox.excludeAllies "Excluir aliados">
+<!ENTITY gft.battles.searchby.level.between "Entre">
+<!ENTITY gft.battles.searchby.level.and "y">
+<!ENTITY gft.battles.searchby.level "nivel">
+<!ENTITY gft.battles.searchby.location.title "Lugar">
+<!ENTITY gft.battles.searchby.location.arena "Arena">
+<!ENTITY gft.battles.searchby.location.circusTurma "Circo Turma">
+<!ENTITY gft.battles.searchby.attackType.title "Tipo de batalla">
+<!ENTITY gft.battles.searchby.attackType.offense "Ataque">
+<!ENTITY gft.battles.searchby.attackType.defense "Defensa">
+
+<!-- GFT Statusbar XUL -->
+<!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Click izquierdo para abrir el interfaz de batallas">
+<!ENTITY gft.statusbar.tooltip.menu.desc.row2 "Click derecho para abrir el menu">
+<!ENTITY gft.statusbar.tooltip.atacks.sessionstart "Contar ataques desde inicio de sesion">
+<!ENTITY gft.statusbar.tooltip.atacks.startoftheday "Contar ataques desde inicio del día">
+<!ENTITY gft.statusbar.tooltip.lastopponent "Último oponente">
+<!ENTITY gft.statusbar.tooltip.lastdaybattles "Ataques desde el último día">
+<!ENTITY gft.statusbar.tooltip.nextpossiblebattletime "Hora de próximo ataque posible">
+<!ENTITY gft.statusbar.menu.options "Opciones">
+<!ENTITY gft.statusbar.menu.battles "Batallas">
+<!ENTITY gft.statusbar.menu.about "Acerca de...">
