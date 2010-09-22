@@ -1,4 +1,13 @@
 #labels Featured
+=Download and install=
+If you want to install any GFT version directly downloaded from this site ([http://code.google.com/p/gladiatus-fighting-tools/downloads/list downloads section]), then follow these steps:
+ # Download the *gft-v`*`.xpi* file to any location on your computer
+ # Drag and drop the above file to the mozilla firefox browser
+ # Restart your browser
+or
+ # Start downloading the *gft-v`*`.xpi* file and then choose open with mozilla firefox.
+ # Restart your browser
+
 =Locale translation=
 The locale files for the current version can be found in the [http://code.google.com/p/gladiatus-fighting-tools/downloads/list download section]. Download and extract the archive to any location on your computer. Within the archive you can find 3 files, which you can open with your prefered editor (e.g. notepad++) and than you can translate the entities inside them.
 ==Examples==
