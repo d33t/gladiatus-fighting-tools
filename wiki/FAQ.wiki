@@ -5,13 +5,13 @@ The locale files for the current version can be found in the [http://code.google
 The _first file type_ has the form: *somefile.properties*. Every row in the content of this file has the structure *entity=translation value*
 
 _Example_:
-my.entity=My translation text
+{{{my.entity=My translation text}}}
 
 To translate the above row, you have to translate only the text on the right side (*My translation text*), you *should not* translate my.entity!
 
 The _second file type_ has the form: *somefile.dtd*. Every row in the content of this file has the structure *<!ENTITY gft.something "Translation value">*
 
 _Example_:
-<!ENTITY gft.something "My translation text">
+{{{<!ENTITY gft.something "My translation text">}}}
 
 To translate the above row, you have to translate only *"My translation text"*, but nothing else.
