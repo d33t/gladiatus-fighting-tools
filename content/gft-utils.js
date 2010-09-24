@@ -279,19 +279,21 @@ GFT.Utils = {
 		var workPageRedirect = /document\.location\.href=\"index\.php\?mod=work&sh.*/.test(response);
 		var foundBashText = /bashtext/i.test(response);
 		var notLoggedIn = /document\.location\.href=document\.location\.href;/i.test(response);
+		var jsInjection = /javascript/.test(response);
+		
 		var ret = {success: false, msg: ""};
 		
-		if(notLoggedIn) { //not logged in	
+		if(jsInjection) {
+			ret.msg = "Possible security violation. Server is not supposed to return any javascript";
+		} else if(notLoggedIn) { //not logged in	
 			ret.msg = this.getString("notLoggedInOrNoSuchNameWarning");
-		} 
-		else if(workPageRedirect) { // the gladiator is working
+		} else if(workPageRedirect) { // the gladiator is working
 			ret.msg = this.getString("workingInTheStableWarning");
 		} else if(response == "") { // cooldown not finished
 			ret.msg = this.getString("cooldownWarning");
 		} else if(errorPage){ // the opponent has fight recently
 			ret.msg = this.getString("restingOrNotEnoughGoldWarning");
-		}
-		else if(foundBashText) { // the gladiator is about to bash the opponent
+		} else if(foundBashText) { // the gladiator is about to bash the opponent
 			ret.msg = this.getString("aboutToBashWarning");
 		} else { // battle was successful
 			ret.success = true;
@@ -299,6 +301,17 @@ GFT.Utils = {
 		}
 		
 		return ret;
+	},
+	
+	getFightResponseUrl: function(server, responseDetails) {
+		/*this.console.debug("[utils.getFightResponseUrl] Server: " + server + "\nResponse: " + responseDetails.responseText);
+		var relativeUrlRegExp = /'(index\.php\?mod=report&beid=\d+.*)'/g;
+		var result = relativeUrlRegExp.exec(responseDetails.responseText);
+		if(result && result[1] != null) {
+			return GFT.Constants.HTTP_PROTOCOL + server + "/game/" + result[1];
+		}*/
+		var response = this.trim(responseDetails.responseText).split("'");
+		return GFT.Constants.HTTP_PROTOCOL + server + "/game/" + response[1];
 	},
 	
 	showWarning: function(msg, append) {

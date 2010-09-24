@@ -105,9 +105,11 @@ injectScript: function(script, url, unsafeContentWin) {
 	sandbox.GM_xmlhttpRequest=GFT.gmCompiler.hitch(
 		xmlhttpRequester, "contentStartRequest"
 	);
+	sandbox.GM_getFightResponseUrl=GFT.Utils.getFightResponseUrl;
+	sandbox.GM_log=GFT.Utils.console.log;
+	
 	//unsupported
 	sandbox.GM_registerMenuCommand=function(){};
-	sandbox.GM_log=function(msg){GFT.Utils.console.log(msg);};
 	sandbox.GM_getResourceURL=function(){};
 	sandbox.GM_getResourceText=function(){};
 

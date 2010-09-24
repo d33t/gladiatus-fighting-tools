@@ -191,7 +191,7 @@ GFT.Inject = (function(){
 			doc.getElementById("errorRow").style.visibility = "visible";
 			doc.getElementById("errorText").innerHTML = result.msg;
 		} else {
-			eval(responseDetails.responseText);
+			doc.location.href = GM_getFightResponseUrl(doc.domain + "", responseDetails);
 		}
 	}
 	
