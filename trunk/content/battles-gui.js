@@ -39,7 +39,6 @@ GFT.Battles = (function() {
 	var opponentsStore = null;
 	var lastOrderBy = "name";
 	var lastSortDirection = "asc";
-	const HTTP_PROTOCOL = "http://";
 	const ROWS_PER_PAGE = 20;
 	var currentPage = 0;
 	var infoTimeOut = -1;
@@ -338,15 +337,15 @@ GFT.Battles = (function() {
 	function getFightUrl(pid, name, server, isArena) {
 		if(pid > 0) {
 			if(isArena) {
-				return HTTP_PROTOCOL + server + "/game/ajax/doArenaFight.php?did=" + pid + "&a=" + utils.getTime();
+				return GFT.Constants.HTTP_PROTOCOL + server + "/game/ajax/doArenaFight.php?did=" + pid + "&a=" + utils.getTime();
 			} else {
-				return HTTP_PROTOCOL + server + "/game/ajax/doGroupFight.php?did=" + pid + "&a=" + utils.getTime();
+				return GFT.Constants.HTTP_PROTOCOL + server + "/game/ajax/doGroupFight.php?did=" + pid + "&a=" + utils.getTime();
 			}
 		} else {
 			if(isArena) {
-				return HTTP_PROTOCOL + server + "/game/ajax/doArenaFight.php?dname=" + encodeURIComponent(name) + "&a=" + utils.getTime();
+				return GFT.Constants.HTTP_PROTOCOL + server + "/game/ajax/doArenaFight.php?dname=" + encodeURIComponent(name) + "&a=" + utils.getTime();
 			} else {
-				return HTTP_PROTOCOL + server + "/game/ajax/doGroupFight.php?dname=" + encodeURIComponent(name) + "&a=" + utils.getTime();
+				return GFT.Constants.HTTP_PROTOCOL + server + "/game/ajax/doGroupFight.php?dname=" + encodeURIComponent(name) + "&a=" + utils.getTime();
 			}
 		}
 	}
@@ -370,9 +369,7 @@ GFT.Battles = (function() {
 		
 		if(result.success) { //success
 			battleLog.setAttribute("class", "battlelog-success");
-			var response = responseDetails.responseText;
-			response = response.split("'");
-			var url = HTTP_PROTOCOL + server + "/game/" + utils.trim(response[1]);
+			var url = utils.getFightResponseUrl(server, responseDetails);
 			if(server != utils.getServer()) {
 				utils.loadUrl(url, true);
 			} else {
@@ -457,7 +454,7 @@ GFT.Battles = (function() {
 	}
 	
 	function showProfile(pid, server) {
-		var url = HTTP_PROTOCOL + server + "/game/index.php?mod=player&p=" + pid + "&sh=" + prefMan.getValue("secureHash." + server, "");
+		var url = GFT.Constants.HTTP_PROTOCOL + server + "/game/index.php?mod=player&p=" + pid + "&sh=" + prefMan.getValue("secureHash." + server, "");
 		if(server != utils.getServer()) {
 			utils.loadUrl(url, true);
 		} else {
