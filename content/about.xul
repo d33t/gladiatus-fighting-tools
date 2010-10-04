@@ -7,7 +7,7 @@
 	autostretch="never"
 	class="about-window"
 	width="435px"
-	height="620px"
+	height="640px"
 	persist="width height"
 	buttons="accept" 
 	onload="GFTVersions.init();"
@@ -42,6 +42,7 @@
 		<text value="&gft.about.translators;" style="font-weight: bold;"/>
 		<text value="Sébastien BAILLY (French translation)"/>
 		<text value="Anonymous (Spanish translation)"/>
+		<text value="Harrie Nack (Dutch translation)"/>
 		<html:hr style="margin:15px 0 15px 0;"/>
 		<hbox align="right">
 			<menulist id="versionsmenu" oncommand="GFTVersions.changeVersion();">

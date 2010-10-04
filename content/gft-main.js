@@ -128,7 +128,7 @@ GFT.Main = (function(){
 	            	break;
 	            }
 	            default: {
-	                throw "Invalid icon position";
+	                throw new Error("Invalid icon position");
 	            }
 	        }
 	        if(element) {
@@ -280,13 +280,13 @@ GFT.Main = (function(){
 			nodesSnapshot = evaluateXPath(xObj.getXpath());
 			ret = verifyResult(nodesSnapshot, expectedResultLength, nullable, xObj.getRegExp());
 			if(!ret) {
-				throw xObj.getName() + " cannot be parsed.\nXPath \"" + xObj.getXpath() + "\" is invalid.";
+				throw new Error(xObj.getName() + " cannot be parsed.\nXPath \"" + xObj.getXpath() + "\" is invalid.");
 			}
 		} catch(ex1) {
 			nodesSnapshot = evaluateXPath(xObj.getAlternativeXpath());
 			ret = verifyResult(nodesSnapshot, expectedResultLength, nullable, xObj.getRegExp());
 			if(!ret) {
-				throw ex1 + "\nAlternative XPath \"" + xObj.getAlternativeXpath() + "\" is invalid also.";
+				throw new Error(ex1 + "\nAlternative XPath \"" + xObj.getAlternativeXpath() + "\" is invalid also.");
 			}			
 		}
 		return ret;
@@ -415,8 +415,7 @@ GFT.Main = (function(){
 	
 	function parseCircusTurmaReport() {
 		try {
-			var circusTurmaReport = new GFT.BattleReport(false);
-			
+			var circusTurmaReport = new GFT.BattleReport(false);	
 			circusTurmaReport.setRepId(utils.getRepIdFromUrl(utils.getBrowser().location + ""));
 
 			// if report already exists no need to parse it again
@@ -441,7 +440,6 @@ GFT.Main = (function(){
 			
 			circusTurmaReport.setAttacker(attacker);
 			circusTurmaReport.setDefender(defender);
-			
 			// who is the winner ? 
 			snapshotItems = getNodeContent(CIRCUS_XPATHS.WINNER, 1, true);
 			circusTurmaReport.setWinner(trim(snapshotItems[0].textContent.split(" ")[1]));

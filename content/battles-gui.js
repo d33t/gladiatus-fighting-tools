@@ -69,73 +69,73 @@ GFT.Battles = (function() {
 			case "name": { 
 				orderByName = !orderByName;
 				orderByName ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("name", orderDirection);
+				search("rName", orderDirection);
 				break;
 				}
 			case "guild": { 
 				orderByGuild = !orderByGuild;
 				orderByGuild ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("guild", orderDirection);
+				search("rGuild", orderDirection);
 				break;
 				}
 			case "level": { 
 				orderByLevel = !orderByLevel;
 				orderByLevel ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("level", orderDirection);
+				search("rLevel", orderDirection);
 				break;
 			}
 			case "server": { 
 				orderByServer = !orderByServer;
 				orderByServer ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("server", orderDirection);
+				search("rServer", orderDirection);
 				break;
 			}
 			case "attacks": { 
 				orderByAttacks = !orderByAttacks;
 				orderByAttacks ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("a.attacks", orderDirection);
+				search("rAttacks", orderDirection);
 				break;
 			}
 			case "defenses": { 
 				orderByDefenses = !orderByDefenses;
 				orderByDefenses ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("d.defenses", orderDirection);
+				search("rDefenses", orderDirection);
 				break;
 			}
 			case "goldRaised": { 
 				orderByGoldRaised = !orderByGoldRaised;
 				orderByGoldRaised ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("a.goldRaised", orderDirection);
+				search("rGoldRaised", orderDirection);
 				break;
 			}
 			case "goldLost": { 
 				orderByGoldLost = !orderByGoldLost;
 				orderByGoldLost ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("d.goldLost", orderDirection);
+				search("rGoldLost", orderDirection);
 				break;
 			}
 			case "maxGoldRaised": { 
 				orderByMaxGoldRaised = !orderByMaxGoldRaised;
 				orderByMaxGoldRaised ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("a.maxGoldRaised", orderDirection);
+				search("rMaxGoldRaised", orderDirection);
 				break;
 			}
 			case "maxGoldLost": { 
 				orderByMaxGoldLost = !orderByMaxGoldLost;
 				orderByMaxGoldLost ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("d.maxGoldLost", orderDirection);
+				search("rMaxGoldLost", orderDirection);
 				break;
 			}
 			case "expRaised": { 
 				orderByExpRaised = !orderByExpRaised;
 				orderByExpRaised ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("a.expRaised", orderDirection);
+				search("rExpRaised", orderDirection);
 				break;
 			}
 			case "lastAttackTime": { 
 				orderByLastAttack = !orderByLastAttack;
 				orderByLastAttack ? orderDirection = "asc" : orderDirection = "desc"; 
-				search("a.lastAttackTime", orderDirection);
+				search("rLastAttackTime", orderDirection);
 				break;
 			}
 			default: console.log("nothing clicked"); break;
