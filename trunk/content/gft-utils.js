@@ -106,6 +106,7 @@ GFT.Utils = {
 	},
 	
 	trim: function(str, chars) {
+		if(typeof(str) == "undefined" || !str) { return str; }
 		chars = chars || "\\s";
 		str = str.replace(new RegExp("[" + chars + "]+$", "g"), "");
 		return str.replace(new RegExp("^[" + chars + "]+", "g"), "");
@@ -124,7 +125,7 @@ GFT.Utils = {
 		url.match(pidRegEx);
 		var pid = RegExp.$1;
 		if(!pid) {
-			throw "Error[getRepIdFromUrl()]: Cannot parse pid from url:\n " +  url;
+			throw new Error("Error[getRepIdFromUrl()]: Cannot parse pid from url:\n " +  url);
 		}
 		
 		return pid;
@@ -135,7 +136,7 @@ GFT.Utils = {
 		url.match(repidRegEx);
 		var repid = RegExp.$1;
 		if(!repid) {
-			throw "Error[getRepIdFromUrl()]: Cannot parse repId from url:\n " +  url;
+			throw new Error("Error[getRepIdFromUrl()]: Cannot parse repId from url:\n " +  url);
 		}
 		
 		return repid;
@@ -348,10 +349,15 @@ GFT.Utils = {
 			msg += this.getString("exceptionMessage") + ": " + message;
 		}
 		if(exception) {
+			var exDetails = "";
+			for (var prop in exception) { 
+			   exDetails += prop + ": " + exception[prop] + "\n";
+			}
+			
 			if(msg != "") {
 				msg += "\n";
 			}
-			msg += "Exception: " + exception;
+			msg += "Exception caused by " + exception.toString() + "\n" + exDetails;
 		}
 		if(log) {
 			this.console.error(msg);

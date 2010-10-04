@@ -78,7 +78,7 @@ GFT.ResultSet = function() {
 
 	this.get = function(index) {
 		if(index < 0 || index > results.length) {
-			throw "Wrong index. No object at index: " + index;
+			throw new Error("Wrong index. No object at index: " + index);
 		}
 		
 		return results[index];
@@ -89,7 +89,7 @@ GFT.ResultSet = function() {
 			return defaultValue;
 		}
 		if(typeof(results[id]) == "undefined") {
-			throw "Wrong identifier: " + id + ", data: " + results;
+			throw new Error("Wrong identifier: " + id + ", data: " + results);
 		}
 		
 		return results[id];
@@ -113,14 +113,14 @@ GFT.ResultSet = function() {
 	
 	this.uniqueResult = function() {
 		if(this.size() != 1) {
-			throw "Expected unique result but got " + this.size() + " results.";
+			throw new Error("Expected unique result but got " + this.size() + " results.");
 		}
 		return this.get(0);
 	};
 	
 	this.uniqueResultOrNull = function() {
 		if(this.size() > 1) {
-			throw "Expected unique result but got " + this.size() + " results.";
+			throw new Error("Expected unique result but got " + this.size() + " results.");
 		} else if(this.size() == 0) {
 			return null;
 		} else {

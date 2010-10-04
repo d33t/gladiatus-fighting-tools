@@ -278,7 +278,7 @@ GFT.DB = function(){
 			oStatement.reset();
 			var apid = getGladiatorId(gladiator, server);
 			if(apid < 0) {
-				throw "Error occurs while trying to insert player data.";
+				throw new Error("Error occurs while trying to insert player data.");
 			}			
 			return apid;
 		} catch (e) {utils.reportError("Could not insert player data\nServer: " + server + ", Player: " + gladiator.toString(), e);}
@@ -357,7 +357,7 @@ GFT.DB = function(){
 	
 	var checkConnection = function() {
 		if (!dbConn) {
-			throw "No connection to the database! Please restart your browser!";
+			throw new Error("No connection to the database! Please restart your browser!");
 		}
 	};
 	
@@ -467,7 +467,7 @@ GFT.DB = function(){
 			if(oid < 0) {
 				oid = insertPlayer(report.getServer(), gladiator);
 				if(oid < 0) {
-					throw "Cannot insert battle. Opponent doesn't exists in the database!";
+					throw new Error("Cannot insert battle. Opponent doesn't exists in the database!");
 				}
 			}
 			
@@ -494,7 +494,7 @@ GFT.DB = function(){
 					deleteLastBattle(battleid);
 				}
 			} else {
-				throw "Battle report cannot be inserted.\nPlease try to open the battle report again or report this error!";
+				throw new Error("Battle report cannot be inserted.\nPlease try to open the battle report again or report this error!");
 			}
 			return ret;
 		} catch (e) {utils.reportError("Could not insert battle log", e); return false;}
@@ -1025,7 +1025,7 @@ GFT.DB = function(){
 			query1 += " and a.server = '" + server + "'";
 			query2 += " and d.server = '" + server + "'";		
 		}
-		var orderByClause = " order by " + ((orderBy.indexOf("a.") > 0 ||  orderBy.indexOf("d.") > 0) ? orderBy: 'a.' + orderBy) + " " + orderDirection; 
+		var orderByClause = " order by " + orderBy + " " + orderDirection; 
 		
 		var query =  query2 + " UNION " + query1;
 		

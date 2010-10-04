@@ -1,0 +1,128 @@
+﻿<!-- Common -->
+<!ENTITY gft.common.close "sluiten">
+<!ENTITY gft.common.detach "openen in nieuw venster">
+
+<!-- GFT Options XUL - Windows -->
+<!ENTITY gft.windows.options.title "Opties">
+<!ENTITY gft.windows.battles.title "Gevechten">
+
+<!-- GFT Options Main Tab -->
+<!ENTITY gft.options.tabs.main.title "Hoofd">
+<!ENTITY gft.options.tabs.main.appearance.caption "Interface">
+<!ENTITY gft.options.tabs.main.icon.label "Icon positie">
+<!ENTITY gft.options.tabs.main.icon.leftPosition "links">
+<!ENTITY gft.options.tabs.main.icon.rightPosition "rechts">
+<!ENTITY gft.options.tabs.main.icon.mostRightPosition "helemaal rechts">
+<!ENTITY gft.options.tabs.main.icon.hide "verbergen">
+
+<!ENTITY gft.options.tabs.main.bashing.caption "Bashing">
+<!ENTITY gft.options.tabs.main.bashing.cycle "Bashing strategie">
+<!ENTITY gft.options.tabs.main.bashing.firstToLast "van eerste tot laatste">
+<!ENTITY gft.options.tabs.main.bashing.startOfDay "vanaf start van de dag">
+<!ENTITY gft.options.tabs.main.bashing.desc "Aanvallen toegestaan">
+<!ENTITY gft.options.tabs.main.bashing.tooltip "Vul het aantal aanvallen in dat je, volgende de regels op jouw server, mag doen per X dagen.">
+<!ENTITY gft.options.tabs.main.bashing.wordfor "Voor">
+<!ENTITY gft.options.tabs.main.bashing.wordday "dag">
+<!ENTITY gft.options.tabs.main.bashing.worddays "dagen">
+<!ENTITY gft.options.tabs.main.bashing.attacks "aanvallen">
+<!ENTITY gft.options.tabs.main.bashing.showBashingWarning "Toon bashing waarschuwin als de volgende aanval bashing zal zijn">
+<!ENTITY gft.options.tabs.main.battlesOverview.title "Gevechten overzicht">
+<!ENTITY gft.options.tabs.main.battlesOverview.showBattlePopupMenu "Zet de mogelijkheid aan om direct vanuit het gevechtenoverzicht aan te vallen">
+<!ENTITY gft.options.tabs.main.battlesOverview.defaultDoubleClickActionLabel "Begin een gevecht direct door op een rij te dubbelklikken">
+<!ENTITY gft.options.tabs.main.battlesOverview.collapseBattleOverlayAfterBattle "Gevecht overzicht inklappen na succesvolle aanval">
+<!ENTITY gft.options.tabs.main.bashing.showLevelBashingWarning "Level-bashing notificatie aanzetten">
+<!ENTITY gft.options.tabs.main.bashing.levelBashingRemoveButtons "Verwijder gechtsknoppen op gladiator profiel pagina">
+<!ENTITY gft.options.tabs.main.bashing.levelBashingLimit "Toegestane level limiet">
+
+<!-- GFT Options Battles Table Tab -->
+<!ENTITY gft.options.tabs.battlesTable.title "Gevechts statisieken">
+<!ENTITY gft.options.tabs.battlesTable.desc "Markeer de rijen, welke je standaard wilt zien op het gechtstabblad, als de pagina laadt.">
+<!ENTITY gft.options.tabs.battlesTable.captionOpage "Profiel pagina van de tegenstander">
+<!ENTITY gft.options.tabs.battlesTable.captionPpage "Mijn gladiator pagina">
+<!ENTITY gft.options.tabs.battlesTable.todayBattles "Gevechten vandaag">
+<!ENTITY gft.options.tabs.battlesTable.battlesInAttacksCount "Aanvallen totaal">
+<!ENTITY gft.options.tabs.battlesTable.battlesInDefenceCount "Verdedigingen totaal">
+<!ENTITY gft.options.tabs.battlesTable.goldRaised "Goud geroofd">
+<!ENTITY gft.options.tabs.battlesTable.goldLost "Goud verloren">
+<!ENTITY gft.options.tabs.battlesTable.experienceRaised "Ervaring verdiend">
+<!ENTITY gft.options.tabs.battlesTable.chanceForWin "Kans om te winnen">
+<!ENTITY gft.options.tabs.battlesTable.nextPossibleAttack "Volgende gevecht mogelijk op">
+<!ENTITY gft.options.tabs.battlesTable.maxGoldRaised "Max goud geroofd">
+<!ENTITY gft.options.tabs.battlesTable.maxGoldLost "Max goud verloren">
+<!ENTITY gft.options.tabs.battlesTable.realChanceForWin "Echte kans om te winnen">
+
+<!-- GFT Options Others Tab -->
+<!ENTITY gft.options.tabs.others.title "Anderen">
+<!ENTITY gft.options.tabs.others.profilepage.title "Profiel pagina van de tegenstander">
+<!ENTITY gft.options.tabs.others.profilepage.showCircusTurmaButton "Toon circus turma gevechtsknop">
+<!ENTITY gft.options.tabs.others.profilepage.markMyAllies "Toon mijn vrienden in groen">
+<!ENTITY gft.options.tabs.others.battleoverlay.title "Gevechten overzicht standaard opties">
+<!ENTITY gft.options.tabs.others.battleoverlay.advancedOptionsExpandedDefault "Vergroot geavanceerde filters">
+<!ENTITY gft.options.tabs.others.battleoverlay.excludeMyAlliesDefault "Toon mijn vrienden niet">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortColumn.title "Sorteer kolom">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.title "Sorteer volgorde">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.asc "Oplopend">
+<!ENTITY gft.options.tabs.others.battleoverlay.defaultSortDirection.desc "Aflopend">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.label "Plaats gevechtstabel op gladiator pagina">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.hide "niet tonen">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.before "boven profiel">
+<!ENTITY gft.options.tabs.others.battlesTablePosition.after "onder profiel">
+
+<!-- GFT Options Versions Tab -->
+<!ENTITY gft.options.tabs.versions.title "Versies">
+
+<!-- BATTLES XUL -->
+<!ENTITY gft.battles.table.caption "Gevechten tabel">
+<!ENTITY gft.battles.table.name "Naam">
+<!ENTITY gft.battles.table.guild "Gilde">
+<!ENTITY gft.battles.table.level "Level">
+<!ENTITY gft.battles.table.server "Server">
+<!ENTITY gft.battles.table.attacks "Aanvallen">
+<!ENTITY gft.battles.table.defenses "Verdedigingen">
+<!ENTITY gft.battles.table.goldRaised "Goud geroofd">
+<!ENTITY gft.battles.table.goldLost "Goud verloren">
+<!ENTITY gft.battles.table.maxGoldRaised "Max goud geroofd">
+<!ENTITY gft.battles.table.maxGoldLost "Max goud verloren">
+<!ENTITY gft.battles.table.expRaised "Ervaring verdiend">
+<!ENTITY gft.battles.table.nextpossiblefight "Volgende gevecht mogelijk op">
+<!ENTITY gft.battles.searchby.name "Tegenstander">
+<!ENTITY gft.battles.searchby.period "Tijd periode">
+<!ENTITY gft.battles.searchby.server "Server">
+<!ENTITY gft.battles.searchby.period.all "Alles">
+<!ENTITY gft.battles.searchby.period.oneday "Eén dag">
+<!ENTITY gft.battles.searchby.period.twodays "Twee dagen">
+<!ENTITY gft.battles.searchby.period.threedays "Drie dagen">
+<!ENTITY gft.battles.searchby.period.fivedays "Vijf dagen">
+<!ENTITY gft.battles.searchby.period.oneweek "Eén week">
+<!ENTITY gft.battles.searchby.period.onemonth "Eén maand">
+<!ENTITY gft.battles.buttons.search "Toon gevechten">
+<!ENTITY gft.battles.buttons.fightOnArena "Gevechten in arena">
+<!ENTITY gft.battles.buttons.fightOnCirkusTurma "Gevechten in cirkus turma">
+<!ENTITY gft.battles.buttons.showPlayerProfile "Toon profiel">
+<!ENTITY gft.battles.buttons.firstPage.tooltip "Eerste pagina">
+<!ENTITY gft.battles.buttons.previousPage.tooltip "Vorigen pagina">
+<!ENTITY gft.battles.buttons.nextPage.tooltip "Volgende pagina">
+<!ENTITY gft.battles.buttons.lastPage.tooltip "Laatste pagina">
+<!ENTITY gft.battles.checkbox.advancedOptions "Geavanceerde filters">
+<!ENTITY gft.battles.checkbox.excludeAllies "Toon mijTussenBetween">
+<!ENTITY gft.battles.searchby.level.between "Mellem">
+<!ENTITY gft.battles.searchby.level.and "en">
+<!ENTITY gft.battles.searchby.level "level">
+<!ENTITY gft.battles.searchby.location.title "Locatie">
+<!ENTITY gft.battles.searchby.location.arena "Arena">
+<!ENTITY gft.battles.searchby.location.circusTurma "Circus Turma">
+<!ENTITY gft.battles.searchby.attackType.title "Aanval type">
+<!ENTITY gft.battles.searchby.attackType.offense "Aanval">
+<!ENTITY gft.battles.searchby.attackType.defense "Verdediging">
+
+<!-- GFT Statusbar XUL -->
+<!ENTITY gft.statusbar.tooltip.menu.desc.row1 "Klik met de linker muisknop om de gevechtsinterface te openen">
+<!ENTITY gft.statusbar.tooltip.menu.desc.row2 "Klik met de rechter muisknop om het menu te openen">
+<!ENTITY gft.statusbar.tooltip.atacks.sessionstart "Aantal aanvallen sinds begin van de sessie">
+<!ENTITY gft.statusbar.tooltip.atacks.startoftheday "Aantal aanvallen sinds begin van de dag">
+<!ENTITY gft.statusbar.tooltip.lastopponent "Laatste tegenstander">
+<!ENTITY gft.statusbar.tooltip.lastdaybattles "Aanvallen op de laatste dag">
+<!ENTITY gft.statusbar.tooltip.nextpossiblebattletime "Eerstvolgend mogelijke aanvalstijd">
+<!ENTITY gft.statusbar.menu.options "Opties">
+<!ENTITY gft.statusbar.menu.battles "Gevechten">
+<!ENTITY gft.statusbar.menu.about "Over">
