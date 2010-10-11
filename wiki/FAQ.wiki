@@ -1,5 +1,5 @@
 #labels Featured
-=Download and install=
+==Download and install==
 If you want to install any GFT version directly downloaded from this site ([http://code.google.com/p/gladiatus-fighting-tools/downloads/list downloads section]), then follow these steps:
  # Download the *gft-v`*`.xpi* file to any location on your computer
  # Drag and drop the above file to the mozilla firefox browser
@@ -8,9 +8,19 @@ or
  # Start downloading the *gft-v`*`.xpi* file and then choose open with mozilla firefox.
  # Restart your browser
 
-=Locale translation=
+==Transfer GFT internal database to other computer/firefox profile==
+The steps below are to apply for windows xp, among other operational systems should be similar
+ # Open windows explorer and navigate to C:\Documents and Settings\<user profile>\Application Data\Mozilla\Firefox\Profiles\<mozilla profile>
+ # Copy gft.sqlite file
+ # Repeat step one on the computer/firefox profile, where you want to move the database
+ # Paste the file above
+ # Restart your firefox browser
+
+Note: replace <user profile> with your windows username and <mozilla profile> with the name of your firefox profile, where you have installed GFT (if you are not using more than one profile, than the profile is called XXXX.default, where XXXX is some random value)
+
+==Locale translation==
 The locale files for the current version can be found in the [http://code.google.com/p/gladiatus-fighting-tools/downloads/list download section]. Download and extract the archive to any location on your computer. Within the archive you can find 3 files, which you can open with your prefered editor (e.g. notepad++) and than you can translate the entities inside them.
-==Examples==
+===Examples===
 The _first file type_ has the form: *somefile.properties*. Every row in the content of this file has the structure *entity=translation value*
 
 _Example_:
