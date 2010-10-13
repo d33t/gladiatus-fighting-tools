@@ -62,79 +62,83 @@ GFT.Battles = (function() {
 		document.getElementById("search-by-level-low").value = prefMan.getValue("options.tabs.others.searchByLowLevelDefault", "");
 	}
 	
+	function getOrderDirection(orderByType) {
+		return orderByType ? "asc" : "desc"; 
+	}
+	
 	function sortBy(type) {
 		var orderDirection = "asc";
 		switch (type)
 		{
 			case "name": { 
 				orderByName = !orderByName;
-				orderByName ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByName);
 				search("rName", orderDirection);
 				break;
 				}
 			case "guild": { 
 				orderByGuild = !orderByGuild;
-				orderByGuild ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByGuild);
 				search("rGuild", orderDirection);
 				break;
 				}
 			case "level": { 
 				orderByLevel = !orderByLevel;
-				orderByLevel ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByLevel);
 				search("rLevel", orderDirection);
 				break;
 			}
 			case "server": { 
 				orderByServer = !orderByServer;
-				orderByServer ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByServer);
 				search("rServer", orderDirection);
 				break;
 			}
 			case "attacks": { 
 				orderByAttacks = !orderByAttacks;
-				orderByAttacks ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByAttacks);
 				search("rAttacks", orderDirection);
 				break;
 			}
 			case "defenses": { 
 				orderByDefenses = !orderByDefenses;
-				orderByDefenses ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByDefenses);
 				search("rDefenses", orderDirection);
 				break;
 			}
 			case "goldRaised": { 
 				orderByGoldRaised = !orderByGoldRaised;
-				orderByGoldRaised ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByGoldRaised);
 				search("rGoldRaised", orderDirection);
 				break;
 			}
 			case "goldLost": { 
 				orderByGoldLost = !orderByGoldLost;
-				orderByGoldLost ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByGoldLost);
 				search("rGoldLost", orderDirection);
 				break;
 			}
 			case "maxGoldRaised": { 
 				orderByMaxGoldRaised = !orderByMaxGoldRaised;
-				orderByMaxGoldRaised ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByMaxGoldRaised);
 				search("rMaxGoldRaised", orderDirection);
 				break;
 			}
 			case "maxGoldLost": { 
 				orderByMaxGoldLost = !orderByMaxGoldLost;
-				orderByMaxGoldLost ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByMaxGoldLost);
 				search("rMaxGoldLost", orderDirection);
 				break;
 			}
 			case "expRaised": { 
 				orderByExpRaised = !orderByExpRaised;
-				orderByExpRaised ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByExpRaised);
 				search("rExpRaised", orderDirection);
 				break;
 			}
 			case "lastAttackTime": { 
 				orderByLastAttack = !orderByLastAttack;
-				orderByLastAttack ? orderDirection = "asc" : orderDirection = "desc"; 
+				orderDirection = getOrderDirection(orderByLastAttack);
 				search("rLastAttackTime", orderDirection);
 				break;
 			}

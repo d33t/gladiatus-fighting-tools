@@ -79,15 +79,27 @@ GFTVersions = (function()
 	}
 	
 	function initVersions(file) {
-		var istream = Components.classes["@mozilla.org/network/file-input-stream;1"].
+		/*var istream = Components.classes["@mozilla.org/network/file-input-stream;1"].
 								createInstance(Components.interfaces.nsIFileInputStream);
 		istream.init(file, 0x01, 0444, 0);
 		istream.QueryInterface(Components.interfaces.nsILineInputStream);
+		*/
+// First, get and initialize the converter
+var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
+                          .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+converter.charset = /* The character encoding you want, using UTF-8 here */ "UTF-8";
 
-		var line = {}, hasmore, currentPos = 0;
+// This assumes that 'file' is a variable that contains the file you want to read, as an nsIFile
+var fis = Components.classes["@mozilla.org/network/file-input-stream;1"]
+                    .createInstance(Components.interfaces.nsIFileInputStream);
+fis.init(file, -1, -1, 0);
+var lis = fis.QueryInterface(Components.interfaces.nsILineInputStream);
+
+
+		var lineData = {}, hasmore, currentPos = 0;
 		do {
-		  hasmore = istream.readLine(line);
-		  var value = line.value;
+		  hasmore = lis.readLine(lineData);
+		  var value = converter.ConvertToUnicode(lineData.value);
 		  if(value == "") {
 			continue;
 		  }
@@ -98,7 +110,7 @@ GFTVersions = (function()
 			  versions[currentPos-1].addLine(value);
 		  }
 		} while(hasmore);
-		istream.close();
+		lis.close();
 	}
 	
 	function initVersionsDDMenu() {
