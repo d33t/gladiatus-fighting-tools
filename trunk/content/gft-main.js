@@ -429,7 +429,7 @@ GFT.Main = (function(){
 			var snapshotItems = getNodeContent(CIRCUS_XPATHS.ATTACKER, 1, false);
 			attacker.setName(trim(snapshotItems[0].textContent));
 			
-			var snapshotItems = getNodeContent(CIRCUS_XPATHS.DEFENDER, 1, false);
+			snapshotItems = getNodeContent(CIRCUS_XPATHS.DEFENDER, 1, false);
 			defender.setName(trim(snapshotItems[0].textContent));			
 			
 			// parse levels
