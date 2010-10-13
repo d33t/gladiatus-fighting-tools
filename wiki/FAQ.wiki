@@ -10,13 +10,14 @@ or
 
 ==Transfer GFT internal database to other computer/firefox profile==
 The steps below are to apply for windows xp, among other operational systems should be similar
- # Open windows explorer and type in the adressbar (alternativ: start menu -> run) *%APPDATA%\Mozilla\Firefox\Profiles\<mozilla profile>* or follow the instructions on [http://support.mozilla.com/bg/kb/Backing+up+your+information this page]
+ # Open windows explorer and type in the adressbar (alternativ: start menu -> run) *%APPDATA%\Mozilla\Firefox\Profiles\* or follow the instructions on [http://support.mozilla.com/bg/kb/Backing+up+your+information this page]
+ # Open the <mozilla profile> folder
  # Copy gft.sqlite file
  # Repeat step one on the computer/firefox profile, where you want to move the database
  # Paste the file above
  # Restart your firefox browser
 
-Note: replace <user profile> with your windows username and <mozilla profile> with the name of your firefox profile, where you have installed GFT (if you are not using more than one profile, than the profile is called xxxxxxxx.default, where xxxxxxxx represents random string of 8 characters)
+Note: <mozilla profile> is the firefox profile, where you have installed GFT (if you are not using more than one profile, than the profile is called xxxxxxxx.default, where xxxxxxxx represents random string of 8 characters)
 
 ==Locale translation==
 The locale files for the current version can be found in the [http://code.google.com/p/gladiatus-fighting-tools/downloads/list download section]. Download and extract the archive to any location on your computer. Within the archive you can find 3 files, which you can open with your prefered editor (e.g. notepad++) and than you can translate the entities inside them.
