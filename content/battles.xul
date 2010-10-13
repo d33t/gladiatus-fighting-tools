@@ -86,42 +86,42 @@
 			<tree id="gft-battles-tree" flex="1" rows="10">
 				<treecols>
 					<treecol label="&gft.battles.table.name;" persist="width"
-						onclick="GFT.Battles.sort('name')" flex="5" />
+						onclick="GFT.Battles.sort('rName')" flex="5" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.guild;" persist="width"
-						onclick="GFT.Battles.sort('guild')" flex="4" />
+						onclick="GFT.Battles.sort('rGuild')" flex="4" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.level;" persist="width"
-						onclick="GFT.Battles.sort('level')" flex="1" style="text-align:center;" />
+						onclick="GFT.Battles.sort('rLevel')" flex="1" style="text-align:center;" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.server;" persist="width"
-						onclick="GFT.Battles.sort('server')" flex="5" />
+						onclick="GFT.Battles.sort('rServer')" flex="5" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.attacks;" persist="width"
-						onclick="GFT.Battles.sort('attacks')" flex="1" style="text-align:center;" />
+						onclick="GFT.Battles.sort('rAttacks')" flex="1" style="text-align:center;" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.defenses;" persist="width"
-						onclick="GFT.Battles.sort('defenses')" flex="1" style="text-align:center;" />
+						onclick="GFT.Battles.sort('rDefenses')" flex="1" style="text-align:center;" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.goldRaised;" persist="width"
-						onclick="GFT.Battles.sort('goldRaised')" flex="1" style="text-align:center;" />
+						onclick="GFT.Battles.sort('rGoldRaised')" flex="1" style="text-align:center;" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.goldLost;" persist="width"
-						onclick="GFT.Battles.sort('goldLost')" flex="1" style="text-align:center;" />
+						onclick="GFT.Battles.sort('rGoldLost')" flex="1" style="text-align:center;" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.maxGoldRaised;" persist="width"
-						onclick="GFT.Battles.sort('maxGoldRaised')" flex="1"
+						onclick="GFT.Battles.sort('rMaxGoldRaised')" flex="1"
 						style="text-align:center;" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.maxGoldLost;" persist="width"
-						onclick="GFT.Battles.sort('maxGoldLost')" flex="1"
+						onclick="GFT.Battles.sort('rMaxGoldLost')" flex="1"
 						style="text-align:center;" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.expRaised;" persist="width"
-						onclick="GFT.Battles.sort('expRaised')" flex="1" style="text-align:center;" />
+						onclick="GFT.Battles.sort('rExpRaised')" flex="1" style="text-align:center;" />
 					<splitter class="tree-splitter" />
 					<treecol label="&gft.battles.table.nextpossiblefight;" persist="width"
-						onclick="GFT.Battles.sort('lastAttackTime')" flex="5" style="text-align:center;" />
+						onclick="GFT.Battles.sort('rLastAttackTime')" flex="5" style="text-align:center;" />
 					<splitter class="tree-splitter" />
 				</treecols>
 				<treechildren id="battles-rows" context="gft-tree-menu">
