@@ -10,7 +10,7 @@ or
 
 ==Transfer GFT internal database to other computer/firefox profile==
 The steps below are to apply for windows xp, among other operational systems should be similar
- # Open windows explorer and navigate to *%APPDATA%\Mozilla\Firefox\Profiles\<mozilla profile>* or follow the instructions on [http://support.mozilla.com/bg/kb/Backing+up+your+information this page]
+ # Open windows explorer and type in the adressbar (alternativ: start menu -> run) *%APPDATA%\Mozilla\Firefox\Profiles\<mozilla profile>* or follow the instructions on [http://support.mozilla.com/bg/kb/Backing+up+your+information this page]
  # Copy gft.sqlite file
  # Repeat step one on the computer/firefox profile, where you want to move the database
  # Paste the file above
