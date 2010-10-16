@@ -211,18 +211,18 @@
 								<label constrol="defaultSortColumn" value="&gft.options.tabs.others.battleoverlay.defaultSortColumn.title;" />
 								<menulist id="defaultSortColumn" oncommand="GFTOptions.apply('others');">
 									<menupopup>
-										<menuitem id="name" label="&gft.battles.table.name;"/>
-										<menuitem id="guild" label="&gft.battles.table.guild;" />
-										<menuitem id="level" label="&gft.battles.table.level;" />
-										<menuitem id="server" label="&gft.battles.table.server;" />
-										<menuitem id="attacks" label="&gft.battles.table.attacks;" />
-										<menuitem id="defenses" label="&gft.battles.table.defenses;" />
-										<menuitem id="goldRaised" label="&gft.battles.table.goldRaised;" />
-										<menuitem id="goldLost" label="&gft.battles.table.goldLost;" />
-										<menuitem id="maxGoldRaised" label="&gft.battles.table.maxGoldRaised;" />
-										<menuitem id="maxGoldLost" label="&gft.battles.table.maxGoldLost;" />
-										<menuitem id="expRaised" label="&gft.battles.table.expRaised;" />
-										<menuitem id="lastAttackTime" label="&gft.battles.table.nextpossiblefight;" />
+										<menuitem id="rName" label="&gft.battles.table.name;"/>
+										<menuitem id="rGuild" label="&gft.battles.table.guild;" />
+										<menuitem id="rLevel" label="&gft.battles.table.level;" />
+										<menuitem id="rServer" label="&gft.battles.table.server;" />
+										<menuitem id="rAttacks" label="&gft.battles.table.attacks;" />
+										<menuitem id="rDefenses" label="&gft.battles.table.defenses;" />
+										<menuitem id="rGoldRaised" label="&gft.battles.table.goldRaised;" />
+										<menuitem id="rGoldLost" label="&gft.battles.table.goldLost;" />
+										<menuitem id="rMaxGoldRaised" label="&gft.battles.table.maxGoldRaised;" />
+										<menuitem id="rMaxGoldLost" label="&gft.battles.table.maxGoldLost;" />
+										<menuitem id="rExpRaised" label="&gft.battles.table.expRaised;" />
+										<menuitem id="rLastAttackTime" label="&gft.battles.table.nextpossiblefight;" />
 									</menupopup>
 								</menulist>
 							</hbox>

@@ -468,7 +468,7 @@ GFT.Battles = (function() {
 			}, false);
 			document.getElementById("gft-info-messages").hidden = true;
 			initPreferences();
-			lastOrderBy = prefMan.getValue("options.tabs.others.defaultSortColumn", "name");
+			lastOrderBy = prefMan.getValue("options.tabs.others.defaultSortColumn", "rName");
 			lastSortDirection = prefMan.getValue("options.tabs.others.defaultSortDirection", "asc");
 			search(lastOrderBy, lastSortDirection);
 			toogleNavigationButtons();
