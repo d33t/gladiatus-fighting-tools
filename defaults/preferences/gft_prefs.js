@@ -34,7 +34,7 @@ pref("extensions.gft.options.tabs.others.markMyAllies", true);
 pref("extensions.gft.options.tabs.others.battlesTablePosition", "before");
 pref("extensions.gft.options.tabs.others.advancedOptionsExpandedDefault", false);
 pref("extensions.gft.options.tabs.others.excludeMyAlliesDefault", true);
-pref("extensions.gft.options.tabs.others.defaultSortColumn", "name");
+pref("extensions.gft.options.tabs.others.defaultSortColumn", "rName");
 pref("extensions.gft.options.tabs.others.defaultSortDirection", "asc");
 pref("extensions.gft.options.tabs.others.searchByPeriodDefault", "oneday");
 pref("extensions.gft.options.tabs.others.searchByLocationDefault", "location-arena");
