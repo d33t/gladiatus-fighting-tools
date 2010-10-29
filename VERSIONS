@@ -1,4 +1,7 @@
-﻿#Version 1.5.2
+﻿#Version 1.5.3
+FIXED: small bug fixes
+
+#Version 1.5.2
 CHANGED: Improved exception handling
 FIXED: Database query bug (issue #17-4)
 ADDED: Dutch translation
