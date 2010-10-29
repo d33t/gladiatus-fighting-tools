@@ -84,6 +84,11 @@ GFT.Main = (function(){
 	};
 	
 	function init() { 
+		//updates for GFT version 1.5.3
+		if(!prefMan.getValue("updates.v153", false)) {
+			prefMan.setValue("updates.v153", true);
+			prefMan.setValue("options.tabs.others.defaultSortColumn", "rName");
+		}
 		prefMan.setValue("sessionstart", utils.getTime() + "");
 		registerPreferenceObservers();
 		adjustIconPosition();
