@@ -228,9 +228,12 @@ GFT.DB = function(){
 	var getInternId = function(identifier, server, by) {
 		console.debug("[getInternId()]: identifier: " + identifier + ", server: " + server + ", by: " + by);
 		var id = -1;
+		if(by == "pid" && identifier < 0) {
+			return id;
+		}	
 		try {
 			checkConnection();
-			var query = "SELECT apid FROM player where " + by + "=:identifier AND server=:p_server";		
+			var query = "SELECT apid FROM player where " + by + "=:identifier AND server=:p_server";	
 			var oStatement = dbConn.createStatement(query);
 			oStatement.params.identifier = identifier;
 			oStatement.params.p_server = server;
@@ -253,13 +256,16 @@ GFT.DB = function(){
 		console.debug("[getPlayerId()]: identifier: " + identifier + ", server: " + server + ", by: " + by);
 		return getInternId(identifier, server, by);
 	};
-
+	
 	var getGladiatorId = function(gladiator, server) {
 		console.debug("[getGladiatorId()]: Gladiator: " + gladiator.toString());
+		console.debug("[getGladiatorId()]: Searching intern id by pid...");
 		var apid = getInternId(gladiator.getId(), server, "pid");
 		if(apid < 0) {
+			console.debug("[getGladiatorId()]: Invalid id. Searching intern id by name...");
 			apid = getInternId(gladiator.getName(), server, "name");			
 		}
+		console.debug("[getGladiatorId()]: Return value: " + apid);
 		return apid;
 	};
 	
@@ -724,7 +730,7 @@ GFT.DB = function(){
 			return insertPlayer(server, gladiator);
 		} else if (info.needUpdate || info.incomplete) {
 			if(this.getMyPid(server) == gladiator.getId() && gladiator.getGuild() == GFT.Constants.DEFAULT_MY_GUILD) {
-				console.log("[updatePlayerData()]: Skipping update for " + gladiator.getName() + " [" + gladiator.getId() + "] - " + server);
+				console.log("[updatePlayerData()]: Skipping update for my gladiator " + gladiator.getName() + " [" + gladiator.getId() + "] - " + server);
 				return info.apid;
 			}
 			console.log("[updatePlayerData()]: Updating data for " + gladiator.getName() + " [" + gladiator.getId() + "] - " + server);
