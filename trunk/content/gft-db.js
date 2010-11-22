@@ -128,13 +128,15 @@ GFT.DB = function(){
 		try {
 			checkConnection();
 			var winnerId = -1;
-			if(report.isArenaReport()) {
+			if(report.getWinner() == -1) { // battle finished in a draw
+				winnerId = 0;
+			} else if(report.isArenaReport()) {
 				winnerId = getPlayerId(report.getWinner(), report.getServer(), "pid");
 			} else {
 				winnerId = getPlayerId(report.getWinner(), report.getServer(), "name");
 			}
 			if(winnerId < 0) {
-				winnerId = 0; // battle result was equal
+				return false;
 				//throw "Cannot find the winner id. No data stored for the winner gladiator!";
 			}
 			
@@ -498,9 +500,12 @@ GFT.DB = function(){
 					console.log("[insertBattle]: Battle was stored successful.");
 				} else {
 					deleteLastBattle(battleid);
+					throw new Error("Battle report cannot be saved.\nPlease try to open the battle report again or report this error!" 
+									+ "\nReport details: " + report.toString());
 				}
 			} else {
-				throw new Error("Battle report cannot be inserted.\nPlease try to open the battle report again or report this error!");
+				throw new Error("Battle report cannot be saved.\nPlease try to open the battle report again or report this error!"
+								+ "\nReport details: " + report.toString());
 			}
 			return ret;
 		} catch (e) {utils.reportError("Could not insert battle log", e); return false;}

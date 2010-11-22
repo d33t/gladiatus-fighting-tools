@@ -1,4 +1,7 @@
-﻿#Version 1.5.4
+﻿#Version 1.5.5
+FIXED: issue #24 fixing the proper storing of battles finishing in a draw
+
+#Version 1.5.4
 FIXED: issue #23 fixing the proper storing of battles made trough circus turma
 
 #Version 1.5.3
