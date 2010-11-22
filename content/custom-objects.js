@@ -190,7 +190,7 @@ GFT.BattleReport = function(reportType) {
 	var raisedGold = 0;
 	var raisedExp = 0;
 	/** winner could be id or name */
-	var winner;
+	var winner = -1;
 	
 	this.isArenaReport = function() { return arenaReport; };
 	
