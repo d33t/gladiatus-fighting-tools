@@ -101,6 +101,7 @@ injectScript: function(script, url, unsafeContentWin) {
 	sandbox.GM_isMyAlly=GFT.gmCompiler.hitch(ppc, "isMyAlly");
 	sandbox.GM_isMyProfilePage=GFT.gmCompiler.hitch(ppc, "isMyProfilePage");
 	sandbox.GM_isLevelBashed=GFT.gmCompiler.hitch(ppc, "isLevelBashed");
+	sandbox.GM_isServerActive=GFT.gmCompiler.hitch(ppc, "isServerActive");
 	sandbox.GM_openInTab=GFT.gmCompiler.hitch(this, "openInTab", unsafeContentWin);
 	sandbox.GM_xmlhttpRequest=GFT.gmCompiler.hitch(
 		xmlhttpRequester, "contentStartRequest"

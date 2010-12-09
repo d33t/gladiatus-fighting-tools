@@ -166,5 +166,13 @@ GFT.PlayerPageContent = function() {
 		return pid == myPid;
 	};
 	
+	this.isServerActive = function(doc) {
+		var server = doc.domain +  "";
+		if(!db.isServerActive(server)) {
+			return false;
+		}
+		return true;
+	};
+	
 	this.isLevelBashed = GFT.Main.isLevelBashed;
 };

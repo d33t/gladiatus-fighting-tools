@@ -1,5 +1,8 @@
 ﻿#Version 1.5.5
 FIXED: issue #24 fixing the proper storing of battles finishing in a draw
+FIXED: the empty name of the circus turma button on the gladiator profile page
+ADDED: check for verifying if server is active, before adding any content to gladiator profile page
+FIXED: version log on the gft about dialog didn't appeared in firefox 4
 
 #Version 1.5.4
 FIXED: issue #23 fixing the proper storing of battles made trough circus turma

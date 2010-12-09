@@ -105,10 +105,14 @@ GFT.Main = (function(){
 		prefMan.unwatch("options.tabs.main.iconposition", adjustIconPosition);
 	};
 	
-	function adjustIconPosition() {
+	function adjustIconPosition() { // Firefox 4 status-bar doesn't exists anymore, replace with addon-bar or put the icon in the navigation bar
 		console.debug("Adjusting icon position");
 	    try {
-	        var statusbar = document.getElementById("status-bar");
+	        var statusbar = document.getElementById("addon-bar");
+			if(!statusbar) {
+				statusbar = document.getElementById("status-bar");
+			}
+			
 	        var gftStatusIcon = document.getElementById("gft-status");
 	        if(gftStatusIcon.hidden == true) {
 	        	gftStatusIcon.hidden = false;

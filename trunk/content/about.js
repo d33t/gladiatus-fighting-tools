@@ -22,6 +22,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
 */
+try {
+	Components.utils.import("resource://gre/modules/AddonManager.jsm");
+} catch(e) {}
 
 GFTVersions = (function()
 {
@@ -84,18 +87,16 @@ GFTVersions = (function()
 		istream.init(file, 0x01, 0444, 0);
 		istream.QueryInterface(Components.interfaces.nsILineInputStream);
 		*/
-// First, get and initialize the converter
-var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
+		// First, get and initialize the converter
+		var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
                           .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-converter.charset = /* The character encoding you want, using UTF-8 here */ "UTF-8";
+		converter.charset = "UTF-8";
 
-// This assumes that 'file' is a variable that contains the file you want to read, as an nsIFile
-var fis = Components.classes["@mozilla.org/network/file-input-stream;1"]
+		// This assumes that 'file' is a variable that contains the file you want to read, as an nsIFile
+		var fis = Components.classes["@mozilla.org/network/file-input-stream;1"]
                     .createInstance(Components.interfaces.nsIFileInputStream);
-fis.init(file, -1, -1, 0);
-var lis = fis.QueryInterface(Components.interfaces.nsILineInputStream);
-
-
+		fis.init(file, -1, -1, 0);
+		var lis = fis.QueryInterface(Components.interfaces.nsILineInputStream);
 		var lineData = {}, hasmore, currentPos = 0;
 		do {
 		  hasmore = lis.readLine(lineData);
@@ -111,6 +112,7 @@ var lis = fis.QueryInterface(Components.interfaces.nsILineInputStream);
 		  }
 		} while(hasmore);
 		lis.close();
+		initVersionsDDMenu();
 	}
 	
 	function initVersionsDDMenu() {
@@ -124,11 +126,17 @@ var lis = fis.QueryInterface(Components.interfaces.nsILineInputStream);
 	return {
 		init: function() {
 			document.getElementById("gft-version").innerHTML = GFT.Constants.VERSION;
-			var em = Components.classes["@mozilla.org/extensions/manager;1"].
+			try { // firefox 3,6,*
+				var em = Components.classes["@mozilla.org/extensions/manager;1"].
 					 getService(Components.interfaces.nsIExtensionManager);
-			var file = em.getInstallLocation(GFT.Constants.ADDON_ID).getItemFile(GFT.Constants.ADDON_ID, "VERSIONS");
-			initVersions(file);
-			initVersionsDDMenu();
+				var f1 = em.getInstallLocation(GFT.Constants.ADDON_ID).getItemFile(GFT.Constants.ADDON_ID, "VERSIONS");
+				initVersions(f1);
+			} catch(e) { // firefox 4
+				AddonManager.getAddonByID(GFT.Constants.ADDON_ID, function(addon) {
+					var f2 = addon.getResourceURI("VERSIONS").QueryInterface(Components.interfaces.nsIFileURL).file;
+					initVersions(f2);
+				});
+			}
 		},
 		
 		changeVersion: showSelectedVersion

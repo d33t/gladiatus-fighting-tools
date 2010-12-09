@@ -114,12 +114,13 @@ GFT.Inject = (function(){
 		var fightButton = getArenaFightButton(doc);
 		if(fightButton) {
 			var insertButton = doc.createElement('input');
-			insertButton.value = GM_getString("location.circusTurma");
+			//insertButton.value = GM_getString("location.circusTurma");
 			insertButton.className = "button2";
 			insertButton.type = "button";
 			insertButton.style.marginLeft = "5px";
 			insertButton.id = "start-circus-turma-fight";
 			fightButton.parentNode.insertBefore(insertButton, fightButton.nextSibling);
+			doc.getElementById("start-circus-turma-fight").value = GM_getString("location.circusTurma");
 		}	
 	}
 	
@@ -274,7 +275,7 @@ GFT.Inject = (function(){
 	}
 	
 	return {
-		injectContent : function(e) {
+		injectContent : function(e) { //TODO check if server is active before continuing
 			var doc = e.target;
 			setVariousSettings(doc);
 			var removeFightButtons = GM_getValue("options.tabs.main.levelBashingRemoveButtons", false);
@@ -297,5 +298,5 @@ GFT.Inject = (function(){
 	};
 })();
 
-window.addEventListener('load', function(e){ GFT.Inject.injectContent(e);}, false);
-document.addEventListener('click', function(e){ GFT.Inject.handleClick(e);}, true);
+window.addEventListener('load', function(e){ if(GM_isServerActive(e.target)) {GFT.Inject.injectContent(e);}}, false);
+document.addEventListener('click', function(e){ if(GM_isServerActive(e.target)) {GFT.Inject.handleClick(e);}}, true);
