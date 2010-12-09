@@ -1,5 +1,5 @@
 ﻿#Version 1.5.6
-FIXED: click handlers for battle table showed on gladiator and your own profile page
+FIXED: click handlers for the battle table showed on gladiator and your own profile page
 
 #Version 1.5.5
 FIXED: issue #24 fixing the proper storing of battles finishing in a draw
