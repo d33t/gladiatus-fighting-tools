@@ -102,6 +102,7 @@ GFT.Inject = (function(){
 			content = getBattleStatsTable(GM_getString("battleStatsTitle"), GM_getEnemyStats(doc, defaultSearchPeriod, false, locCode), "visible", defaultSearchPeriod, defaultSearchLocation);
 		}
 		msgDiv.innerHTML = content;
+		document.addEventListener('click', function(e){ GFT.Inject.handleClick(e);}, true);
 	}
 	
 	function getArenaFightButton(doc) {
@@ -299,4 +300,3 @@ GFT.Inject = (function(){
 })();
 
 window.addEventListener('load', function(e){ if(GM_isServerActive(e.target)) {GFT.Inject.injectContent(e);}}, false);
-document.addEventListener('click', function(e){ if(GM_isServerActive(e.target)) {GFT.Inject.handleClick(e);}}, true);
