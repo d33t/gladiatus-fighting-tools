@@ -43,40 +43,49 @@ GFTVersions = (function()
 		var version = document.getElementById('versionsmenu').selectedItem.label;
 		var textarea = document.getElementById('versionsarea');
 		if(version == "all") {
-			textarea.innerHTML = getVersionHTML(getAllVersions());
+			textarea.innerHTML = getAllVersionsHTML();
 		} else { 
-			textarea.innerHTML = getVersionHTML(getVersion(version));
+			textarea.innerHTML = getVersionHTML(getVersion(version), false);
 		}
-	}
-	
-	function getAllVersions() {
-		var all = new Array();
-		for(var i = 0; i < versions.length; i++) {
-			all = all.concat(versions[i].getContent());
-		}
-		return all;
 	}
 	
 	function getVersion(version) {
 		for(var i = 0; i < versions.length; i++) {
 			if(versions[i].getName() == version) {
-				return versions[i].getContent();
+				return versions[i];
 			}
 		}
-		return getAllVersions();
+		return false;
+	}
+
+	function getAllVersionsHTML() {
+		var result = "";
+		for(var i = 0; i < versions.length; i++) {
+			result += getVersionHTML(versions[i], true);
+		}
+		return result;
 	}
 	
-	function getVersionHTML(content) {
+	function getVersionHTML(version, printHeader) {
+		if(!version) {
+			return getAllVersionsHTML();
+		}
+		
 		var ulOpen = "<html:ul>";
 		var ulClose = "</html:ul>";
 		var liOpen = "<html:li>";
 		var liClose = "</html:li>";
 		
 		var result = ulOpen;
+		var content = version.getContent();
 		for(i = 0; i < content.length; i++) {
 			result += liOpen + content[i] + liClose;
 		}
 		result += ulClose;
+		
+		if(printHeader) {
+			result = "<html:h3>" + version.getName() + "</html:h3>" + result;
+		}
 		
 		return result;
 	}
