@@ -22,16 +22,18 @@ Note: <mozilla profile> is the firefox profile, where you have installed GFT (if
 ==Locale translation==
 The locale files for the current version can be found in the [http://code.google.com/p/gladiatus-fighting-tools/downloads/list download section]. Download and extract the archive to any location on your computer. Within the archive you can find 3 files, which you can open with your prefered editor (e.g. notepad++) and than you can translate the entities inside them.
 ===Examples===
-The _first file type_ has the form: *somefile.properties*. Every row in the content of this file has the structure *entity=translation value*
+The _first file type_ has the form: *somefile.properties*. Every row in the content of this file has the structure:
+ * *entity=string*
 
 _Example_:
-{{{my.entity=My translation text}}}
+{{{my.entity=Some useful text}}}
 
-To translate the above row, you have to translate only the text on the right side (*My translation text*), you *should not* translate my.entity!
+To translate the above row, you have to translate only the text on the right side (*Some useful text*), you *should not* translate my.entity!
 
-The _second file type_ has the form: *somefile.dtd*. Every row in the content of this file has the structure *<!ENTITY gft.something "Translation value">*
+The _second file type_ has the form: *somefile.dtd*. Every row in the content of this file has the structure: 
+ * *<!ENTITY gft.something "string">*
 
 _Example_:
-{{{<!ENTITY gft.something "My translation text">}}}
+{{{<!ENTITY gft.something "Some useful text">}}}
 
-To translate the above row, you have to translate only *"My translation text"*, but nothing else.
+To translate the above row, you have to translate only *"Some useful text"*, but nothing else. Please do not remove the quotes or the locale will break the addon!
