@@ -1,8 +1,11 @@
 #Version 1.6
 ADDED: Firefox 4.0.* support
 ADDED: Gladiatus v1.2.0 compatibility
-REMOVED: Dropped support for gladiatus versions prior to gladiatus v1.2.0
-NOTFIXED: Additional raised gold in combat reports is not added to your raised gold
+CHANGED: Dropped support for gladiatus versions prior to gladiatus v1.2.0
+FIXED: Battle table is shown on the profile page exact like before
+CHANGED: Set icon position in the status-bar in firefox 4 (except right and hide) will not work anymore (no change in firefox 3.*)
+CHANGED: Circus turma battle button on the profile page is now hidden per default
+WONTFIX: Additional raised gold in combat reports is not added to your raised gold
 
 #Version 1.5.6
 FIXED: click handlers for the battle table showed on gladiator and your own profile page

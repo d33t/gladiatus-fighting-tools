@@ -65,7 +65,7 @@ GFT.Inject = (function(){
 		if(insertPosition == "hide") {
 			return;
 		}
-		var xPath = "//td[@id='content']/table";
+		var xPath = "//*[@id='content']/table";
 		var xResult = doc.evaluate(xPath, doc, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 		if(!gladiatorExists(xResult)) { return; } // gladiator doesn't exists
 		var descriptionDiv = xResult.snapshotItem(0);
