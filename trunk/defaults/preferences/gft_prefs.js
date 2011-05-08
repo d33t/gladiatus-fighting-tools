@@ -29,7 +29,7 @@ pref("extensions.gft.options.tabs.battlesTable.oMaxGoldRaised", false);
 pref("extensions.gft.options.tabs.battlesTable.oMaxGoldLost", false);
 pref("extensions.gft.options.tabs.battlesTable.oExperienceRaised", false);
 pref("extensions.gft.options.tabs.battlesTable.oRealChanceForWin", false);
-pref("extensions.gft.options.tabs.others.showCircusTurmaButton", true);
+pref("extensions.gft.options.tabs.others.showCircusTurmaButton", false);
 pref("extensions.gft.options.tabs.others.markMyAllies", true);
 pref("extensions.gft.options.tabs.others.battlesTablePosition", "before");
 pref("extensions.gft.options.tabs.others.advancedOptionsExpandedDefault", false);
