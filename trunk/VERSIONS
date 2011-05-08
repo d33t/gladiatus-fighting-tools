@@ -1,7 +1,10 @@
 #Version 1.6
-ADDED: Firefox 4.* support
+ADDED: Firefox 4.0.* support
+ADDED: Gladiatus v1.2.0 compatibility
+REMOVED: Dropped support for gladiatus versions prior to gladiatus v1.2.0
+NOTFIXED: Additional raised gold in combat reports is not added to your raised gold
 
-﻿#Version 1.5.6
+#Version 1.5.6
 FIXED: click handlers for the battle table showed on gladiator and your own profile page
 
 #Version 1.5.5
