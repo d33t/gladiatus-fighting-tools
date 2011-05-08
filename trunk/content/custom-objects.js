@@ -129,26 +129,21 @@ GFT.ResultSet = function() {
 	};	
 };
 
-GFT.ElementPath = function(elName, xpath, alternativeXPath, regExp) {
-	var name = elName; //used for better exception handling
-	var xpath1 = xpath;
-	var xpath2 = alternativeXPath || xpath;
-	var verifyRegExp = regExp || null;
+GFT.ElementPath = function(name, xpaths, regExp) {
+	var _name = name; //used for better exception handling
+	var _xpaths = xpaths;
+	var _regExp = regExp || null;
 	
 	this.getName = function() {
-		return name;
+		return _name;
 	};
 	
-	this.getXpath = function() {
-		return xpath1;
-	};
-	
-	this.getAlternativeXpath = function() {
-		return xpath2;
+	this.getXpaths = function() {
+		return _xpaths;
 	};
 	
 	this.getRegExp = function() {
-		return verifyRegExp;
+		return _regExp;
 	};
 };
 

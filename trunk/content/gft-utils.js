@@ -87,21 +87,16 @@ GFT.Utils = {
 		},
 		
 		isPlayerOverviewPage: function(url) {
-			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=overview&sh=.*/.test(url);
+			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=overview&sh=[a-z0-9]+(&inv=\d)?/.test(url);
 		},
-		
-		isPlayerPage: function(url) {
-			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=player&p=\d+&sh=.*/.test(url);
-		},
-		
+	
 		isPlayerReportPage: function(url) {
-			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&sh=.*/.test(url)
-						|| /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&t=2&sh=.*/.test(url);
+			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=reports&submod=showArenaReport&reportId=\d+(&t=2)?&sh=[a-z0-9]+/.test(url);
 		},
 		
 		isCombatReportPage: function(url) {
-			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&t=3&submod=combatReport&sh=.*/.test(url)
-						|| /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=report&beid=\d+&t=3&sh=.*/.test(url);
+			return /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=reports&reportId=\d+&t=3&submod=showCombatReport&sh=[a-z0-9]+/.test(url)
+				|| /http:\/\/s\d+.*\.gladiatus\..*\/game\/index\.php\?mod=reports&submod=showCombatReport&t=3&reportId=\d+&sh=[a-z0-9]+/.test(url);
 		}
 	},
 	
@@ -132,9 +127,21 @@ GFT.Utils = {
 	},
 	
 	getRepIdFromUrl: function(url) {
-		var repidRegEx = /mod=report&beid=(\d+).*&sh=.*/;
+	/* v0.11.1
+	 * attack:
+	 * http://s3.bg.gladiatus.com/game/index.php?mod=report&beid=3041766&t=3&submod=combatReport&sh=752f080befb123e7cd0766e20eaa0be6
+	 * defense:
+	 * http://s3.bg.gladiatus.com/game/index.php?mod=report&beid=3041616&t=3&sh=752f080befb123e7cd0766e20eaa0be6&submod=combatReport
+	 * 
+	 * v1.0.0
+	 * attack:
+	 * http://s201.gladiatus.de/game/index.php?mod=reports&submod=showCombatReport&t=3&reportId=161900&sh=46a5d32defd3a70d0e8b1e1cd0916bd2
+	 * defense:
+	 * http://s201.gladiatus.de/game/index.php?mod=reports&submod=showCombatReport&t=3&reportId=161958&sh=46a5d32defd3a70d0e8b1e1cd0916bd2
+	 */
+		var repidRegEx = /&(report|be)[iI]d=(\d+).*&sh=.+/;
 		url.match(repidRegEx);
-		var repid = RegExp.$1;
+		var repid = RegExp.$2;
 		if(!repid) {
 			throw new Error("Error[getRepIdFromUrl()]: Cannot parse repId from url:\n " +  url);
 		}

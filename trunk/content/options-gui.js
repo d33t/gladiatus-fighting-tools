@@ -182,7 +182,7 @@ GFTOptions = (function()
 			GTFpreferences.setValue("options.tabs.others." + itemId, $(itemId).value);
 		} else if(isInteger($(itemId).value)) {
 			if(isInteger($("searchByLowLevelDefault").value) && isInteger($("searchByHighLevelDefault").value)) {
-				if($("searchByLowLevelDefault").value <= $("searchByHighLevelDefault").value) {
+				if(parseInt($("searchByLowLevelDefault").value) <= parseInt($("searchByHighLevelDefault").value)) {
 					GTFpreferences.setValue("options.tabs.others." + itemId, $(itemId).value);
 				} else {
 					$(itemId).value = GTFpreferences.getValue("options.tabs.others." + itemId, "");
