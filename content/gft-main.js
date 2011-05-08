@@ -34,36 +34,92 @@ GFT.Main = (function(){
 	var prefMan = new GFT.PrefManager();
 	var trim = GFT.Utils.trim;
 	var ARENA_XPATHS = {
-		GLADIATORS : new GFT.ElementPath("ARENA_GLADIATORS", "//span[@class='playername_achievement']"),
-		BATTLE_TIME : new GFT.ElementPath("ARENA_BATTLE_TIME", "//div[@id='battlerep']/div[*]/div[1]/div", null, /\d{2}\.\d{2}.\d{4}\s{1}\d{2}:\d{2}:\d{2}/),
-		ATTACKER_ID : new GFT.ElementPath("ARENA_ATTACKER_ID", "//div[@id='battlerep']/div[*]/div[2]/div/table/tbody/tr[2]/td[1]/a"),
-		DEFENDER_ID : new GFT.ElementPath("ARENA_DEFENDER_ID", "//div[@id='battlerep']/div[*]/div[2]/div/table/tbody/tr[3]/td[1]/a"),
-		ATTACKER_LEVEL : new GFT.ElementPath("ARENA_ATTACKER_LEVEL", "//div[@id='battlerep']/table[2]/tbody/tr[2]/td[1]/div/div[2]/span[2]"),
-		DEFENDER_LEVEL : new GFT.ElementPath("ARENA_DEFENDER_LEVEL", "//div[@id='battlerep']/table[2]/tbody/tr[2]/td[2]/div/div[2]/span[2]"),
-		ATTACKER_GUILD : new GFT.ElementPath("ARENA_ATTACKER_GUILD", "//div[@id='battlerep']/div[*]/div[2]/div/table/tbody/tr[2]/td[2]/a"),
-		DEFENDER_GUILD : new GFT.ElementPath("ARENA_DEFENDER_GUILD", "//div[@id='battlerep']/div[*]/div[2]/div/table/tbody/tr[3]/td[2]/a"),
-		WINNER_ID : new GFT.ElementPath("ARENA_WINNER_ID", "//div[@id='battlerep']//div[3]/div/span[2]/a", "//div[@id='battlerep']/div[3]/div[2]/div/table/tbody/tr[3]/td[1]/a"),
-		REWARD : new GFT.ElementPath("ARENA_REWARD", "//div[@id='battlerep']/div[*]/div[2]/div/table/tbody/tr/td/p")	
+		GLADIATORS : new GFT.ElementPath("ARENA_GLADIATORS", ["//span[@class='playername_achievement']"]),
+		BATTLE_TIME : new GFT.ElementPath("ARENA_BATTLE_TIME", [
+										"//div[@id='battlerep']/div[*]/div[1]/div", //  version <= 0.11.1 
+										"//div[@id='content']/div[4]/div[1]/div", // version >= 1.0.0 without centurion
+										"//div[@id='content']/div[3]/div[1]/div" // version >= 1.0.0 with centurion
+										], /\d{2}\.\d{2}.\d{4}\s{1}\d{2}:\d{2}:\d{2}/),
+		ATTACKER_ID : new GFT.ElementPath("ARENA_ATTACKER_ID", [
+										"//div[@id='battlerep']/div[*]/div[2]/div/table/tbody/tr[2]/td[1]/a", //  version <= 0.11.1 
+										"//div[@id='content']/div[*]/div[2]/div/table/tbody/tr[2]/td[1]/a" // version >= 1.0.0
+										]),
+		DEFENDER_ID : new GFT.ElementPath("ARENA_DEFENDER_ID", [
+										"//div[@id='battlerep']/div[*]/div[2]/div/table/tbody/tr[3]/td[1]/a", //  version <= 0.11.1
+										"//div[@id='content']/div[*]/div[2]/div/table/tbody/tr[3]/td[1]/a" // version >= 1.0.0
+										]),
+		ATTACKER_LEVEL : new GFT.ElementPath("ARENA_ATTACKER_LEVEL", [
+										"//div[@id='battlerep']/table[2]/tbody/tr[2]/td[1]/div/div[2]/span[2]", //  version <= 0.11.1 
+										"//div[@id='content']/table[2]/tbody/tr[2]/td[1]/div/div[2]/span[2]" // version >= 1.0.0
+										]),
+		DEFENDER_LEVEL : new GFT.ElementPath("ARENA_DEFENDER_LEVEL", [
+										"//div[@id='battlerep']/table[2]/tbody/tr[2]/td[2]/div/div[2]/span[2]", //  version <= 0.11.1 
+										"//div[@id='content']/table[2]/tbody/tr[2]/td[2]/div/div[2]/span[2]" // version >= 1.0.0
+										]),
+		ATTACKER_GUILD : new GFT.ElementPath("ARENA_ATTACKER_GUILD", [
+										"//div[@id='battlerep']/div[*]/div[2]/div/table/tbody/tr[2]/td[2]/a", //  version <= 0.11.1 
+										"//div[@id='content']/div[*]/div[2]/div/table/tbody/tr[2]/td[2]/a" // version >= 1.0.0
+										]),
+		DEFENDER_GUILD : new GFT.ElementPath("ARENA_DEFENDER_GUILD", [
+										"//div[@id='battlerep']/div[*]/div[2]/div/table/tbody/tr[3]/td[2]/a", //  version <= 0.11.1 
+										"//div[@id='content']/div[*]/div[2]/div/table/tbody/tr[3]/td[2]/a" // version >= 1.0.0
+										]),
+		WINNER_ID : new GFT.ElementPath("ARENA_WINNER_ID", [
+										"//div[@id='battlerep']//div[3]/div/span[2]/a", //  version <= 0.11.1 
+										"//div[@id='content']//div[3]/div/span[2]/a", // version >= 1.0.0
+										"//div[@id='battlerep']/div[3]/div[2]/div/table/tbody/tr[3]/td[1]/a" //  version <= 0.11.1 
+										]),
+		REWARD : new GFT.ElementPath("ARENA_REWARD", [
+										"//div[@id='battlerep']/div[*]/div[2]/div/table/tbody/tr/td/p", //  version <= 0.11.1
+										"//div[@id='content']/div[*]/div[2]/div/table/tbody/tr/td/p" // version >= 1.0.0
+										])	
 	};	
 	var CIRCUS_XPATHS = {
-		ATTACKER : new GFT.ElementPath("CIRCUS_ATTACKER", "//div[@id='attackername0']/span[1]"),
-		DEFENDER : new GFT.ElementPath("CIRCUS_DEFENDER", "//div[@id='defendername0']/span[1]"),
-		ATTACKER_LEVEL : new GFT.ElementPath("CIRCUS_ATTACKER_LEVEL", "//div[@id='attackerstats0']/div[2]/span[2]"),
-		DEFENDER_LEVEL : new GFT.ElementPath("CIRCUS_DEFENDER_LEVEL", "//div[@id='defenderstats0']/div[2]/span[2]"),
-		WINNER : new GFT.ElementPath("CIRCUS_WINNER", "//td[@id='content']/div[2]"),
-		REWARD : new GFT.ElementPath("CIRCUS_REWARD", "//td[@id='content']/div[3]/div[2]/div/table/tbody/tr/td/p")	
+		ATTACKER : new GFT.ElementPath("CIRCUS_ATTACKER", [
+										"//div[@id='attackername0']/span[1]", //  version <= 0.11.1 
+										"//div[@id='attackerAvatar1']/div[1]/span[1]" // version >= 1.0.0
+										]),
+		DEFENDER : new GFT.ElementPath("CIRCUS_DEFENDER", [
+										"//div[@id='defendername0']/span[1]", // version <= 0.11.1 
+										"//div[@id='defenderAvatar11']/div[1]/span[1]" // version >= 1.0.0
+										]),
+		ATTACKER_LEVEL : new GFT.ElementPath("CIRCUS_ATTACKER_LEVEL", [
+										"//div[@id='attackerstats0']/div[2]/span[2]", // version <= 0.11.1 
+										"//div[@id='attackerCharStats1']//span[@id='char_level']" // version >= 1.0.0
+										]),
+		DEFENDER_LEVEL : new GFT.ElementPath("CIRCUS_DEFENDER_LEVEL", [
+										"//div[@id='defenderstats0']/div[2]/span[2]", // version <= 0.11.1 
+										"//div[@id='defenderCharStats11']//span[@id='char_level']" // version >= 1.0.0
+										]),
+		WINNER : new GFT.ElementPath("CIRCUS_WINNER", [
+										"//td[@id='content']/div[2]", // version <= 0.11.1 
+										"//div[@id='content']/div[1]" // version >= 1.0.0
+										]),
+		REWARD : new GFT.ElementPath("CIRCUS_REWARD", [
+										"//td[@id='content']/div[3]/div[2]/div/table/tbody/tr/td/p", // version <= 0.11.1 
+										"//div[@id='content']/div[2]/div[2]/div//tr/td/p[1]" // version >= 1.0.0
+										])	
 	};	
 
 	var OVERVIEW_XPATHS = {
-		PLAYER_NAME : new GFT.ElementPath("OVERVIEW_PLAYER_NAME", "//span[@class='playername_achievement']"),
-		HUNT_LINK : new GFT.ElementPath("OVERVIEW_HUNT_LINK", "//p[@class='huntlink']/b"),
-		PLAYER_LEVEL : new GFT.ElementPath("OVERVIEW_PLAYER_LEVEL", "//span[@id='char_level']")
+		PLAYER_NAME : new GFT.ElementPath("OVERVIEW_PLAYER_NAME", ["//span[@class='playername_achievement']"]),
+		HUNT_LINK : new GFT.ElementPath("OVERVIEW_HUNT_LINK", [
+										"//p[@class='huntlink']/b", // version <= 0.11.1  
+										"//div[@class='contentItem_content']/p[2]/b" // version >= 1.0.0
+										]),
+		PLAYER_LEVEL : new GFT.ElementPath("OVERVIEW_PLAYER_LEVEL", ["//span[@id='char_level']"])
 	};
 	
 	var PROFILE_XPATHS = {
-		PLAYER_NAME : new GFT.ElementPath("PROFILE_PLAYER_NAME", "//td[@id='content']/table/tbody/tr/td[1]/div[1]/span[1]"),
-		PLAYER_LEVEL : new GFT.ElementPath("PROFILE_PLAYER_LEVEL", "//span[@id='char_level']"),
-		PLAYER_GUILD : new GFT.ElementPath("PROFILE_PLAYER_GUILD", "//td[@id='content']/table/tbody/tr/td[2]/div[2]/b/a")
+		PLAYER_NAME : new GFT.ElementPath("PROFILE_PLAYER_NAME", [
+										"//td[@id='content']/table/tbody/tr/td[1]/div[1]/span[1]",  // version <= 0.11.1 
+										"//span[@class='playername_achievement']" // version >= 1.0.0
+										]),
+		PLAYER_LEVEL : new GFT.ElementPath("PROFILE_PLAYER_LEVEL", ["//span[@id='char_level']"]),
+		PLAYER_GUILD : new GFT.ElementPath("PROFILE_PLAYER_GUILD", [
+										"//td[@id='content']/table/tbody/tr/td[2]/div[2]/b/a", // version <= 0.11.1 
+										"//div[@id='content']/table/tbody/tr/td[2]/div[2]/b/a" // version >= 1.0.0
+										])
 	};
 	
 	function load() {
@@ -270,35 +326,38 @@ GFT.Main = (function(){
 			return false;
 		} else {
 			if(snapshotItems.length != expectedResultLength) {
-				if(nullable) {
-					return snapshotItems;
-				} else {
+				if(!nullable) {
 					return false;
 				}
-			} else {
-				return snapshotItems;
 			}
+			return snapshotItems;
 		}
 		
 	};
 	
 	function getNodeContent(xObj, expectedResultLength, nullable) {
-		var nodesSnapshot;
-		var ret;
-		try {
-			nodesSnapshot = evaluateXPath(xObj.getXpath());
-			ret = verifyResult(nodesSnapshot, expectedResultLength, nullable, xObj.getRegExp());
-			if(!ret) {
-				throw new Error(xObj.getName() + " cannot be parsed.\nXPath \"" + xObj.getXpath() + "\" is invalid.");
-			}
-		} catch(ex1) {
-			nodesSnapshot = evaluateXPath(xObj.getAlternativeXpath());
-			ret = verifyResult(nodesSnapshot, expectedResultLength, nullable, xObj.getRegExp());
-			if(!ret) {
-				throw new Error(ex1 + "\nAlternative XPath \"" + xObj.getAlternativeXpath() + "\" is invalid also.");
-			}			
+		var xPaths = xObj.getXpaths();
+		var firstBestResult = null;
+		for(var i = 0; i < xPaths.length; i++) {
+			var nodesSnapshot = evaluateXPath(xPaths[i]);
+			console.debug("Testing xPath " + xPaths[i] + " for " + expectedResultLength + " valid result(s).");
+			var ret = verifyResult(nodesSnapshot, expectedResultLength, nullable, xObj.getRegExp());
+			var actualLength = ret.length;
+			if(ret && ret != "undefined") {
+				if(firstBestResult == null) {
+					firstBestResult = ret;
+					ret = null;
+				}
+				if(actualLength != expectedResultLength && i < xPaths.length) {
+					continue;
+				}
+				return (ret == null) ? firstBestResult : ret;
+			} else if(!ret && (i+1) >= xPaths.length) {
+				throw new Error(xObj.getName() + " cannot be parsed.\nNo valid xPath found.");
+			}		
 		}
-		return ret;
+		return false;
+		
 	};
 	
 	function pageload(event) {
@@ -338,6 +397,7 @@ GFT.Main = (function(){
 	
 	function parseArenaReport() {
 		try {
+			console.debug("Parsing arena report...");
 			var arenaReport = new GFT.BattleReport(true);
 			var attacker = new GFT.Gladiator();
 			var defender = new GFT.Gladiator();
@@ -424,6 +484,7 @@ GFT.Main = (function(){
 	
 	function parseCircusTurmaReport() {
 		try {
+			console.debug("Parsing circus turma report...");
 			var circusTurmaReport = new GFT.BattleReport(false);	
 			circusTurmaReport.setRepId(utils.getRepIdFromUrl(utils.getBrowser().location + ""));
 
@@ -450,7 +511,7 @@ GFT.Main = (function(){
 			circusTurmaReport.setAttacker(attacker);
 			circusTurmaReport.setDefender(defender);
 			// who is the winner ? 
-			snapshotItems = getNodeContent(CIRCUS_XPATHS.WINNER, 1, true);
+			snapshotItems = getNodeContent(CIRCUS_XPATHS.WINNER, 1, false);
 			circusTurmaReport.setWinner(trim(snapshotItems[0].textContent.split(" ")[1]));
 			
 			// experience and gold raised or lost
