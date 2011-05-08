@@ -34,9 +34,9 @@ GFTVersions = (function()
 	function VersionItem(versionName) {
 		var name = versionName;
 		var content = new Array();
-		this.getName = function() { return name; }
-		this.addLine = function(line) { content.push(line); }
-		this.getContent = function() { return content; }
+		this.getName = function() { return name; };
+		this.addLine = function(line) { content.push(line); };
+		this.getContent = function() { return content; };
 	}
 	
 	function showSelectedVersion() {
